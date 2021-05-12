@@ -6,34 +6,19 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_DATETIME_PROVIDER_H_
-#define _I_DATETIME_PROVIDER_H_
-
-struct DateTime
-{
-    int year;
-    int month;
-    int day;
-    int hours;
-    int minutes;
-    int seconds;
-};
-
-class IDateTimeProvider 
-{
-    public:
-        virtual DateTime* getLocalDatetime() 
-        { 
-            return new DateTime;
-        };
-};
+#include "FakeLogPersister.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+namespace sout {
+    #include "printf.h"
+}
 #ifdef __cplusplus
 }
 #endif
 
-#endif
+void FakeLogPersister::write(const char t_character)
+{
+    sout::_putchar(t_character);
+};

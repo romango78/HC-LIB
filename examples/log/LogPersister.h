@@ -6,34 +6,20 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_DATETIME_PROVIDER_H_
-#define _I_DATETIME_PROVIDER_H_
+#ifndef _LOG_PERSISTER_H_
+#define _LOG_PERSISTER_H_
 
-struct DateTime
-{
-    int year;
-    int month;
-    int day;
-    int hours;
-    int minutes;
-    int seconds;
-};
+#include <iostream>
+#include "ILogPersister.h"
 
-class IDateTimeProvider 
+class LogPersister : ILogPersister
 {
     public:
-        virtual DateTime* getLocalDatetime() 
-        { 
-            return new DateTime;
+        LogPersister() {};
+        void write(const char t_character) override
+        {
+          std::cout << t_character;
         };
 };
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif
