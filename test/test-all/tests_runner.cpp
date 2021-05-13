@@ -10,6 +10,7 @@
 
 #include <unity.h>
 #include "log/LogTests.h"
+#include "collections/generic/KeyValuePairTests.h"
 
 void setUp(void)
 {
@@ -35,6 +36,11 @@ int main( int argc, char **argv) {
     RUN_TEST(Log_ShouldLogError_WithModule);
     RUN_TEST(Log_ShouldLogFatal_WithoutModule);
     RUN_TEST(Log_ShouldLogFatal_WithModule);
+
+    /*****************************************
+     * Collections\Generic\KeyValuePair<Tkey, Tvalue)
+     *****************************************/
+    RUN_TEST(KeyValuePair_ShouldCreate_RefKey_RefValue);
 
     UNITY_END();
 }
