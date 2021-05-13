@@ -27,17 +27,15 @@ class KeyValuePair
 
         };
 
-/*        template<typename TKey, typename TValue>
-        TKey &getKey()
+        TKey getKey()
         {
             return m_key;
         };
 
-        template<typename TKey, typename TValue>
-        TValue &getValue()
+        TValue getValue()
         {
             return m_value;
-        };*/
+        };
 };
 
 #endif

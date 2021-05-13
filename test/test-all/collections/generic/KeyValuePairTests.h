@@ -9,6 +9,9 @@
 #ifndef _KEY_VALUE_PAIR_TESTS_H_
 #define _KEY_VALUE_PAIR_TESTS_H_
 
+#ifdef UNIT_TEST
+
+#include <unity.h>
 #include "generic/KeyValuePair.h"
 
 void KeyValuePair_ShouldCreate_RefKey_RefValue()
@@ -17,8 +20,10 @@ void KeyValuePair_ShouldCreate_RefKey_RefValue()
     char value[] = "Value";
     KeyValuePair<char*, char*> *sut = new KeyValuePair<char*, char*>(key, value);
 
-
+    TEST_ASSERT_EQUAL_STRING(key, sut->getKey());
+    TEST_ASSERT_EQUAL_STRING(value, sut->getValue());
 }
 
 
+#endif
 #endif
