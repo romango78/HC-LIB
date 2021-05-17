@@ -3,12 +3,20 @@
 	"tasks": [
 		{
 			"type": "PlatformIO",
-			"task": "Test",
+			"task": "Test (desktop)",
 			"problemMatcher": [
 				"$platformio"
 			],
 			"group": "test",
-			"label": "PlatformIO: Test"
+			"label": "PlatformIO: Test (desktop)"
+		},
+		{
+			"type": "PlatformIO",
+			"task": "Pre-Debug (desktop)",
+			"problemMatcher": [
+				"$platformio"
+			],
+			"label": "PlatformIO: Build in debug mode (desktop)"
 		}
 	]
 }

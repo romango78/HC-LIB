@@ -9,58 +9,90 @@
 #ifndef _I_ENUMERATOR_
 #define _I_ENUMERATOR_
 
+//#include <type_traits>
+
 template <class T>
 class IEnumerator
 {
     public:
         IEnumerator() {};
         
+        // Sets the enumerator to its initial position, 
+        // which is before the first element in the collection.
+        //
+        // The preferred implementation is to move the enumerator 
+        // to the beginning of the collection, before the first element.  
         virtual void reset() {};
 
-        virtual bool moveNext() {};
+        // Advances the enumerator to the next element of the collection.
+        // Returns true if the enumerator was successfully advanced to 
+        // the next element; false if the enumerator has passed the end of the collection.
+        //
+        // After an enumerator is created or after the Reset method is called, 
+        // an enumerator is positioned before the first element of the collection, 
+        // and the first call to the MoveNext method moves the enumerator over 
+        // the first element of the collection.
+        // If MoveNext passes the end of the collection, the enumerator is positioned 
+        // after the last element in the collection and MoveNext returns false. 
+        // When the enumerator is at this position, subsequent calls to MoveNext 
+        // also return false until Reset is called.
+        virtual bool moveNext() = 0;
 
-        virtual T getCurrent() {};
+        // Gets the element in the collection at the current position of the enumerator.
+        // Current is undefined under any of the following conditions:
+        //   - The enumerator is positioned before the first element in the collection, 
+        //     immediately after the enumerator is created. MoveNext must be called to 
+        //     advance the enumerator to the first element of the collection before 
+        //     reading the value of Current.
+        //   - The last call to MoveNext returned false, which indicates the end of the collection.
+        //   - The enumerator is invalidated due to changes made in the collection, 
+        //     such as adding, modifying, or deleting elements.
+        virtual T getCurrent() = 0;
 };
 
 template <class T>
-struct EnumeratedItem : IEnumerator
+struct EnumeratedItem
 {
     T item;
     EnumeratedItem<T> *next = nullptr;
 };
 
 template <class T>
-class EnumeratorBase
+class EnumeratorBase : public IEnumerator<T>
 {
-    private:
-        const constexpr T NULLITEM = {};
-
     protected:
         EnumeratedItem<T> *m_head;
         EnumeratedItem<T> *m_current;
+        bool m_isReseted = false;
 
     public:
-        IEnumerator()
+        const T NULLITEM = {};
+
+        EnumeratorBase()
         {
             m_head = nullptr;
             m_current = nullptr;
         }
         
-        ~IEnumerator()
+        ~EnumeratorBase()
         {
-            reset();
-            EnumeratedItem<T> item = m_head;
-            while(moveNext())
+            if(m_head)
             {
-                delete item;
-                item = getCurrent();
+                m_current = m_head;            
+                do
+                {
+                    EnumeratedItem<T> *item = m_current->next;
+                    delete m_current;
+                    m_current = item;
+                }
+                while(!m_current);
             }
-            delete item;
         }
 
         void reset() override
         {
-            m_current = m_head;
+            m_isReseted = true;
+            m_current = nullptr;
         };
 
         bool moveNext() override
@@ -70,16 +102,18 @@ class EnumeratorBase
                 return false;
             }
 
-            if (!m_current)
+            if(m_isReseted)
             {
-                reset();
+                m_current = m_head;
+                m_isReseted = false;
             }
-            else if (m_current->next)
+            else if (m_current && m_current->next)
             {
                 m_current = m_current->next;
             }
             else
             {
+                m_current = nullptr;
                 return false;
             }
 
@@ -88,9 +122,9 @@ class EnumeratorBase
 
         T getCurrent() override
         {
-            if (!m_current)
+            if(!m_current)
             {
-                return NULLITEM;
+                return T();
             }
             return m_current->item;            
         };

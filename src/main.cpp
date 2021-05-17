@@ -6,16 +6,27 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-namespace sout {
+/*namespace sout {
     #include "printf.h"
 }
 
 void sout::_putchar(char character)
 {
     // STUB
-};
+};*/
 
-#ifndef ARDUINO
+#include "../test/test-all/collections/generic/EnumeratorBaseTests.h"
+
+#ifdef ARDUINO
+
+void setup() {
+  // STUB
+}
+
+void loop() 
+{
+    // STUB
+}
 
 int main( int argc, char **argv) 
 {
@@ -24,7 +35,11 @@ int main( int argc, char **argv)
 
 #endif
 
-#ifdef ARDUINO
+#ifndef ARDUINO
 
+int main( int argc, char **argv) 
+{
+    // STUB
+};
 
 #endif
