@@ -11,7 +11,11 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include <cstring>
+#if !defined(ARDUINO)
+    #include <cstring>
+#else
+    #include <Arduino.h>
+#endif
 
 #include "FakeDateTimeProvider.h"
 #include "FakeLogPersister.h"

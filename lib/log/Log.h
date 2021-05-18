@@ -135,6 +135,8 @@ class Log
                 && (m_logLevelRequested != LogLevelEnum::off);
         };
 
+        ~Log() = default;
+        
         template<typename... Args>
         void debug(const char* t_format, const Args&... args) noexcept
         {

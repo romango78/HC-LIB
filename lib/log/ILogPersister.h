@@ -12,7 +12,8 @@
 class ILogPersister 
 {
     public:
-        virtual void write(const char t_character) {};        
+        virtual void write(const char t_character) {};
+        virtual ~ILogPersister() = default;
 };
 
 #endif

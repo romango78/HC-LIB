@@ -15,8 +15,9 @@ template <class T>
 class IEnumerator
 {
     public:
-        IEnumerator() {};
-        
+        IEnumerator() = default;
+        virtual ~IEnumerator() = default;
+
         // Sets the enumerator to its initial position, 
         // which is before the first element in the collection.
         //
@@ -74,7 +75,7 @@ class EnumeratorBase : public IEnumerator<T>
             m_current = nullptr;
         }
         
-        ~EnumeratorBase()
+        ~EnumeratorBase() override
         {
             if(m_head)
             {

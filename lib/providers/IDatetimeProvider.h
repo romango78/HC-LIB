@@ -26,6 +26,7 @@ class IDateTimeProvider
         { 
             return new DateTime;
         };
+        virtual ~IDateTimeProvider() = default;
 };
 
 #ifdef __cplusplus
