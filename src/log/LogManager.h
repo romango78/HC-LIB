@@ -28,8 +28,8 @@ Log* LogManager::getLogger()
     if(m_log == nullptr)
     {
         m_log = new Log(
-                    (ILogPersister *) new LogPersister(), 
-                    (IDateTimeProvider*) new DateTimeProvider());
+                    reinterpret_cast<ILogPersister*>(new LogPersister()), 
+                    reinterpret_cast<IDateTimeProvider*>(new DateTimeProvider()));
     }
     return m_log;
 }

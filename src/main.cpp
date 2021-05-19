@@ -6,40 +6,34 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-/*namespace sout {
-    #include "printf.h"
-}
+#include "app.config/app.config.h"
 
-void sout::_putchar(char character)
+#ifdef LOGGING_EXAMPLE_APP
+
+#include "log/LogManager.h"
+
+Log *logger;
+LogModule module = { "Logging Example App" };
+
+void setup() 
 {
-    // STUB
-};*/
+    // Setup device
+    Serial.begin(115200);
 
-#include "../test/test-all/collections/generic/EnumeratorBaseTests.h"
-
-#ifdef ARDUINO
-
-void setup() {
-  // STUB
+    // Setup Application
+    logger = LogManager::getLogger();
 }
 
 void loop() 
 {
-    // STUB
+    logger->debug(module, "Here can be your debug message.");
+    logger->info(module, "Here can be your info message.");
+    logger->warn(module, "Here can be your warning message.");
+    logger->error(module, "Here can be your error message.");
+    logger->fatal(module, "Here can be your critical message.");
+    sout::printf("\n");
+
+    delay(1000);
 }
-
-int main( int argc, char **argv) 
-{
-    // STUB
-};
-
-#endif
-
-#ifndef ARDUINO
-
-int main( int argc, char **argv) 
-{
-    // STUB
-};
 
 #endif

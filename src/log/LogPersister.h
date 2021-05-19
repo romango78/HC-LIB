@@ -9,7 +9,7 @@
 #ifndef _LOG_PERSISTER_H_
 #define _LOG_PERSISTER_H_
 
-#include <iostream>
+#include <Arduino.h>
 #include "ILogPersister.h"
 
 class LogPersister : ILogPersister
@@ -18,7 +18,7 @@ class LogPersister : ILogPersister
         LogPersister() {};
         void write(const char t_character) override
         {
-          std::cout << t_character;
+          Serial.write(t_character);
         };
 };
 

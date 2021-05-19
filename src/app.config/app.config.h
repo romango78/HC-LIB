@@ -6,15 +6,27 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
+#include <Arduino.h>
 #include "Log.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+namespace sout {
+    #include "printf.h"
+    #include "printf.c"
+}
+#ifdef __cplusplus
+}
+#endif
+
+#define LOGGING_EXAMPLE_APP
 
 LogLevelEnum gLogLevel()
 {
     return LogLevelEnum::debug;
 };
 
-/*
-void _putchar(char character)
+void sout::_putchar(char character)
 {
-    std::cout << character;
-};*/
+    Serial.write(character);
+};

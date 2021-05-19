@@ -33,7 +33,7 @@ namespace sout {
 #endif
 
 #ifndef SOUT_BUFFER_SIZE
-#define SOUT_BUFFER_SIZE 1024U
+#define SOUT_BUFFER_SIZE 128U
 #endif
 
 LogModule module = { "Unit Test Module" };
