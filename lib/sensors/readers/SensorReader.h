@@ -6,28 +6,20 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#include <Arduino.h>
-#include "Log.h"
-#ifdef __cplusplus
-extern "C" {
-#endif
-namespace sout {
-    #include "printf.h"
-    #include "printf.c"
-}
-#ifdef __cplusplus
-}
-#endif
+#ifndef _SENSOR_READER_H_
+#define _SENSOR_READER_H_
 
-//#define LOGGING_EXAMPLE_APP
-#define ZMPT101B_EXAMPLE_APP
+#include "Sensor.h"
 
-LogLevelEnum gLogLevel()
+template<typename T>
+class ISensorReader
 {
-    return LogLevelEnum::debug;
+    protected:
+        ISensor* m_sensor;
+    public:
+        ISensorReader(ISensor *t_sensor) : m_sensor(t_sensor) {};
+        virtual ~ISensorReader() = default;
+        virtual T read() {};
 };
 
-void sout::_putchar(char character)
-{
-    Serial.write(character);
-};
+#endif
