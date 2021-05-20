@@ -40,9 +40,8 @@ void loop()
 
 #ifdef ZMPT101B_EXAMPLE_APP
 
-#include "ZMPT101B.h"
+#include "readers/zmpt101b.h"
 
-ZMPT101BSensor* sensor;
 ZMPT101BVoltageDCReader* reader;
 
 void setup() 
@@ -53,7 +52,8 @@ void setup()
     delay(2000);
 
     // Setup Application    
-    sensor = new ZMPT101BSensor(A0);
+    ZMPT101BSensor* sensor = new ZMPT101BSensor(A0);
+    sensor->sensitivity = 0.001;
     ZMPT101B::calibrate(sensor);    
 
     sout::printf("The ZMPT101B was initialized and calibrated. It contains the following data:\n");
@@ -69,9 +69,14 @@ void setup()
 void loop() 
 {
     ZMPT101BVoltageDC sensorData = reader->read();
+
+    const ZMPT101BSensor* sensor = reinterpret_cast<const ZMPT101BSensor*>(sensorData.sensor);
     sout::printf("The ZMPT101B sensor info:\n");
-    sout::printf("\tType: %X\n", sensorData.sensor->type);
-    sout::printf("\tCategory: %u\n", sensorData.sensor->category);
+    sout::printf("\tType: %X\n", sensor->type);
+    sout::printf("\tCategory: %u\n", sensor->category);
+    sout::printf("\tPin: %u\n", sensor->pin);
+    sout::printf("\tZero: %d\n", sensor->zero);
+    sout::printf("\tSensitivity: %f\n", sensor->sensitivity);    
     sout::printf("Read data: %f\n", sensorData.data);
     delay(2000);
 }

@@ -36,6 +36,8 @@ struct ISensorData
     const ISensor* sensor;
     const T data;
 
+    ISensorData() : sensor(nullptr), data(T()) {};
+    
     ISensorData(ISensor *t_sensor, T t_data)
         : sensor(t_sensor), data(t_data) {};
 };

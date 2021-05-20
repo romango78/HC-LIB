@@ -23,10 +23,12 @@ struct ZMPT101BSensor : AnalogSensor
 
     ZMPT101BSensor(const uint8_t t_pin)
         : AnalogSensor(ZMPT101B_SENSOR, t_pin), zero(512), sensitivity(0.001) {};
-}
+};
 
 struct ZMPT101BVoltageDC : ISensorData<float>
 {
+    ZMPT101BVoltageDC() : ISensorData() {};
+    
     ZMPT101BVoltageDC(ISensor *t_sensor, float t_data)
         : ISensorData<float>(t_sensor, t_data) {};    
 };

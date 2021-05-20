@@ -19,7 +19,10 @@ class ISensorReader
     public:
         ISensorReader(ISensor *t_sensor) : m_sensor(t_sensor) {};
         virtual ~ISensorReader() = default;
-        virtual T read() {};
+        virtual T read() 
+        {
+            return T();
+        };
 };
 
 #endif
