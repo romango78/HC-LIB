@@ -19,13 +19,14 @@ struct DateTime
     int seconds;
 };
 
-class IDatetimeProvider 
+class IDateTimeProvider 
 {
     public:
         virtual DateTime* getLocalDatetime() 
         { 
             return new DateTime;
         };
+        virtual ~IDateTimeProvider() = default;
 };
 
 #ifdef __cplusplus

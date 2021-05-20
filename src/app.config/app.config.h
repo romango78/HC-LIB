@@ -6,14 +6,28 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_LOG_PERSISTER_H_
-#define _I_LOG_PERSISTER_H_
+#include <Arduino.h>
+#include "Log.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+namespace sout {
+    #include "printf.h"
+    #include "printf.c"
+}
+#ifdef __cplusplus
+}
+#endif
 
-class ILogPersister 
+//#define LOGGING_EXAMPLE_APP
+#define ZMPT101B_EXAMPLE_APP
+
+LogLevelEnum gLogLevel()
 {
-    public:
-        virtual void write(const char t_character) {};
-        virtual ~ILogPersister() = default;
+    return LogLevelEnum::debug;
 };
 
-#endif
+void sout::_putchar(char character)
+{
+    Serial.write(character);
+};

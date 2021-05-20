@@ -6,14 +6,20 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_LOG_PERSISTER_H_
-#define _I_LOG_PERSISTER_H_
+#ifndef _SENSOR_READER_H_
+#define _SENSOR_READER_H_
 
-class ILogPersister 
+#include "Sensor.h"
+
+template<typename T>
+class ISensorReader
 {
+    protected:
+        ISensor* m_sensor;
     public:
-        virtual void write(const char t_character) {};
-        virtual ~ILogPersister() = default;
+        ISensorReader(ISensor *t_sensor) : m_sensor(t_sensor) {};
+        virtual ~ISensorReader() = default;
+        virtual T read() {};
 };
 
 #endif

@@ -11,7 +11,7 @@
 
 #include "LogPersister.h"
 #include "../providers/DateTimeProvider.h"
-#include "log/Log.h"
+#include "Log.h"
 
 class LogManager
 {
@@ -28,8 +28,8 @@ Log* LogManager::getLogger()
     if(m_log == nullptr)
     {
         m_log = new Log(
-                    (ILogPersister *) new LogPersister(), 
-                    (IDatetimeProvider*) new DateTimeProvider());
+                    reinterpret_cast<ILogPersister*>(new LogPersister()), 
+                    reinterpret_cast<IDateTimeProvider*>(new DateTimeProvider()));
     }
     return m_log;
 }

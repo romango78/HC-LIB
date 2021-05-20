@@ -6,14 +6,19 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_LOG_PERSISTER_H_
-#define _I_LOG_PERSISTER_H_
+#include "FakeLogPersister.h"
 
-class ILogPersister 
-{
-    public:
-        virtual void write(const char t_character) {};
-        virtual ~ILogPersister() = default;
-};
-
+#ifdef __cplusplus
+extern "C" {
 #endif
+namespace sout {
+    #include "printf.h"
+}
+#ifdef __cplusplus
+}
+#endif
+
+void FakeLogPersister::write(const char t_character)
+{
+    sout::_putchar(t_character);
+};

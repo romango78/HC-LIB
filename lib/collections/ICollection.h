@@ -5,17 +5,3 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-
-#include <iostream>
-#include "printf.h"
-#include "log/Log.h"
-
-LogLevelEnum gLogLevel()
-{
-    return LogLevelEnum::debug;
-};
-
-void _putchar(char character)
-{
-    std::cout << character;
-};

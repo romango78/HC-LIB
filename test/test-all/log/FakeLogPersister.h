@@ -6,20 +6,16 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _LOG_PERSISTER_H_
-#define _LOG_PERSISTER_H_
+#ifndef _FAKE_LOG_PERSISTER_H_
+#define _FAKE_LOG_PERSISTER_H_
 
-#include <iostream>
-#include "log/ILogPersister.h"
+#include "ILogPersister.h"
 
-class LogPersister : ILogPersister
+class FakeLogPersister : ILogPersister
 {
     public:
-        LogPersister() {};
-        void write(const char t_character) override
-        {
-          std::cout << t_character;
-        };
+        FakeLogPersister() {};
+        void write(const char t_character) override;
 };
 
 #endif
