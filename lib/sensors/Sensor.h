@@ -9,7 +9,7 @@
 #ifndef _SENSOR_H_
 #define _SENSOR_H_
 
-#include <inttypes.h>
+#include <stdint.h>
 
 // Sensor Types
 #define ZMPT101B_SENSOR 0x001
@@ -28,18 +28,6 @@ struct ISensor
     const SensorCategory category;
     ISensor(const uint8_t t_type, const SensorCategory t_category)
         : type(t_type), category(t_category) {};
-};
-
-template<typename T>
-struct ISensorData
-{
-    const ISensor* sensor;
-    const T data;
-
-    ISensorData() : sensor(nullptr), data(T()) {};
-    
-    ISensorData(ISensor *t_sensor, T t_data)
-        : sensor(t_sensor), data(t_data) {};
 };
 
 struct AnalogSensor : ISensor

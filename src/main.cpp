@@ -6,6 +6,7 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
+#include <Arduino.h>
 #include "app.config/app.config.h"
 
 #ifdef LOGGING_EXAMPLE_APP
@@ -41,6 +42,7 @@ void loop()
 #ifdef ZMPT101B_EXAMPLE_APP
 
 #include "readers/zmpt101b.h"
+#include "PortStream.h"
 
 ZMPT101BVoltageDCReader* reader;
 
@@ -63,7 +65,7 @@ void setup()
     sout::printf("\tZero: %d\n", sensor->zero);
     sout::printf("\tSensitivity: %f\n", sensor->sensitivity);
 
-    reader = new ZMPT101BVoltageDCReader(sensor);
+    reader = new ZMPT101BVoltageDCReader(sensor, new AnalogPortStream(A0));
 }
 
 void loop() 

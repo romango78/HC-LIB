@@ -9,8 +9,9 @@
 #ifndef _ZMPT101B_H_
 #define _ZMPT101B_H_
 
-#include <Arduino.h>
 #include "SensorReader.h"
+#include "SensorData.h"
+#include "PortStream.h"
 
 #define ADC_SCALE 1023.0
 #define VREF 5.0
@@ -31,6 +32,9 @@ struct ZMPT101BVoltageDC : ISensorData<float>
     
     ZMPT101BVoltageDC(ISensor *t_sensor, float t_data)
         : ISensorData<float>(t_sensor, t_data) {};    
+
+    ZMPT101BVoltageDC(ISensor *t_sensor, err_t t_error)
+        : ISensorData<float>(t_sensor, t_error) {};  
 };
 
 class ZMPT101B
@@ -54,14 +58,7 @@ class ZMPT101B
 class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
 {
     private:
-        uint8_t getPin()
-        {
-            if(!m_sensor)
-            {
-                return 0;
-            }
-            return reinterpret_cast<ZMPT101BSensor*>(this->m_sensor)->pin;
-        };
+        AnalogPortStream *m_stream;
 
         int getZero()
         {
@@ -81,16 +78,26 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
             return reinterpret_cast<ZMPT101BSensor*>(this->m_sensor)->sensitivity;
         };
     public:
-        ZMPT101BVoltageDCReader(ZMPT101BSensor *t_sensor)
-            : ISensorReader(t_sensor) {};
+        ZMPT101BVoltageDCReader(ZMPT101BSensor *t_sensor, AnalogPortStream *t_stream)
+            : m_stream(t_stream), ISensorReader(t_sensor) {};
 
         ZMPT101BVoltageDC read() override
         {   
+            if(!m_stream)
+            {
+                return ZMPT101BVoltageDC(this->m_sensor, (err_t)IO_ERROR_STREAM_NOTCREATED);
+            };
+            if(!m_stream->canRead())
+            {
+                m_stream->startRead();
+            };
+
             int16_t voltage = 0;
             for(int index = 0; index < NUMBER_OF_ITERATIONS; index++)
             {
-                voltage += analogRead(getPin()) - getZero();
-            }
+                voltage += m_stream->read() - getZero();
+            };
+
             float result = (float)voltage / NUMBER_OF_ITERATIONS / ADC_SCALE * VREF / getSensitivity();
             return ZMPT101BVoltageDC(this->m_sensor, result);
         };
