@@ -20,7 +20,7 @@ namespace sout {
 #endif
 
 //#define LOGGING_EXAMPLE_APP
-#define ZMPT101B_EXAMPLE_APP
+#define ZMPT101B_DC_EXAMPLE_APP
 
 LogLevelEnum gLogLevel()
 {

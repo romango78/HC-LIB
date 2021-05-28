@@ -30,7 +30,7 @@ class AnalogPortStream : IStream<int>
 
         void startRead() override
         {
-            pinMode(m_pin, OUTPUT);
+            pinMode(m_pin, INPUT);
             m_isReadInitialized = true;
         };
 

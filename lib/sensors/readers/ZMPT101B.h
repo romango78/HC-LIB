@@ -15,7 +15,7 @@
 
 #define ADC_SCALE 1023.0
 #define VREF 5.0
-#define NUMBER_OF_ITERATIONS 10
+#define NUMBER_OF_ITERATIONS 100
 
 struct ZMPT101BSensor : AnalogSensor
 {
@@ -40,18 +40,27 @@ struct ZMPT101BVoltageDC : ISensorData<float>
 class ZMPT101B
 {
     public:
-        static void calibrate(ZMPT101BSensor *t_sensor)
+        static void calibrate(ZMPT101BSensor *t_sensor, AnalogPortStream *t_stream)
         {
             if(!t_sensor)
             {
                 return;
             }
+            if(!t_stream)
+            {
+                return;
+            }
+            if(!t_stream->canRead())
+            {
+                t_stream->startRead();
+            }
             uint16_t voltage = 0;
             for(int index = 0; index < NUMBER_OF_ITERATIONS; index++)
             {
-                voltage += analogRead(t_sensor->pin);
+                voltage += t_stream->read();
             }
             t_sensor->zero = voltage / NUMBER_OF_ITERATIONS;
+            t_stream->endRead();
         };
 };
 
@@ -79,7 +88,7 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
         };
     public:
         ZMPT101BVoltageDCReader(ZMPT101BSensor *t_sensor, AnalogPortStream *t_stream)
-            : m_stream(t_stream), ISensorReader(t_sensor) {};
+            : ISensorReader(t_sensor), m_stream(t_stream) {};
 
         ZMPT101BVoltageDC read() override
         {   
@@ -92,13 +101,14 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
                 m_stream->startRead();
             };
 
-            int16_t voltage = 0;
+            float voltage = 0;
+            int zero = getZero();
             for(int index = 0; index < NUMBER_OF_ITERATIONS; index++)
             {
-                voltage += m_stream->read() - getZero();
+                voltage += (float)(m_stream->read() - zero) * (VREF / ADC_SCALE);
             };
 
-            float result = (float)voltage / NUMBER_OF_ITERATIONS / ADC_SCALE * VREF / getSensitivity();
+            float result = (voltage / NUMBER_OF_ITERATIONS) / getSensitivity();
             return ZMPT101BVoltageDC(this->m_sensor, result);
         };
 };
