@@ -13,7 +13,7 @@
 #include "SensorData.h"
 #include "PortStream.h"
 
-#define NUMBER_OF_ITERATIONS 1
+#define NUMBER_OF_ITERATIONS 10
 
 struct ZMPT101BSensor : AnalogSensor
 {
@@ -106,7 +106,7 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
                 voltage += m_stream->readVoltage() - zero;
             };
 
-            float result = (voltage / NUMBER_OF_ITERATIONS) / getSensitivity();
+            float result = (int)((voltage / NUMBER_OF_ITERATIONS) / getSensitivity()) * getSensitivity();
             return ZMPT101BVoltageDC(this->m_sensor, result);
         };
 };

@@ -85,7 +85,7 @@ void loop()
     sout::printf("\tSensitivity: %f\n", sensor->sensitivity);    
     sout::printf("Read data: %f\n", sensorData.data);
     delay(2000);*/
-    Serial.println(sensorData.data);
+    Serial.println(sensorData.data, 6);
     //delay(100);
     //Serial.print("\n");
 }
