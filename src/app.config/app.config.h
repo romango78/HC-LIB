@@ -19,6 +19,8 @@ namespace sout {
 }
 #endif
 
+#define VREF 4.7
+
 //#define LOGGING_EXAMPLE_APP
 #define ZMPT101B_DC_EXAMPLE_APP
 

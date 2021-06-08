@@ -13,17 +13,15 @@
 #include "SensorData.h"
 #include "PortStream.h"
 
-#define ADC_SCALE 1023.0
-#define VREF 5.0
-#define NUMBER_OF_ITERATIONS 100
+#define NUMBER_OF_ITERATIONS 1
 
 struct ZMPT101BSensor : AnalogSensor
 {
-    int zero;
+    float zero;
     float sensitivity;
 
     ZMPT101BSensor(const uint8_t t_pin)
-        : AnalogSensor(ZMPT101B_SENSOR, t_pin), zero(512), sensitivity(0.001) {};
+        : AnalogSensor(ZMPT101B_SENSOR, t_pin), zero(0), sensitivity(1) {};
 };
 
 struct ZMPT101BVoltageDC : ISensorData<float>
@@ -54,10 +52,10 @@ class ZMPT101B
             {
                 t_stream->startRead();
             }
-            uint16_t voltage = 0;
+            float voltage = 0;
             for(int index = 0; index < NUMBER_OF_ITERATIONS; index++)
             {
-                voltage += t_stream->read();
+                voltage += t_stream->readVoltage();
             }
             t_sensor->zero = voltage / NUMBER_OF_ITERATIONS;
             t_stream->endRead();
@@ -69,11 +67,11 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
     private:
         AnalogPortStream *m_stream;
 
-        int getZero()
+        float getZero()
         {
             if(!m_sensor)
             {
-                return 512;
+                return 0;
             }
             return reinterpret_cast<ZMPT101BSensor*>(this->m_sensor)->zero;
         };
@@ -105,7 +103,7 @@ class ZMPT101BVoltageDCReader : ISensorReader<ZMPT101BVoltageDC>
             int zero = getZero();
             for(int index = 0; index < NUMBER_OF_ITERATIONS; index++)
             {
-                voltage += (float)(m_stream->read() - zero) * (VREF / ADC_SCALE);
+                voltage += m_stream->readVoltage() - zero;
             };
 
             float result = (voltage / NUMBER_OF_ITERATIONS) / getSensitivity();

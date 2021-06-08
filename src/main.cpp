@@ -59,7 +59,7 @@ void setup()
     sensor->sensitivity = 0.001;
     sensor->zero = 0;
     
-    AnalogPortStream *stream = new AnalogPortStream(sensor->pin);
+    AnalogPortStream *stream = new AnalogPortStream(sensor->pin, VREF);
     //ZMPT101B::calibrate(sensor, stream);    
 /*
     sout::printf("The ZMPT101B was initialized and calibrated. It contains the following data:\n");
