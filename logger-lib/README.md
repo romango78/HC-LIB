@@ -1,5 +1,5 @@
 # HC-LIB
-## Logger Library v1.0.1
+## Logger Arduino Library v1.0.1
 This __library__ is a tool to help the programmer output log statements to a variety of output targets. 
 
 ### Dependencies
@@ -10,3 +10,7 @@ The `pio test -e {environment}` command is used for running unit tests on the sp
 
 ### Sample
 The `pio run -e nanonew -t upload` command is used for compiling and upload the __sample application__.
+
+### NuGet
+* The `nuget.exe pack Logger.Arduino.Library.nuspec -outputdirectory {local_repo}` command is sued for creating NuGet package and store it in the {local_repo} folder.
+* The `nuget.exe install logger.arduino.library` command is used for installing NuGet package.
