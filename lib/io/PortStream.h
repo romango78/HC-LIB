@@ -12,14 +12,17 @@
 #include <Arduino.h>
 #include "IStream.h"
 
+#define ADC_SCALE 1024.0
+
 class AnalogPortStream : IStream<int>
 {
     private:
         uint8_t m_pin;
+        float m_vref;
         bool m_isReadInitialized;
     public:
-        AnalogPortStream(uint8_t t_pin) 
-            : m_pin(t_pin), m_isReadInitialized(false) {};
+        AnalogPortStream(uint8_t t_pin, float t_vref) 
+            : m_pin(t_pin), m_vref(t_vref), m_isReadInitialized(false) {};
 
         ~AnalogPortStream() = default;
 
@@ -30,7 +33,7 @@ class AnalogPortStream : IStream<int>
 
         void startRead() override
         {
-            pinMode(m_pin, INPUT);
+            pinMode(m_pin, INPUT);            
             m_isReadInitialized = true;
         };
 
@@ -38,6 +41,11 @@ class AnalogPortStream : IStream<int>
         {
             return analogRead(m_pin);
         };
+
+        float readVoltage()
+        {
+            return (float)read() * (m_vref/ADC_SCALE);
+        }
 
         void endRead() override
         {
