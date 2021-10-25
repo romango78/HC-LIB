@@ -1,5 +1,5 @@
 # HC-LIB
-## Logger Arduino Library v1.0.1
+## Logger Arduino Library v1.0.2110
 This __library__ is a tool to help the programmer output log statements to a variety of output targets. 
 
 ### Dependencies

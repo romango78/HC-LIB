@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Logger.Arduino.Library</id>
-    <version>1.0.1</version>
+    <version>1.0.2110</version>
     <title>Logger Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -11,7 +11,7 @@
     <description>This library is a tool to help the programmer output log statements to a variety of output targets.</description>
     <releaseNotes>Initial 1.0.1 release</releaseNotes>
     <copyright>Copyright 2021 Roman Gorielov</copyright>
-    <tags>native arduino logger</tags>
+    <tags>native arduino nanoatmega328new logger</tags>
     <dependencies/>    
     <summary>For Arduino projects</summary>
     <packageTypes>
