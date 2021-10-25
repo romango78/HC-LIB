@@ -9,7 +9,7 @@
 #ifndef _LOG_MANAGER_H_
 #define _LOG_MANAGER_H_
 
-#include "LogPersister.h"
+#include "persisters/SerialLogPersister.h"
 #include "../providers/DateTimeProvider.h"
 #include "Log.h"
 
@@ -28,7 +28,7 @@ Log* LogManager::getLogger()
     if(m_log == nullptr)
     {
         m_log = new Log(
-                    reinterpret_cast<ILogPersister*>(new LogPersister()), 
+                    reinterpret_cast<ILogPersister*>(new SerialLogPersister()), 
                     reinterpret_cast<IDateTimeProvider*>(new DateTimeProvider()));
     }
     return m_log;

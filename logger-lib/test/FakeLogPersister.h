@@ -9,7 +9,7 @@
 #ifndef _FAKE_LOG_PERSISTER_H_
 #define _FAKE_LOG_PERSISTER_H_
 
-#include "ILogPersister.h"
+#include "persisters/ILogPersister.h"
 
 class FakeLogPersister : ILogPersister
 {

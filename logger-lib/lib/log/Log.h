@@ -13,7 +13,7 @@
 #ifndef _LOG_H_
 #define _LOG_H_
 
-#include "ILogPersister.h"
+#include "persisters/ILogPersister.h"
 #include "IDatetimeProvider.h"
 
 #define LOG_LEVEL_OFF 0 // Logging is disabled
