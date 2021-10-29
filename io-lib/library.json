@@ -1,0 +1,21 @@
+{
+    "name": "HC-LIB.IO",
+    "version": "1.0.2110",
+    "description": "",
+    "keywords": "io, arduino, atmelavr",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/main/io-lib"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": "*"
+  }
