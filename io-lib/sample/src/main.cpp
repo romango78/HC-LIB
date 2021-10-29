@@ -11,9 +11,9 @@
 
 #ifdef VOLTAGE_READ_EXAMPLE_APP
 
-#include "IStream.h"
-#include "AnalogPortAdapter.h"
-#include "AnalogStream.h"
+#include "stream/IStream.h"
+#include "adapter/AnalogPortAdapter.h"
+#include "stream/AnalogStream.h"
 
 AnalogStream *stream;
 

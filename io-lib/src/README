@@ -1,46 +1,22 @@
 
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into executable file.
+This directory is intended for common specific library.
+PlatformIO has a built-in Library Management where developers can declare project dependencies and PlatformIO will automatically manage them (install, build, update). It doesn’t have any requirements for a library source code structure. The only requirement is a library manifest file - library.json, library.properties, or module.json. It must be located in the root of a library.
 
-The source code of each library should be placed in a an own separate directory
-("lib/your_library_name/[here are source files]").
+We recommend to use `src` folder for your C/C++ source files and `include` folder for your headers. You can also have nested sub-folders in `src` or `include`.
 
-For example, see a structure of the following two libraries `Foo` and `Bar`:
+For example, see a structure of the following library `Foo`:
 
-|--lib
+|--examples
 |  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
+|  |- sample.c
+|--include
 |  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
+|  |- header.h
 |--src
-   |- main.c
+|  |
+|  |- Foo.c
+|  |- Foo.h
+|- library.json (https://docs.platformio.org/page/librarymanager/config.html)
 
-and a contents of `src/main.c`:
-```
-#include <Foo.h>
-#include <Bar.h>
-
-int main (void)
-{
-  ...
-}
-
-```
-
-PlatformIO Library Dependency Finder will find automatically dependent
-libraries scanning project source files.
-
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+More information about PlatformIO Creating Library
+- https://docs.platformio.org/en/latest/librarymanager/creating.html

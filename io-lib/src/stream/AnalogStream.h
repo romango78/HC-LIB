@@ -9,7 +9,7 @@
 #ifndef _ANALOG_STREAM_H_
 #define _ANALOG_STREAM_H_
 
-#include "IPortAdapter.h"
+#include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
 #define NO_DATA -1

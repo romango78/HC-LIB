@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>HC-LIB.IO</id>
+    <version>1.0.2110</version>
+    <title>IO Arduino Library</title>
+    <authors>Roman Gorielov</authors>
+    <owners>Roman Gorielov</owners>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/main/io-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.</description>
+    <releaseNotes>Initial 1.0 release</releaseNotes>
+    <copyright>Copyright 2021 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr io</tags>
+    <dependencies/>    
+    <summary>For Arduino projects</summary>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="include\errdef.h" target="include\errdef.h"/>    
+    <file src="src\adapter\AnalogPortAdapter.cpp" target="src\adapter\AnalogPortAdapter.cpp" />
+    <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />
+    <file src="src\adapter\IPortAdapter.h" target="src\adapter\IPortAdapter.h" />
+    <file src="src\stream\AnalogStream.cpp" target="src\stream\AnalogStream.cpp" />
+    <file src="src\stream\AnalogStream.h" target="src\stream\AnalogStream.h" />
+    <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
+    <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
+    <file src="library.json" target="library.json" />
+    <file src="LICENSE.md" target="LICENSE.md" />
+  </files>
+</package>
