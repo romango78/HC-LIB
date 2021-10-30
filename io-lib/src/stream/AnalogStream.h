@@ -12,15 +12,22 @@
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
+#define IO_ERROR_WRONG_LOW_RANGE 0x0201
+#define IO_ERROR_WRONG_HIGH_RANGE 0x0202
+
 #define NO_DATA -1
 
 #define ADC_SCALE 1023.0
 #define V_REF 5.0
 
+#define PWM_MIN 0
+#define PWM_MAX 255
+
 class IVoltageStream
 {
     public:
         virtual float getVoltage() = 0;
+        virtual void setPwm(int t_percentage);
 };
 
 class AnalogStream : BaseStream<int>, IVoltageStream
@@ -35,8 +42,10 @@ class AnalogStream : BaseStream<int>, IVoltageStream
 
         void begin(StreamMode t_mode) override;
         int read() override;
+        void write(int t_data) override;
 
         float getVoltage() override;
+        void setPwm(int t_percentage) override;
 };
 
 #endif

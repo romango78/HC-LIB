@@ -28,7 +28,44 @@ int AnalogStream::read()
     return m_adapter->read();
 };
 
+void AnalogStream::write(int t_data)
+{
+    BaseStream::write(t_data);
+    if(!canWrite())
+    {
+        BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+        return;
+    }
+    if(t_data < PWM_MIN)
+    {
+        BaseStream::setLastError(IO_ERROR_WRONG_LOW_RANGE);
+        return;
+    }
+    if(t_data > PWM_MAX)
+    {
+        BaseStream::setLastError(IO_ERROR_WRONG_HIGH_RANGE);
+        return;
+    }
+    m_adapter->write(t_data);    
+};
+
+
 float AnalogStream::getVoltage()
 {
     return (float)read() * (V_REF/ADC_SCALE);
+};
+
+void AnalogStream::setPwm(int t_percentage)
+{
+    if(t_percentage < 0)
+    {
+        t_percentage = 0;
+    } 
+    else if (t_percentage > 100)
+    {
+        t_percentage = 100;
+    }
+
+    int data = static_cast<int>((t_percentage * PWM_MAX)/100);
+    write(data);
 };
