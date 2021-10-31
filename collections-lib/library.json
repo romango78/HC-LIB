@@ -15,6 +15,14 @@
         "email": "romango78@gmail.com"        
       }
     ],
+    "export": {
+      "include":
+      [
+          "src/*",
+          "library.json",
+          "*.md"
+      ]
+    },
     "license": "MIT",    
     "frameworks": "*",
     "platforms": ["atmelavr"]
