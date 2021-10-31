@@ -17,7 +17,7 @@ class IPortAdapter
         uint8_t m_pin; 
     public:
         IPortAdapter(uint8_t t_pin) : m_pin(t_pin) {};
-        ~IPortAdapter() = default;
+        virtual ~IPortAdapter() = default;
 
         virtual void setInputMode();
         virtual void setOutputMode();

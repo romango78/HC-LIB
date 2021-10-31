@@ -6,6 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
+#if defined(ARDUINO)
+
 #include <Arduino.h>
 #include "AnalogPortAdapter.h"
 
@@ -28,3 +30,5 @@ void AnalogPortAdapter::write(int t_value)
 {
     analogWrite(m_pin, t_value);
 };
+
+#endif

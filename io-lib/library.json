@@ -16,6 +16,6 @@
       }
     ],
     "license": "MIT",    
-    "frameworks": ["arduino"],
+    "frameworks": "*",
     "platforms": ["atmelavr"]
   }

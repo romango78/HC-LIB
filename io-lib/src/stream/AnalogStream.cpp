@@ -15,6 +15,10 @@ void AnalogStream::begin(StreamMode t_mode)
     {        
         m_adapter->setInputMode();
     }
+    else
+    {
+        m_adapter->setOutputMode();
+    }
 };
 
 int AnalogStream::read()
@@ -34,16 +38,6 @@ void AnalogStream::write(int t_data)
     if(!canWrite())
     {
         BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
-        return;
-    }
-    if(t_data < PWM_MIN)
-    {
-        BaseStream::setLastError(IO_ERROR_WRONG_LOW_RANGE);
-        return;
-    }
-    if(t_data > PWM_MAX)
-    {
-        BaseStream::setLastError(IO_ERROR_WRONG_HIGH_RANGE);
         return;
     }
     m_adapter->write(t_data);    
