@@ -1,0 +1,29 @@
+{
+    "name": "HC-LIB.Collections",
+    "version": "1.0.2110",
+    "description": "This library contains interfaces and classes that define various collections of objects, such as lists, queues, bit arrays, hash tables and dictionaries.",
+    "keywords": "collections, arduino, atmelavr",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/master/collections-lib"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "export": {
+      "include":
+      [
+          "src/*",
+          "library.json",
+          "*.md"
+      ]
+    },
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": ["atmelavr"]
+  }
