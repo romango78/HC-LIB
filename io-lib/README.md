@@ -22,8 +22,8 @@ See the included examples and tests for further usage examples.
 The `pio test -e {environment}` command is used for running unit tests on the specified {environment}. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details
 
 ### Packages
-* The `` command is used for creating PlatformIO package.
-* The `` command is used for publishing PlatformIO package.
+* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
+* The `pio package publish {local_repo_folder}/HC-LIB.IO-1.0.2110.tar.gz` command is used for publishing PlatformIO package.
 
 * The `nuget.exe pack HC-LIB.IO.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
 * The `nuget.exe install HC-LIB.IO` command is used for installing NuGet package.
