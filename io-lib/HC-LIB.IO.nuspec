@@ -6,7 +6,7 @@
     <title>IO Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
-    <projectUrl>https://github.com/romango78/HC-LIB/tree/main/io-lib</projectUrl>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.</description>
     <releaseNotes>Initial 1.0 release</releaseNotes>
