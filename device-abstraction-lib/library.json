@@ -1,0 +1,21 @@
+{
+    "name": "HC-LIB.Device.Abstraction",
+    "version": "1.0.2111",
+    "description": "TBD",
+    "keywords": "device, abstraction, arduino, atmelavr",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/master/"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": ["atmelavr"]
+  }
