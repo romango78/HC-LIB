@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>HC-LIB.Logger</id>
+    <version>1.0.2110</version>
+    <title>Logger Arduino Library</title>
+    <authors>Roman Gorielov</authors>
+    <owners>Roman Gorielov</owners>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/logger-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This library is a tool to help the programmer output log statements to a variety of output targets.</description>
+    <releaseNotes>Initial 1.0 release</releaseNotes>
+    <copyright>Copyright 2021 Roman Gorielov</copyright>
+    <tags>native arduino nanoatmega328new logger</tags>
+    <dependencies/>    
+    <summary>For Arduino projects</summary>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="include\printf.c" target="include\printf.c"/>
+    <file src="include\printf.h" target="include\printf.h" />    
+    <file src="src\log\Log.h" target="src\log\Log.h" />
+    <file src="src\log\persisters\ILogPersister.h" target="src\log\persisters\ILogPersister.h" />
+    <file src="src\log\persisters\SerialLogPersister.h" target="src\log\persisters\SerialLogPersister.h" />
+    <file src="src\providers\IDatetimeProvider.h" target="src\providers\IDatetimeProvider.h" />
+    <file src="library.json" target="library.json" />
+    <file src="LICENSE.md" target="LICENSE.md" />
+  </files>
+</package>
