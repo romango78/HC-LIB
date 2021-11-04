@@ -60,6 +60,9 @@ struct LogModule
 extern "C" {
 #endif
 
+namespace sout {
+    #include "printf.h"
+}
 LogLevelEnum gLogLevel();
 
 #ifdef __cplusplus
@@ -77,15 +80,54 @@ class Log
         bool m_enabled = LOG_ENABLED_DEFAULT;
         const LogLevelEnum m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;       
 
-        constexpr const char* getLogLevelName(const LogLevelEnum t_level);
+        constexpr const char* getLogLevelName(const LogLevelEnum t_level)
+        {
+                constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;
+                return level_short_names[t_level];
+        };
     protected:
         template<typename... Args>
         void write(const LogLevelEnum t_level, const LogModule t_module, 
-            const char* t_format, const Args&... args) noexcept;
+            const char* t_format, const Args&... args) noexcept
+        {
+            if(m_enabled && t_level <= m_logLevelRequested)
+            {
+                if(m_dateTimeProvider)
+                {
+                    DateTime dt = *m_dateTimeProvider->getLocalDatetime();
+                    sout::fctprintf(&Log::writeBounce, this, 
+                        "%i-%02i-%02i %02i:%02i:%02i ", 
+                        dt.year,
+                        dt.month,
+                        dt.day,
+                        dt.hours,
+                        dt.minutes,
+                        dt.seconds);
+                }
 
-        void write(const char t_character);
+                const char* prefix = this->getLogLevelName(t_level);    
+                sout::fctprintf(&Log::writeBounce, this, "%s ", prefix);
 
-        static void writeBounce(char t_character, void* t_thisPtr);
+                if(t_module.name)
+                {
+                    sout::fctprintf(&Log::writeBounce, this, "[%s] ", t_module.name);
+                }
+
+                sout::fctprintf(&Log::writeBounce, this, t_format, args...);
+                // Add new line control symbol
+                sout::fctprintf(&Log::writeBounce, this, "\n");
+            }
+        };
+
+        void write(const char t_character)
+        {
+            m_logPersister->write(t_character);    
+        };
+
+        static void writeBounce(char t_character, void* t_thisPtr)
+        {   
+            reinterpret_cast<Log*>(t_thisPtr)->write(t_character);
+        };         
     public:
         Log(ILogPersister *t_logPersister, IDateTimeProvider *t_datetimeProvider)
             : m_logLevelRequested(gLogLevel())
@@ -99,34 +141,64 @@ class Log
         ~Log() = default;
         
         template<typename... Args>
-        void debug(const char* t_format, const Args&... args) noexcept;
+        void debug(const char* t_format, const Args&... args) noexcept
+        {
+            debug(EMPTY_LOG_MODULE, t_format, args...);
+        };
 
         template<typename... Args>
-        void debug(const LogModule t_module, const char* t_format, const Args&... args) noexcept;
+        void debug(const LogModule t_module, const char* t_format, const Args&... args) noexcept
+        {
+            write(LogLevelEnum::debug, t_module, t_format, args...);
+        };
 
         template<typename... Args>
-        void info(const char* t_format, const Args&... args) noexcept;
+        void info(const char* t_format, const Args&... args) noexcept
+        {
+            info(EMPTY_LOG_MODULE, t_format, args...);
+        };
 
         template<typename... Args>
-        void info(const LogModule t_module, const char* t_format, const Args&... args) noexcept;
+        void info(const LogModule t_module, const char* t_format, const Args&... args) noexcept
+        {
+            write(LogLevelEnum::info, t_module, t_format, args...);
+        };
 
         template<typename... Args>
-        void warn(const char* t_format, const Args&... args) noexcept;
+        void warn(const char* t_format, const Args&... args) noexcept
+        {
+            warn(EMPTY_LOG_MODULE, t_format, args...);
+        };
 
         template<typename... Args>
-        void warn(const LogModule t_module, const char* t_format, const Args&... args) noexcept;
+        void warn(const LogModule t_module, const char* t_format, const Args&... args) noexcept
+        {
+            write(LogLevelEnum::warn, t_module, t_format, args...);
+        };
 
         template<typename... Args>
-        void error(const char* t_format, const Args&... args) noexcept;
+        void error(const char* t_format, const Args&... args) noexcept
+        {
+            error(EMPTY_LOG_MODULE, t_format, args...);
+        };
 
         template<typename... Args>
-        void error(const LogModule t_module, const char* t_format, const Args&... args) noexcept;
+        void error(const LogModule t_module, const char* t_format, const Args&... args) noexcept
+        {
+            write(LogLevelEnum::error, t_module, t_format, args...);
+        };
 
         template<typename... Args>
-        void fatal(const char* t_format, const Args&... args) noexcept;
+        void fatal(const char* t_format, const Args&... args) noexcept
+        {
+            fatal(EMPTY_LOG_MODULE, t_format, args...);
+        };
 
         template<typename... Args>
-        void fatal(const LogModule t_module, const char* t_format, const Args&... args) noexcept;
+        void fatal(const LogModule t_module, const char* t_format, const Args&... args) noexcept
+        {
+            write(LogLevelEnum::critical, t_module, t_format, args...);
+        };
 };
 
 #endif

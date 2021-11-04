@@ -10,7 +10,7 @@
 #define _DATETIME_PROVIDER_H_
 
 #include <time.h>
-#include "log/providers/IDatetimeProvider.h"
+#include "providers/IDatetimeProvider.h"
 
 class DateTimeProvider : IDateTimeProvider
 {
@@ -20,8 +20,8 @@ class DateTimeProvider : IDateTimeProvider
         {
             DateTime *dt = new DateTime;
             
-            time_t now = time(0);
-            struct tm  tStruct = *localtime(&now);
+            time_t utc = time(nullptr);
+            struct tm  tStruct = *localtime(&utc);
             dt->year = 1900 + tStruct.tm_year;
             dt->month = tStruct.tm_mon;
             dt->day = tStruct.tm_mday;
@@ -31,6 +31,8 @@ class DateTimeProvider : IDateTimeProvider
 
             return dt;
         };        
+
+
 };
 
 #endif
