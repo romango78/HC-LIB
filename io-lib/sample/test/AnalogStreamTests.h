@@ -26,6 +26,7 @@ void AnalogStream_ShouldReadData_WhenStreamIsOpenForRead()
     // Act
     sut->begin(StreamMode::Read);
     int actualValue = sut->read();
+    sut->end();
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is not set in INPUT mode.");
@@ -46,6 +47,7 @@ void AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead()
     sut->begin(StreamMode::Read);
     bool canRead = sut->canRead();
     bool canWrite = sut->canWrite();
+    sut->end();
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is not set in INPUT mode.");
@@ -109,6 +111,7 @@ void AnalogStream_ShouldWriteData_WhenStreamIsOpenForWrite()
     // Act
     sut->begin(StreamMode::Write);
     sut->write(expectedValue);
+    sut->end();
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is not set in OUTPUT mode.");
@@ -129,6 +132,7 @@ void AnalogStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite()
     sut->begin(StreamMode::Write);
     bool canRead = sut->canRead();
     bool canWrite = sut->canWrite();
+    sut->end();
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is not set in OUTPUT mode.");
@@ -154,6 +158,7 @@ void AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes()
     sut->begin(StreamMode::Read);
     bool canRead = sut->canRead();
     bool canWrite = sut->canWrite();
+    sut->end();
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is not set in INPUT mode.");
@@ -174,51 +179,11 @@ void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
     // Act
     sut->begin(StreamMode::Read);
     sut->write(125);
-    int error = sut->getLastError();
+    int error = sut->getLastError();    
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
     TEST_ASSERT_EQUAL_INT_MESSAGE(IO_ERROR_STREAM_CLOSED, error,"The wrong error is set.");
-
-    delete sut;
-    delete adapter;
-}
-
-void IVoltageStream_ShouldReadVoltage()
-{
-    // Arrange
-    float expectedValue = 2.5;
-    IPortAdapter* adapter = (IPortAdapter *)new FakePortAdapter();
-    ((FakePortAdapter *)adapter)->setData(static_cast<int>(expectedValue*ADC_SCALE/V_REF));
-
-    AnalogStream* sut = new AnalogStream(adapter);
-
-    // Act
-    ((IStream<int> *)sut)->begin(StreamMode::Read);
-    float actualValue = ((IVoltageStream *)sut)->getVoltage();
-
-    // Assert
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue,"The read voltage is not equal the expected value.");
-
-    delete sut;
-    delete adapter;
-}
-
-void IVoltageStream_ShouldSetPWM()
-{
-    // Arrange
-    int expectedValue = 25;
-    IPortAdapter* adapter = (IPortAdapter *)new FakePortAdapter();    
-
-    AnalogStream* sut = new AnalogStream(adapter);
-
-    // Act
-    ((IStream<int> *)sut)->begin(StreamMode::Write);
-    ((IVoltageStream *)sut)->setPwm(expectedValue);
-
-    // Assert
-    TEST_ASSERT_EQUAL_INT_MESSAGE(static_cast<int>(expectedValue*PWM_MAX/100), ((FakePortAdapter *)adapter)->getData()
-        ,"The write PWM is not equal the expected value.");
 
     delete sut;
     delete adapter;

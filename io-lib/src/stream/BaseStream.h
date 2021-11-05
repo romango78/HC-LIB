@@ -14,7 +14,7 @@
 #include "IStream.h"
 
 template<typename T>
-class BaseStream : IStream<T>
+class BaseStream : public IStream<T>
 {
     private:
         err_t m_lastError;

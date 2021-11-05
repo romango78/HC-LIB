@@ -33,10 +33,10 @@ class IStream
         IStream(){};
         virtual ~IStream() = default;
 
-        virtual void begin(StreamMode t_mode);
+        virtual void begin(StreamMode t_mode) = 0;
         virtual T read() = 0;          
-        virtual void write(T t_data);
-        virtual void end();
+        virtual void write(T t_data) = 0;
+        virtual void end() = 0;
 
         virtual bool canRead() = 0;
         virtual bool canWrite() = 0;

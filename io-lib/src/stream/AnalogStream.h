@@ -17,16 +17,7 @@
 #define ADC_SCALE 1023.0
 #define V_REF 5.0
 
-#define PWM_MAX 255
-
-class IVoltageStream
-{
-    public:
-        virtual float getVoltage() = 0;
-        virtual void setPwm(int t_percentage);
-};
-
-class AnalogStream : BaseStream<int>, IVoltageStream
+class AnalogStream : public BaseStream<int>
 {
     private:
         IPortAdapter *m_adapter;                
@@ -39,9 +30,6 @@ class AnalogStream : BaseStream<int>, IVoltageStream
         void begin(StreamMode t_mode) override;
         int read() override;
         void write(int t_data) override;
-
-        float getVoltage() override;
-        void setPwm(int t_percentage) override;
 };
 
 #endif
