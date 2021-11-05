@@ -14,20 +14,19 @@
 #include "errdef.h"
 
 template<typename T>
-struct ISensorData
+struct SensorData
 {
     const ISensor* sensor;
     const T data;
     const err_t error;
 
-    ISensorData() : sensor(nullptr), data(T()), error(NO_ERROR) {};
+    SensorData() : sensor(nullptr), data(T()), error(NO_ERROR) {};
     
-    ISensorData(ISensor *t_sensor, T t_data)
+    SensorData(ISensor *t_sensor, T t_data)
         : sensor(t_sensor), data(t_data), error(NO_ERROR) {};
 
-    ISensorData(ISensor *t_sensor, err_t t_error)
+    SensorData(ISensor *t_sensor, err_t t_error)
         : sensor(t_sensor), data(T()), error(t_error) {};
-
 };
 
 #endif

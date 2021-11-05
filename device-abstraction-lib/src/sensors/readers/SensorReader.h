@@ -9,20 +9,18 @@
 #ifndef _SENSOR_READER_H_
 #define _SENSOR_READER_H_
 
-#include "Sensor.h"
+#include "sensors/Sensor.h"
 
 template<typename T>
-class ISensorReader
+class SensorReader
 {
     protected:
         ISensor* m_sensor;
     public:
-        ISensorReader(ISensor *t_sensor) : m_sensor(t_sensor) {};
-        virtual ~ISensorReader() = default;
-        virtual T read() 
-        {
-            return T();
-        };
+        SensorReader(ISensor *t_sensor) : m_sensor(t_sensor) {};
+        ~SensorReader() = default;
+
+        virtual T read() = 0;
 };
 
 #endif

@@ -11,10 +11,11 @@
 
 #ifdef ZMPT101B_DC_EXAMPLE_APP
 
-//#include "readers/zmpt101b.h"
-//#include "PortStream.h"
+#include "adapter/AnalogPortAdapter.h"
+#include "sensors/ZMPT101B.h"
+#include "sensors/readers/ZMPT101BDCReader.h"
 
-//ZMPT101BVoltageDCReader* reader;
+ZMPT101BDCReader* dcReader;
 
 void setup() 
 {
@@ -24,26 +25,32 @@ void setup()
     delay(2000);
 
     // Setup Application      
-/*    ZMPT101BSensor* sensor = new ZMPT101BSensor(A0);
+    ZMPT101BSensor* sensor = new ZMPT101BSensor(A0);
     sensor->sensitivity = 0.001;
     sensor->zero = 0;
     
-    AnalogPortStream *stream = new AnalogPortStream(sensor->pin, VREF);*/
-    //ZMPT101B::calibrate(sensor, stream);    
-/*
-    sout::printf("The ZMPT101B was initialized and calibrated. It contains the following data:\n");
-    sout::printf("\tType: %X\n", sensor->type);
-    sout::printf("\tCategory: %u\n", sensor->category);
-    sout::printf("\tPin: %u\n", sensor->pin);
-    sout::printf("\tZero: %d\n", sensor->zero);
-    sout::printf("\tSensitivity: %f\n", sensor->sensitivity);
-*/
-//    reader = new ZMPT101BVoltageDCReader(sensor, stream);
+    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(sensor->pin);
+    IVoltageStream *stream = (IVoltageStream *)new VoltageStream(adapter);
+    ZMPT101B::calibrate(sensor, stream);    
+
+    Serial.println("The ZMPT101B was initialized and calibrated. It contains the following data:");
+    Serial.print("      Type: ");
+    Serial.println(sensor->type);
+    Serial.print("      Category: ");
+    Serial.println(sensor->category);
+    Serial.print("      Pin: ");
+    Serial.println(sensor->pin);
+    Serial.print("      Zero: ");
+    Serial.println(sensor->zero);
+    Serial.print("      Sensitivity: ");
+    Serial.println(sensor->sensitivity);
+
+    dcReader = new ZMPT101BDCReader(sensor, stream);
 }
 
 void loop() 
 {
-//    ZMPT101BVoltageDC sensorData = reader->read();
+    ZMPT101BVoltageDC sensorData = dcReader->read();
 
     /*const ZMPT101BSensor* sensor = reinterpret_cast<const ZMPT101BSensor*>(sensorData.sensor);
     sout::printf("The ZMPT101B sensor info:\n");
@@ -54,9 +61,9 @@ void loop()
     sout::printf("\tSensitivity: %f\n", sensor->sensitivity);    
     sout::printf("Read data: %f\n", sensorData.data);
     delay(2000);*/
-//    Serial.println(sensorData.data, 6);    
-    //Serial.print("\n");
-    delay(100);
+    Serial.print("Read data: ");
+    Serial.println(sensorData.data, 6);
+    delay(1000);
 }
 
 #endif
