@@ -22,7 +22,7 @@ class IEnumerator
         //
         // The preferred implementation is to move the enumerator 
         // to the beginning of the collection, before the first element.  
-        virtual void reset() {};
+        virtual void reset() = 0;
 
         // Advances the enumerator to the next element of the collection.
         // Returns true if the enumerator was successfully advanced to 

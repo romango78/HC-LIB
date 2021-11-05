@@ -23,12 +23,9 @@ struct DateTime
 
 class IDateTimeProvider 
 {
-    public:
-        virtual DateTime* getLocalDatetime() 
-        { 
-            return new DateTime;
-        };
+    public:        
         virtual ~IDateTimeProvider() = default;
+        virtual DateTime* getLocalDatetime() = 0;
 };
 
 #endif
