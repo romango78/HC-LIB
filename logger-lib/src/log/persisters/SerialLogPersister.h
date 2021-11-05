@@ -12,7 +12,7 @@
 #include <Arduino.h>
 #include "ILogPersister.h"
 
-class SerialLogPersister : ILogPersister
+class SerialLogPersister : public ILogPersister
 {
     public:
         SerialLogPersister() {};

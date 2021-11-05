@@ -11,7 +11,7 @@
 
 #include "providers/IDatetimeProvider.h"
 
-class FakeDateTimeProvider : IDateTimeProvider
+class FakeDateTimeProvider : public IDateTimeProvider
 {
     public:
         FakeDateTimeProvider() {};

@@ -12,7 +12,7 @@
 #include <time.h>
 #include "providers/IDatetimeProvider.h"
 
-class DateTimeProvider : IDateTimeProvider
+class DateTimeProvider : public IDateTimeProvider
 {
     public:
         DateTimeProvider() {};
