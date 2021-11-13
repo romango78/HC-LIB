@@ -1,8 +1,8 @@
 {
-    "name": "HC-LIB.Device.Abstraction",
+    "name": "HC-LIB.System",
     "version": "1.0.2111",
     "description": "TBD",
-    "keywords": "device, abstraction, arduino, atmelavr",
+    "keywords": "common, core, system, arduino, atmelavr",
     "repository":
     {
       "type": "git",
@@ -13,13 +13,6 @@
       {
         "name": "Roman Gorielov",
         "email": "romango78@gmail.com"        
-      }
-    ],
-    "dependencies":
-    [
-      {
-        "name": "HC-LIB.System",
-        "version": ">=1.0.2111"
       }
     ],
     "license": "MIT",    

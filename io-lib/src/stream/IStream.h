@@ -10,11 +10,7 @@
 #define _I_STREAM_H_
 
 #include <inttypes.h>
-#include "errdef.h"
-
-#define IO_ERROR_STREAM_NOTCREATED 0x0100
-#define IO_ERROR_STREAM_CLOSED 0x0101
-
+#include "ioerrdef.h"
 
 #define UNDEF_MODE 0
 #define READ_MODE 1

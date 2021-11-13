@@ -6,6 +6,13 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#define ZMPT101B_POTENTIOMETER_CALIBRATION_APP
-//#define ZMPT101B_RMS_READ_EXAMPLE_APP
-//#define ZMPT101B_TRUE_RMS_READ_EXAMPLE_APP
+#ifndef _IO_ERRDEF_H_
+#define _IO_ERRDEF_H_
+
+#include "errdef.h"
+
+#define IO_ERROR 0x100
+#define IO_ERROR_STREAM_NOTCREATED (IO_ERROR + 1)
+#define IO_ERROR_STREAM_CLOSED (IO_ERROR + 2)
+
+#endif

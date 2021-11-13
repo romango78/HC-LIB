@@ -15,6 +15,13 @@
         "email": "romango78@gmail.com"        
       }
     ],
+    "dependencies":
+    [
+      {
+        "name": "HC-LIB.System",
+        "version": ">=1.0.2111"
+      }
+    ],    
     "license": "MIT",    
     "frameworks": "*",
     "platforms": ["atmelavr"]

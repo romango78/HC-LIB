@@ -15,7 +15,7 @@
 #define NO_DATA -1
 
 #define ADC_SCALE 1023.0
-#define V_REF 5.0
+#define V_REF 5.0f
 
 class AnalogStream : public BaseStream<int>
 {

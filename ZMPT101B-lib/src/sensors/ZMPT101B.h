@@ -16,7 +16,7 @@
 // Sensor Type
 #define ZMPT101B_SENSOR_TYPE 0x001
 
-#define ZMPT101B_READ_ITERATIONS 10
+#define ZMPT101B_DC_READ_ITERATIONS 100
 
 struct ZMPT101BSensor : AnalogSensor
 {
@@ -27,14 +27,14 @@ struct ZMPT101BSensor : AnalogSensor
         : AnalogSensor(ZMPT101B_SENSOR_TYPE, t_pin), zero(0), sensitivity(1) {};
 };
 
-struct ZMPT101BVoltageDC : SensorData<float>
+struct ZMPT101B_ACVoltage : SensorData<float>
 {
-    ZMPT101BVoltageDC() : SensorData() {};
+    ZMPT101B_ACVoltage() : SensorData() {};
     
-    ZMPT101BVoltageDC(ZMPT101BSensor *t_sensor, float t_data)
+    ZMPT101B_ACVoltage(ZMPT101BSensor *t_sensor, float t_data)
         : SensorData<float>(t_sensor, t_data) {};    
 
-    ZMPT101BVoltageDC(ZMPT101BSensor *t_sensor, err_t t_error)
+    ZMPT101B_ACVoltage(ZMPT101BSensor *t_sensor, err_t t_error)
         : SensorData<float>(t_sensor, t_error) {};  
 };
 
@@ -56,11 +56,11 @@ class ZMPT101B
                 t_stream->begin(StreamMode::Read);
             }
             float voltage = 0;
-            for(int index = 0; index < ZMPT101B_READ_ITERATIONS; index++)
+            for(int index = 0; index < ZMPT101B_DC_READ_ITERATIONS; index++)
             {
                 voltage += t_stream->getVoltage();
             }
-            t_sensor->zero = voltage / ZMPT101B_READ_ITERATIONS;
+            t_sensor->zero = voltage / ZMPT101B_DC_READ_ITERATIONS;
             t_stream->end();
         };
 };
