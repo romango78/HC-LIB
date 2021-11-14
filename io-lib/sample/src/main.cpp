@@ -26,7 +26,7 @@ void setup()
     Serial.begin(115200);
 
     // Setup Application
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(A0);
+    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(A0);
     stream = (IVoltageStream *)new VoltageStream(adapter);
     stream->begin(StreamMode::Read);
 }
@@ -68,7 +68,7 @@ void setup()
     _currPwm = V_MIN;
     _direction = ASC_DIR;
 
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(3);
+    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(3);
     stream = (IVoltageStream *)new VoltageStream(adapter);
     stream->begin(StreamMode::Write);
 }

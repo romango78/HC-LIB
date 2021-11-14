@@ -9,27 +9,25 @@
 #ifndef _ANALOG_STREAM_H_
 #define _ANALOG_STREAM_H_
 
+#include <inttypes.h>
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
-#define NO_DATA -1
+#define NO_DATA UINT16_MAX
 
-#define ADC_SCALE 1023.0
-#define V_REF 5.0f
-
-class AnalogStream : public BaseStream<int>
+class AnalogStream : public BaseStream<uint16_t>
 {
     private:
-        IPortAdapter *m_adapter;                
+        IPortAdapter<int> *m_adapter;                
     public:
-        AnalogStream(IPortAdapter* t_adapter) 
+        AnalogStream(IPortAdapter<int>* t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
 
         ~AnalogStream() = default;
 
         void begin(StreamMode t_mode) override;
-        int read() override;
-        void write(int t_data) override;
+        uint16_t read() override;
+        void write(uint16_t t_data) override;
 };
 
 #endif

@@ -11,9 +11,12 @@
 
 #include "AnalogStream.h"
 
+// ADC scale was taken from ATMega328P datasheet
+#define ADC_SCALE 1024
+#define V_REF 5.0f
 #define PWM_MAX 255
 
-class IVoltageStream : public IStream<int>
+class IVoltageStream : public IStream<uint16_t>
 {
     public:
         IVoltageStream(){};
@@ -26,14 +29,14 @@ class IVoltageStream : public IStream<int>
 class VoltageStream : protected AnalogStream, public IVoltageStream
 {
     public:
-        VoltageStream(IPortAdapter* t_adapter) 
+        VoltageStream(IPortAdapter<int>* t_adapter) 
             : AnalogStream(t_adapter) {};
 
         ~VoltageStream() = default;
 
         void begin(StreamMode t_mode) override;
-        int read() override;
-        void write(int t_data) override;
+        uint16_t read() override;
+        void write(uint16_t t_data) override;
         void end() override;
 
         bool canRead() override;

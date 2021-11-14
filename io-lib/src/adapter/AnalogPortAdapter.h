@@ -11,7 +11,7 @@
 
 #include "IPortAdapter.h"
 
-class AnalogPortAdapter : IPortAdapter
+class AnalogPortAdapter : IPortAdapter<int>
 {
     public:
         AnalogPortAdapter(uint8_t t_pin) : IPortAdapter(t_pin) {};

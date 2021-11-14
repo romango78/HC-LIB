@@ -6,29 +6,38 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(ARDUINO)
-
-#include <Arduino.h>
 #include "AnalogPortAdapter.h"
+
+#if defined(ARDUINO)
+#include <Arduino.h>
+#endif
 
 void AnalogPortAdapter::setInputMode()
 {
+    #if defined(ARDUINO)
     pinMode(m_pin, INPUT);
+    #endif
 };
 
 void AnalogPortAdapter::setOutputMode()
 {
+    #if defined(ARDUINO)
     pinMode(m_pin, OUTPUT);
+    #endif
 };
 
 int AnalogPortAdapter::read()
 {
+    #if defined(ARDUINO)
     return analogRead(m_pin);
+    #else
+    return 0;
+    #endif
 };
 
 void AnalogPortAdapter::write(int t_value)
 {
+    #if defined(ARDUINO)
     analogWrite(m_pin, t_value);
+    #endif
 };
-
-#endif

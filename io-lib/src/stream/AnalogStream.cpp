@@ -21,7 +21,7 @@ void AnalogStream::begin(StreamMode t_mode)
     }
 };
 
-int AnalogStream::read()
+uint16_t AnalogStream::read()
 {
     BaseStream::read();
     if(!canRead())
@@ -29,10 +29,10 @@ int AnalogStream::read()
         BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
         return NO_DATA;
     }
-    return m_adapter->read();
+    return static_cast<uint16_t>(m_adapter->read());
 };
 
-void AnalogStream::write(int t_data)
+void AnalogStream::write(uint16_t t_data)
 {
     BaseStream::write(t_data);
     if(!canWrite())

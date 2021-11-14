@@ -13,6 +13,9 @@ N/A
 
 ### Changed
 - Refactored IVoltageStream interface and VoltageStream calss.
+- Moved definitions from errdef.h to HC-LIB.System library.
+- Refactored AnalogStream class, changed type of read/write value from __int__ to __uint16_t__.
+- Refactored IPortAdapter interface and made it generic.
 
 ## [1.0.2110]
 ### Added

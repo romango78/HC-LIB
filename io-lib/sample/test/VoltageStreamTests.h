@@ -18,7 +18,7 @@ void VoltageStream_ShouldReadVoltage()
 {
     // Arrange
     float expectedValue = 2.5;
-    IPortAdapter* adapter = (IPortAdapter *)new FakePortAdapter();
+    IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();
     ((FakePortAdapter *)adapter)->setData(static_cast<int>(expectedValue*ADC_SCALE/V_REF));
 
     IVoltageStream* sut =(IVoltageStream *)new VoltageStream(adapter);
@@ -39,7 +39,7 @@ void VoltageStream_ShouldSetPWM()
 {
     // Arrange
     int expectedValue = 25;
-    IPortAdapter* adapter = (IPortAdapter *)new FakePortAdapter();    
+    IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
     IVoltageStream* sut =(IVoltageStream *)new VoltageStream(adapter);
 

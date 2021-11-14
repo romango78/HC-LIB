@@ -14,7 +14,7 @@
 #define INPUT_MODE 0
 #define OUTPUT_MODE 1
 
-class FakePortAdapter : IPortAdapter
+class FakePortAdapter : IPortAdapter<int>
 {
     private:
         int m_mode;

@@ -13,12 +13,12 @@ void VoltageStream::begin(StreamMode t_mode)
     AnalogStream::begin(t_mode);
 };
 
-int VoltageStream::read()  
+uint16_t VoltageStream::read()  
 {
     return AnalogStream::read();
 };
 
-void VoltageStream::write(int t_data) 
+void VoltageStream::write(uint16_t t_data) 
 {
     AnalogStream::write(t_data);
 };

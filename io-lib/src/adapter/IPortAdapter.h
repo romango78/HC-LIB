@@ -11,6 +11,7 @@
 
 #include <inttypes.h>
 
+template<typename T>
 class IPortAdapter
 {
     protected:
@@ -22,8 +23,8 @@ class IPortAdapter
         virtual void setInputMode();
         virtual void setOutputMode();
 
-        virtual int read();
-        virtual void write(int t_value);
+        virtual T read();
+        virtual void write(T t_value);
 };
 
 #endif

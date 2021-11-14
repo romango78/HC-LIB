@@ -9,7 +9,6 @@
 #ifndef _I_STREAM_H_
 #define _I_STREAM_H_
 
-#include <inttypes.h>
 #include "ioerrdef.h"
 
 #define UNDEF_MODE 0
