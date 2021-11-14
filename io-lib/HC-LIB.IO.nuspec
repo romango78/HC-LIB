@@ -12,21 +12,25 @@
     <releaseNotes>Initial 1.0 release</releaseNotes>
     <copyright>Copyright 2021 Roman Gorielov</copyright>
     <tags>native arduino atmelavr io</tags>
-    <dependencies/>    
+    <dependencies>
+      <dependency id="HC-LIB.SYSTEM" version="1.0.2111" />
+    </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
       <packageType name="Dependency" />
     </packageTypes>
   </metadata>
   <files>
-    <file src="include\errdef.h" target="include\errdef.h"/>    
-    <file src="src\adapter\AnalogPortAdapter.cpp" target="src\adapter\AnalogPortAdapter.cpp" />
-    <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />
+    <file src="src\ioerrdef.h" target="src\ioerrdef.h" />
     <file src="src\adapter\IPortAdapter.h" target="src\adapter\IPortAdapter.h" />
+    <file src="src\adapter\AnalogPortAdapter.cpp" target="src\adapter\AnalogPortAdapter.cpp" />
+    <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />    
+    <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
+    <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
     <file src="src\stream\AnalogStream.cpp" target="src\stream\AnalogStream.cpp" />
     <file src="src\stream\AnalogStream.h" target="src\stream\AnalogStream.h" />
-    <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
-    <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
+    <file src="src\stream\VoltageStream.h" target="src\stream\VoltageStream.h" />
+    <file src="src\stream\VoltageStream.cpp" target="src\stream\VoltageStream.cpp" />
     <file src="library.json" target="library.json" />
     <file src="LICENSE.md" target="LICENSE.md" />
   </files>
