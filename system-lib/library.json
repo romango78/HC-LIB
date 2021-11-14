@@ -1,12 +1,12 @@
 {
     "name": "HC-LIB.System",
     "version": "1.0.2111",
-    "description": "TBD",
+    "description": "Contains fundamental classes and base classes that define commonly-used data types.",
     "keywords": "common, core, system, arduino, atmelavr",
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/romango78/HC-LIB/tree/master/"
+      "url": "https://github.com/romango78/HC-LIB/tree/master/system-lib"
     },
     "authors":
     [

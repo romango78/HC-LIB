@@ -7,7 +7,10 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 #include "ArduinoTimer.h"
+
+#if defined(ARDUINO)
 #include <Arduino.h>
+#endif
 
 uint32_t ArduinoTimer::getInterval()
 {
@@ -25,7 +28,11 @@ void ArduinoTimer::setInterval(uint32_t t_interval)
 void ArduinoTimer::start()
 {
     m_started = true;
+    #if defined(ARDUINO)
     m_startedAt = millis();
+    #else
+    m_startedAt = 0;
+    #endif
 };
 
 void ArduinoTimer::stop()
@@ -39,7 +46,11 @@ bool ArduinoTimer::isElapsed()
 {
     if(!m_elapsed)
     {
+        #if defined(ARDUINO)
         m_elapsed = (millis() - m_startedAt >= m_interval);
+        #else
+        m_elapsed = true;
+        #endif
     }
     return m_elapsed;
 };
