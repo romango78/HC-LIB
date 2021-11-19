@@ -14,7 +14,7 @@
 class AnalogPortAdapter : IPortAdapter<int>
 {
     public:
-        AnalogPortAdapter(uint8_t t_pin) : IPortAdapter(t_pin) {};
+        AnalogPortAdapter(const uint8_t t_pin) : IPortAdapter(t_pin) {};
         ~AnalogPortAdapter() = default;
         
         void setInputMode() override;
