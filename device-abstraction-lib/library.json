@@ -1,8 +1,8 @@
 {
-    "name": "HC-LIB.Device.Abstraction",
+    "name": "HC-LIB.Device.Abstractions",
     "version": "1.0.2111",
-    "description": "TBD",
-    "keywords": "device, abstraction, arduino, atmelavr",
+    "description": "Defines abstractions for devices that can be connected to Arduino Boards.",
+    "keywords": "device, abstractions, arduino, atmelavr",
     "repository":
     {
       "type": "git",
@@ -19,6 +19,10 @@
     [
       {
         "name": "HC-LIB.System",
+        "version": ">=1.0.2111"
+      },
+      {
+        "name": "HC-LIB.IO",
         "version": ">=1.0.2111"
       }
     ],

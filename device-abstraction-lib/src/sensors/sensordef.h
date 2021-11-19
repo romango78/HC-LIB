@@ -6,11 +6,13 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ERRDEF_H_
-#define _ERRDEF_H_
+#ifndef _SENSOR_DEF_H_
+#define _SENSOR_DEF_H_
 
-#define NO_ERROR 0x0000
+// Sensor Categories
+#define SENSOR_CATEGORY_ANALOG 0
 
-typedef unsigned short err_t;
+// Sensor Types
+#define ZMPT101B_SENSOR_TYPE 0x001
 
 #endif
