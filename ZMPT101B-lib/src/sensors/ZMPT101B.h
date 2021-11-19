@@ -11,57 +11,53 @@
 
 #include "sensors/Sensor.h"
 #include "sensors/SensorData.h"
-#include "stream/VoltageStream.h"
+#include "stream/IStream.h"
 
-// Sensor Type
-#define ZMPT101B_SENSOR_TYPE 0x001
-
-#define ZMPT101B_DC_READ_ITERATIONS 100
+#define ZMPT101B_READ_ITERATIONS 1000
 
 struct ZMPT101BSensor : AnalogSensor
 {
-    float zero;
-    float sensitivity;
+    uint16_t zero;
 
-    ZMPT101BSensor(const uint8_t t_pin)
-        : AnalogSensor(ZMPT101B_SENSOR_TYPE, t_pin), zero(0), sensitivity(1) {};
+    ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_analogStream)
+        : AnalogSensor(ZMPT101B_SENSOR_TYPE, t_pin, t_analogStream), zero(0) {};
 };
 
 struct ZMPT101B_ACVoltage : SensorData<float>
 {
     ZMPT101B_ACVoltage() : SensorData() {};
     
-    ZMPT101B_ACVoltage(ZMPT101BSensor *t_sensor, float t_data)
+    ZMPT101B_ACVoltage(ZMPT101BSensor* const t_sensor, float t_data)
         : SensorData<float>(t_sensor, t_data) {};    
 
-    ZMPT101B_ACVoltage(ZMPT101BSensor *t_sensor, err_t t_error)
+    ZMPT101B_ACVoltage(ZMPT101BSensor* const t_sensor, err_t t_error)
         : SensorData<float>(t_sensor, t_error) {};  
 };
 
 class ZMPT101B
 {
     public:
-        static void calibrate(ZMPT101BSensor *t_sensor, IVoltageStream *t_stream)
+        static void calibrate(ZMPT101BSensor *t_sensor)
         {
             if(!t_sensor)
             {
                 return;
             }
-            if(!t_stream)
+            if(!t_sensor->analogStream)
             {
                 return;
             }
-            if(!t_stream->canRead())
+            if(!t_sensor->analogStream->canRead())
             {
-                t_stream->begin(StreamMode::Read);
+                t_sensor->analogStream->begin(StreamMode::Read);
             }
-            float voltage = 0;
-            for(int index = 0; index < ZMPT101B_DC_READ_ITERATIONS; index++)
+            uint32_t adcValue = 0;
+            for(int index = 0; index < ZMPT101B_READ_ITERATIONS; index++)
             {
-                voltage += t_stream->getVoltage();
+                adcValue += t_sensor->analogStream->read();
             }
-            t_sensor->zero = voltage / ZMPT101B_DC_READ_ITERATIONS;
-            t_stream->end();
+            t_sensor->zero = static_cast<uint16_t>(adcValue / ZMPT101B_READ_ITERATIONS);
+            t_sensor->analogStream->end();
         };
 };
 

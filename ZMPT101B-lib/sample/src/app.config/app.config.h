@@ -6,6 +6,5 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#define ZMPT101B_POTENTIOMETER_CALIBRATION_APP
-//#define ZMPT101B_RMS_READ_EXAMPLE_APP
-//#define ZMPT101B_TRUE_RMS_READ_EXAMPLE_APP
+//#define ZMPT101B_POTENTIOMETER_CALIBRATION_APP
+#define ZMPT101B_READ_EXAMPLE_APP

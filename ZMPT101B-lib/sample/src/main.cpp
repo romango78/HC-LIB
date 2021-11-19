@@ -30,7 +30,7 @@ void setup()
     _max_value = 0;
     _min_value = 1023;
 
-    Serial.println("220V, -220V, MAX, MIN, AC, PQ");
+    Serial.println("MAX, MIN, ADC, PQ");
 }
 
 void loop() 
@@ -45,10 +45,6 @@ void loop()
         _min_value = value;
     }
 
-    Serial.print(220);
-    Serial.print(" ");
-    Serial.print(-220);
-    Serial.print(" ");
     Serial.print(_max_value);
     Serial.print(" ");
     Serial.print(_min_value);
@@ -61,108 +57,54 @@ void loop()
 
 #endif 
 
-#ifdef ZMPT101B_RMS_READ_EXAMPLE_APP
+#ifdef ZMPT101B_READ_EXAMPLE_APP
 
 #include "adapter/AnalogPortAdapter.h"
+#include "stream/AnalogStream.h"
 #include "sensors/ZMPT101B.h"
-#include "sensors/readers/ZMPT101BReader.h"
+#include "sensors/readers/ZMPT101BReaders.h"
 #include "timers/ArduinoTimer.h"
 
+#define ZMPT101B_PIN A0
+
+ZMPT101BSensor* sensor;
 ZMPT101BRmsReader* rmsReader;
+ZMPT101BTrueRmsReader* trueRmsReader;
 
 void setup() 
 {
     // Setup device
-    Serial.begin(115200);   
-
-    delay(2000);
+    Serial.begin(115200);      
 
     // Setup Application      
-    ZMPT101BSensor* sensor = new ZMPT101BSensor(A0);
-    sensor->sensitivity = 0.004;
-    sensor->zero = 0;
-    
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(sensor->pin);
-    IVoltageStream *stream = (IVoltageStream *)new VoltageStream(adapter);
-    ZMPT101B::calibrate(sensor, stream);
+    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(ZMPT101B_PIN);
+    IStream<uint16_t> *stream = (IStream<uint16_t> *)new AnalogStream(adapter);
+
+    sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
+    ZMPT101B::calibrate(sensor);
 
     ITimer *timer = (ITimer *)new ArduinoTimer();
 
-    Serial.println("The ZMPT101B was initialized and calibrated. It contains the following data:");
-    Serial.print("      Type: ");
-    Serial.println(sensor->type);
-    Serial.print("      Category: ");
-    Serial.println(sensor->category);
-    Serial.print("      Pin: ");
-    Serial.println(sensor->pin);
-    Serial.print("      Zero: ");
-    Serial.println(sensor->zero);
-    Serial.print("      Sensitivity: ");
-    Serial.println(sensor->sensitivity);
+    rmsReader = new ZMPT101BRmsReader(timer);
+    trueRmsReader = new ZMPT101BTrueRmsReader(timer);
 
-    rmsReader = new ZMPT101BRmsReader(sensor, stream, timer);
+    Serial.println("220V,RMS,TrueRMS");
+
+    delay(2000);
 }
 
 void loop() 
 {
-    ZMPT101B_ACVoltage sensorData = rmsReader->read();
+    ZMPT101B_ACVoltage sensorData1 = rmsReader->read(sensor);
+    ZMPT101B_ACVoltage sensorData2 = trueRmsReader->read(sensor);
 
-    Serial.print("RMS (V): ");
-    Serial.println(sensorData.data, 2);
-    delay(100);
-}
-
-#endif
-
-#ifdef ZMPT101B_TRUE_RMS_READ_EXAMPLE_APP
-
-#include "adapter/AnalogPortAdapter.h"
-#include "sensors/ZMPT101B.h"
-#include "sensors/readers/ZMPT101BReader.h"
-#include "timers/ArduinoTimer.h"
-
-ZMPT101BTrueRmsReader* rmsReader;
-
-void setup() 
-{
-    // Setup device
-    Serial.begin(115200);   
-
-    delay(2000);
-
-    // Setup Application      
-    ZMPT101BSensor* sensor = new ZMPT101BSensor(A0);
-    sensor->sensitivity = 2.39;//0.004;
-    sensor->zero = 0;
+    Serial.print(220.00);
+    Serial.print(" ");
+    Serial.print(sensorData1.data, 2);
+    Serial.print(" ");
+    Serial.println(sensorData2.data, 2);
     
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(sensor->pin);
-    IVoltageStream *stream = (IVoltageStream *)new VoltageStream(adapter);
-    ZMPT101B::calibrate(sensor, stream);
-
-    ITimer *timer = (ITimer *)new ArduinoTimer();
-
-    Serial.println("The ZMPT101B was initialized and calibrated. It contains the following data:");
-    Serial.print("      Type: ");
-    Serial.println(sensor->type);
-    Serial.print("      Category: ");
-    Serial.println(sensor->category);
-    Serial.print("      Pin: ");
-    Serial.println(sensor->pin);
-    Serial.print("      Zero: ");
-    Serial.println(sensor->zero, 2);
-    Serial.print("      Sensitivity: ");
-    Serial.println(sensor->sensitivity, 4);
-
-    rmsReader = new ZMPT101BTrueRmsReader(sensor, stream, timer);
-}
-
-void loop() 
-{
-    ZMPT101B_ACVoltage sensorData = rmsReader->read();
-
-    Serial.print("True RMS (V): ");
-    Serial.println(sensorData.data, 2);
-    delay(100);
+    delay(500);
 }
 
 #endif
