@@ -9,6 +9,8 @@
 #if defined(UNIT_TEST) 
 
 #include <unity.h>
+#include "ZMPT101BRmsReaderTests.h"
+#include "ZMPT101BTrueRmsReaderTests.h"
 
 void dummyTest()
 {
@@ -20,8 +22,20 @@ void testsProcess()
     UNITY_BEGIN();
 
     /*****************************************
-     * 
+     * ZMPT101BRmsReader
      *****************************************/
+    RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized);
+    RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_ArgumentIsNull);
+    RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized);
+    RUN_TEST(ZMPT101BRmsReader_Read_Data_And_Calculate_Rms);
+
+    /*****************************************
+     * ZMPT101BTrueRmsReader
+     *****************************************/
+    RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_TimerIsNotInitialized);
+    RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_ArgumentIsNull);
+    RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized);
+    RUN_TEST(ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms);
 
     UNITY_END();
 };

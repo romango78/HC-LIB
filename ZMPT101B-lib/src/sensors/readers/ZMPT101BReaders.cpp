@@ -96,7 +96,7 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
     m_timer->setInterval(2*static_cast<uint32_t>(MILLISECONDS_IN_SECOND/AC_NETWORK_FREQUENCY));
     m_timer->start();
 
-    float totalVoltage = 0.0f;
+    double totalVoltage = 0.0f;
     uint16_t sampleCount = 0;
     while(!m_timer->isElapsed())
     {
