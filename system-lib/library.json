@@ -1,0 +1,21 @@
+{
+    "name": "HC-LIB.System",
+    "version": "1.0.2111",
+    "description": "Contains fundamental classes and base classes that define commonly-used data types.",
+    "keywords": "common, core, system, arduino, atmelavr",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/master/system-lib"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": ["atmelavr"]
+  }

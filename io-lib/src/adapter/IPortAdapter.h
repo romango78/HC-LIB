@@ -11,19 +11,20 @@
 
 #include <inttypes.h>
 
+template<typename T>
 class IPortAdapter
 {
     protected:
-        uint8_t m_pin; 
+        const uint8_t m_pin; 
     public:
-        IPortAdapter(uint8_t t_pin) : m_pin(t_pin) {};
+        IPortAdapter(const uint8_t t_pin) : m_pin(t_pin) {};
         virtual ~IPortAdapter() = default;
 
-        virtual void setInputMode();
-        virtual void setOutputMode();
+        virtual void setInputMode() = 0;
+        virtual void setOutputMode() = 0;
 
-        virtual int read();
-        virtual void write(int t_value);
+        virtual T read() = 0;
+        virtual void write(T t_value) = 0;
 };
 
 #endif

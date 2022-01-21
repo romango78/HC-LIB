@@ -6,11 +6,13 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ERRDEF_H_
-#define _ERRDEF_H_
+#ifndef _IO_ERRDEF_H_
+#define _IO_ERRDEF_H_
 
-#define NO_ERROR 0x0000
+#include "errdef.h"
 
-typedef unsigned short err_t;
+#define IO_ERROR 0x100
+#define IO_ERROR_STREAM_NOTCREATED (IO_ERROR + 1)
+#define IO_ERROR_STREAM_CLOSED (IO_ERROR + 2)
 
 #endif

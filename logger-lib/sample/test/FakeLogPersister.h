@@ -11,7 +11,7 @@
 
 #include "log/persisters/ILogPersister.h"
 
-class FakeLogPersister : ILogPersister
+class FakeLogPersister : public ILogPersister
 {
     public:
         FakeLogPersister() {};

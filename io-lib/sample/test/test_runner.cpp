@@ -11,6 +11,7 @@
 #include <unity.h>
 
 #include "AnalogStreamTests.h"
+#include "VoltageStreamTests.h"
 
 void dummyTest()
 {
@@ -36,8 +37,8 @@ void testsProcess()
     /*****************************************
      * Voltage Stream Tests (AnalogStreamTests.h)
      *****************************************/
-    RUN_TEST(IVoltageStream_ShouldReadVoltage);
-    RUN_TEST(IVoltageStream_ShouldSetPWM);
+    RUN_TEST(VoltageStream_ShouldReadVoltage);
+    RUN_TEST(VoltageStream_ShouldSetPWM);
 
     UNITY_END();
 };

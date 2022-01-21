@@ -15,11 +15,10 @@
 // Arduino port.
 // The analog port #3 is used in this sample
 
-#include "stream/IStream.h"
 #include "adapter/AnalogPortAdapter.h"
-#include "stream/AnalogStream.h"
+#include "stream/VoltageStream.h"
 
-AnalogStream *stream;
+IVoltageStream *stream;
 
 void setup() 
 {
@@ -27,14 +26,14 @@ void setup()
     Serial.begin(115200);
 
     // Setup Application
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(A0);
-    stream = new AnalogStream(adapter);
+    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(A0);
+    stream = (IVoltageStream *)new VoltageStream(adapter);
     stream->begin(StreamMode::Read);
 }
 
 void loop() 
 {
-    float value = ((IVoltageStream*)stream)->getVoltage();
+    float value = stream->getVoltage();
     Serial.println(value);
     delay(100);
 }
@@ -47,9 +46,8 @@ void loop()
 // The digital port #3 is used in this sample.
 // Note: not all ports support PWM.
 
-#include "stream/IStream.h"
 #include "adapter/AnalogPortAdapter.h"
-#include "stream/AnalogStream.h"
+#include "stream/VoltageStream.h"
 
 #define V_MIN 0
 #define V_MAX 100
@@ -57,7 +55,7 @@ void loop()
 #define ASC_DIR 1
 #define DESC_DIR -1
 
-AnalogStream *stream;
+IVoltageStream *stream;
 int _currPwm;
 int _direction;
 
@@ -70,8 +68,8 @@ void setup()
     _currPwm = V_MIN;
     _direction = ASC_DIR;
 
-    IPortAdapter *adapter = (IPortAdapter*)new AnalogPortAdapter(3);
-    stream = new AnalogStream(adapter);
+    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(3);
+    stream = (IVoltageStream *)new VoltageStream(adapter);
     stream->begin(StreamMode::Write);
 }
 
@@ -87,7 +85,7 @@ void loop()
     }
 
     Serial.println(_currPwm);
-    ((IVoltageStream*)stream)->setPwm(_currPwm);    
+    stream->setPwm(_currPwm);    
 
     _currPwm += V_STEP * _direction;
     delay(30);

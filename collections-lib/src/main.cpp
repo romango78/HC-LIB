@@ -6,8 +6,6 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#include <Arduino.h>
-
 void setup() 
 {
     // put your setup code here, to run once:
@@ -16,5 +14,4 @@ void setup()
 void loop() 
 {
     // put your main code here, to run repeatedly:
-    delay(100);
 }

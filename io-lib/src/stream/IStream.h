@@ -9,12 +9,7 @@
 #ifndef _I_STREAM_H_
 #define _I_STREAM_H_
 
-#include <inttypes.h>
-#include "errdef.h"
-
-#define IO_ERROR_STREAM_NOTCREATED 0x0100
-#define IO_ERROR_STREAM_CLOSED 0x0101
-
+#include "ioerrdef.h"
 
 #define UNDEF_MODE 0
 #define READ_MODE 1
@@ -33,10 +28,10 @@ class IStream
         IStream(){};
         virtual ~IStream() = default;
 
-        virtual void begin(StreamMode t_mode);
+        virtual void begin(StreamMode t_mode) = 0;
         virtual T read() = 0;          
-        virtual void write(T t_data);
-        virtual void end();
+        virtual void write(T t_data) = 0;
+        virtual void end() = 0;
 
         virtual bool canRead() = 0;
         virtual bool canWrite() = 0;

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>HC-LIB.Device.Abstractions</id>
+    <version>1.0.2111</version>
+    <title>Arduino Device Abstractions Library</title>
+    <authors>Roman Gorielov</authors>
+    <owners>Roman Gorielov</owners>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/device-abstraction-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Defines abstractions for devices that can be connected to Arduino Boards.</description>
+    <releaseNotes>Initial 1.0 release</releaseNotes>
+    <copyright>Copyright 2021 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr device abstractions</tags>
+    <dependencies>
+      <dependency id="HC-LIB.SYSTEM" version="1.0.2111" />
+      <dependency id="HC-LIB.IO" version="1.0.2111" />
+    </dependencies>
+    <summary>For Arduino projects</summary>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="src\deviceerrdef.h" target="src\deviceerrdef.h" />
+    <file src="src\sensors\Sensor.h" target="src\sensors\Sensor.h" />
+    <file src="src\sensors\SensorData.h" target="src\sensors\SensorData.h" />
+    <file src="src\sensors\sensordef.h" target="src\sensors\sensordef.h" />
+    <file src="src\sensors\readers\ISensorReader.h" target="src\sensors\readers\ISensorReader.h" />
+    <file src="library.json" target="library.json" />
+    <file src="LICENSE.md" target="LICENSE.md" />
+  </files>
+</package>
