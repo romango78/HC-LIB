@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>HC-LIB.ZMPT101B</id>
+    <version>1.0.2111</version>
+    <title>Arduino ZMPT101B Library</title>
+    <authors>Roman Gorielov</authors>
+    <owners>Roman Gorielov</owners>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/ZMPT101B-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>This library contains fundamental classes and base classes that define commonly-used data types..</description>
+    <releaseNotes>Initial 1.0 release</releaseNotes>
+    <copyright>Copyright 2021 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr common system</tags>
+    <dependencies/>    
+    <summary>For Arduino projects</summary>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="src\sensors\ZMPT101B.h" target="src\sensors\ZMPT101B.h"/>
+    <file src="src\src\sensors\readers\ZMPT101BReaders.h" target="src\src\sensors\readers\ZMPT101BReaders.h" />
+    <file src="src\src\sensors\readers\ZMPT101BReaders.cpp" target="src\src\sensors\readers\ZMPT101BReaders.cpp" />    <file src="library.json" target="library.json" />
+    <file src="LICENSE.md" target="LICENSE.md" />
+  </files>
+</package>
