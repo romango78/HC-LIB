@@ -6,10 +6,17 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SENSOR_DEF_H_
-#define _SENSOR_DEF_H_
+#ifndef _SRD05VDCSL_H_
+#define _SRD05VDCSL_H_
 
-// Sensor Types
-#define VOLTAGE_SENSOR_TYPE 0xff
+#include "devices/Device.h"
+#include "devices/devicedef.h"
+#include "stream/IStream.h"
+
+struct SRD05VDCSLDevice : public RelayDevice
+{
+    SRD05VDCSLDevice(const uint8_t t_pin, IStream<uint8_t>* const t_digitalStream)
+        : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_digitalStream) {};    
+};
 
 #endif

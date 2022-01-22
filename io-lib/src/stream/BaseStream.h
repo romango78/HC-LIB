@@ -34,6 +34,8 @@ class BaseStream : public IStream<T>
         void write(T t_data) override;
         void end() override;
 
+        virtual uint8_t getState() = 0;
+
         bool canRead() override;
         bool canWrite() override;
 

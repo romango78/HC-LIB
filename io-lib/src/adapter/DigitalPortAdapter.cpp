@@ -6,48 +6,52 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#include "AnalogPortAdapter.h"
+#include "DigitalPortAdapter.h"
 
 #if defined(ARDUINO)
 #include <Arduino.h>
 #endif
 
-void AnalogPortAdapter::setInputMode()
+void DigitalPortAdapter::setInputMode()
 {
     #if defined(ARDUINO)
     pinMode(m_pin, INPUT);
     #endif
 };
 
-void AnalogPortAdapter::setOutputMode()
+void DigitalPortAdapter::setOutputMode()
 {
     #if defined(ARDUINO)
     pinMode(m_pin, OUTPUT);
     #endif
 };
 
-int AnalogPortAdapter::read()
+uint8_t DigitalPortAdapter::read()
 {
     #if defined(ARDUINO)
-    return analogRead(m_pin);
+    return digitalRead(m_pin);
     #else
-    return 0;
+    return false;
     #endif
 };
 
-void AnalogPortAdapter::write(int t_value)
+void DigitalPortAdapter::write(uint8_t t_value)
 {
     #if defined(ARDUINO)
-    analogWrite(m_pin, t_value);
+    digitalWrite(m_pin, t_value);
     #endif
 };
 
-uint8_t AnalogPortAdapter::getState()
+uint8_t DigitalPortAdapter::getState()
 {
     #if defined(ARDUINO)
     if(m_pin < 8)
     {
-        return bitRead(PORTC, m_pin);
+        return bitRead(PORTD, m_pin);
+    }
+    if (m_pin < 14)
+    {
+        return bitRead(PORTB, m_pin);
     }
     return 0;
     #else

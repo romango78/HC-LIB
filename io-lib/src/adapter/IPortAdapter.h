@@ -25,6 +25,8 @@ class IPortAdapter
 
         virtual T read() = 0;
         virtual void write(T t_value) = 0;
+
+        virtual uint8_t getState() = 0;
 };
 
 #endif

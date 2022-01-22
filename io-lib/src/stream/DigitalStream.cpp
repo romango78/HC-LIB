@@ -6,9 +6,9 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#include "AnalogStream.h"
+#include "DigitalStream.h"
 
-void AnalogStream::begin(StreamMode t_mode)
+void DigitalStream::begin(StreamMode t_mode)
 {   
     if(m_adapter)
     {
@@ -24,11 +24,11 @@ void AnalogStream::begin(StreamMode t_mode)
     }
     else
     {
-       BaseStream::setLastError(IO_ERROR_STREAM_NOTCREATED); 
+       BaseStream::setLastError(IO_ERROR_STREAM_CLOSED); 
     }
 };
 
-uint16_t AnalogStream::read()
+uint8_t DigitalStream::read()
 {
     BaseStream::read();
     if(!canRead())
@@ -36,10 +36,10 @@ uint16_t AnalogStream::read()
         BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
         return NO_DATA;
     }
-    return static_cast<uint16_t>(m_adapter->read());
+    return static_cast<uint8_t>(m_adapter->read());
 };
 
-void AnalogStream::write(uint16_t t_data)
+void DigitalStream::write(uint8_t t_data)
 {
     BaseStream::write(t_data);
     if(!canWrite())
@@ -50,12 +50,12 @@ void AnalogStream::write(uint16_t t_data)
     m_adapter->write(t_data);    
 };
 
-uint8_t AnalogStream::getState()
+uint8_t DigitalStream::getState()
 {
     if(m_adapter)
     {
         return m_adapter->getState();
     }
     BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
-    return 0;  
+    return 0; 
 }

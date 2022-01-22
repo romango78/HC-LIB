@@ -9,21 +9,13 @@
 #ifndef _SENSOR_H_
 #define _SENSOR_H_
 
-#include <stdint.h>
-#include "sensordef.h"
+#include "devices/Device.h"
 #include "stream/IStream.h"
 
-enum SensorCategory
+struct ISensor : IDevice
 {
-	analog = SENSOR_CATEGORY_ANALOG
-};
-
-struct ISensor
-{
-    const uint8_t type;
-    const SensorCategory category;
-    ISensor(const uint8_t t_type, const SensorCategory t_category)
-        : type(t_type), category(t_category) {};
+    ISensor(const uint8_t t_type, const DeviceCategory t_category)
+        : IDevice(t_type, t_category) {};
 };
 
 struct AnalogSensor : ISensor
@@ -32,7 +24,7 @@ struct AnalogSensor : ISensor
     IStream<uint16_t>* const analogStream;
 
     AnalogSensor(const uint8_t t_type, const uint8_t t_pin, IStream<uint16_t>* const t_analogStream) 
-        : ISensor(t_type, SensorCategory::analog), pin(t_pin), analogStream(t_analogStream) {};
+        : ISensor(t_type, DeviceCategory::analog), pin(t_pin), analogStream(t_analogStream) {};
 };
 
 #endif

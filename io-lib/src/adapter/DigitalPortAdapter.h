@@ -6,22 +6,22 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ANALOG_PORT_ADAPTER_H_
-#define _ANALOG_PORT_ADAPTER_H_
+#ifndef _DIGITAL_PORT_ADAPTER_H_
+#define _DIGITAL_PORT_ADAPTER_H_
 
 #include "IPortAdapter.h"
 
-class AnalogPortAdapter : IPortAdapter<int>
+class DigitalPortAdapter : IPortAdapter<uint8_t>
 {
     public:
-        AnalogPortAdapter(const uint8_t t_pin) : IPortAdapter(t_pin) {};
-        ~AnalogPortAdapter() = default;
+        DigitalPortAdapter(const uint8_t t_pin) : IPortAdapter(t_pin) {};
+        ~DigitalPortAdapter() = default;
         
         void setInputMode() override;
         void setOutputMode() override;
 
-        int read() override;
-        void write(int t_value) override;
+        uint8_t read() override;
+        void write(uint8_t t_value) override;
 
         uint8_t getState() override;
 };

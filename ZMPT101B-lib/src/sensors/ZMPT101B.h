@@ -10,6 +10,7 @@
 #define _ZMPT101B_H_
 
 #include "sensors/Sensor.h"
+#include "sensors/sensordef.h"
 #include "sensors/SensorData.h"
 #include "stream/IStream.h"
 
@@ -20,7 +21,7 @@ struct ZMPT101BSensor : AnalogSensor
     uint16_t zero;
 
     ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_analogStream)
-        : AnalogSensor(ZMPT101B_SENSOR_TYPE, t_pin, t_analogStream), zero(0) {};
+        : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_analogStream), zero(0) {};
 };
 
 struct ZMPT101B_ACVoltage : SensorData<float>

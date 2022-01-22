@@ -9,8 +9,6 @@
 #ifndef _I_SENSOR_READER_H_
 #define _I_SENSOR_READER_H_
 
-#include "sensors/Sensor.h"
-
 template<typename SensorData, typename Sensor>
 class ISensorReader
 {

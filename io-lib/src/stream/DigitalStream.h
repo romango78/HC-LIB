@@ -6,28 +6,28 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ANALOG_STREAM_H_
-#define _ANALOG_STREAM_H_
+#ifndef _DIGITAL_STREAM_H_
+#define _DIGITAL_STREAM_H_
 
 #include <inttypes.h>
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
-#define NO_DATA UINT16_MAX
+#define NO_DATA 0x0
 
-class AnalogStream : public BaseStream<uint16_t>
+class DigitalStream : public BaseStream<uint8_t>
 {
     private:
-        IPortAdapter<int> *m_adapter;                
+        IPortAdapter<uint8_t> *m_adapter;                
     public:
-        AnalogStream(IPortAdapter<int>* t_adapter) 
+        DigitalStream(IPortAdapter<uint8_t>* t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
 
-        ~AnalogStream() = default;
+        ~DigitalStream() = default;
 
         void begin(StreamMode t_mode) override;
-        uint16_t read() override;
-        void write(uint16_t t_data) override;
+        uint8_t read() override;
+        void write(uint8_t t_data) override;
 
         uint8_t getState() override;
 };

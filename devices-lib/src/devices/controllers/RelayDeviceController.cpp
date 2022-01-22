@@ -6,10 +6,19 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SENSOR_DEF_H_
-#define _SENSOR_DEF_H_
+#include "RelayDeviceController.h"
 
-// Sensor Types
-#define VOLTAGE_SENSOR_TYPE 0xff
+err_t RelayDeviceController::on(RelayDevice* t_device)
+{
+    return setState(t_device, LOW);
+}
 
-#endif
+err_t RelayDeviceController::off(RelayDevice* t_device)
+{
+    return setState(t_device, HIGH);
+}
+
+RelayState RelayDeviceController::getState(RelayDevice* t_device)
+{
+    return (RelayState)DigitalDeviceController::getState(t_device);
+}

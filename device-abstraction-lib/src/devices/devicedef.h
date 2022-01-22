@@ -6,10 +6,14 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SENSOR_DEF_H_
-#define _SENSOR_DEF_H_
+#ifndef _DEVICE_DEF_H_
+#define _DEVICE_DEF_H_
 
-// Sensor Types
-#define VOLTAGE_SENSOR_TYPE 0xff
+// Device Categories
+#define DEVICE_CATEGORY_ANALOG 0
+#define DEVICE_CATEGORY_DIGITAL 1
+
+// Device Types
+#define RELAY_DEVICE_TYPE 0x01
 
 #endif

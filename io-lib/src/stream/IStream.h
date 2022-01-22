@@ -33,6 +33,8 @@ class IStream
         virtual void write(T t_data) = 0;
         virtual void end() = 0;
 
+        virtual uint8_t getState() = 0;
+
         virtual bool canRead() = 0;
         virtual bool canWrite() = 0;
         virtual bool hasError() = 0;

@@ -6,10 +6,20 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SENSOR_DEF_H_
-#define _SENSOR_DEF_H_
+#ifndef _I_DEVICE_CONTROLLER_H_
+#define _I_DEVICE_CONTROLLER_H_
 
-// Sensor Types
-#define VOLTAGE_SENSOR_TYPE 0xff
+#include "errdef.h"
+
+template<typename State, typename Device>
+class IDeviceController
+{
+    public:
+        IDeviceController() {};
+        virtual ~IDeviceController() = default;
+
+        virtual err_t setState(Device* t_device, State t_state) = 0;    
+        virtual State getState(Device* t_device) = 0;
+};
 
 #endif
