@@ -13,7 +13,7 @@ err_t DigitalDeviceController::setState(DigitalDevice* t_device, uint8_t t_data)
 {
     if(!t_device)
     {
-        return (err_t)ERROR_ARGUMENT_IS_NULL;
+        return (err_t)ARGUMENT_IS_NULL_ERROR;
     }
     if(!t_device->digitalStream)
     {
@@ -32,7 +32,7 @@ uint8_t DigitalDeviceController::getState(DigitalDevice* t_device)
 /*    StateData stateData = {0, NO_ERROR};
     if(!t_device)
     {
-        stateData.error = (err_t)ERROR_ARGUMENT_IS_NULL;
+        stateData.error = (err_t)ARGUMENT_IS_NULL_ERROR;
     }
     else if(!t_device->digitalStream)
     {

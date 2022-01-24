@@ -29,7 +29,7 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
     }
     if(!t_sensor)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ERROR_ARGUMENT_IS_NULL);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ARGUMENT_IS_NULL_ERROR);
     }
     if(!t_sensor->analogStream)
     {
@@ -77,7 +77,7 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
     }
     if(!t_sensor)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ERROR_ARGUMENT_IS_NULL);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ARGUMENT_IS_NULL_ERROR);
     }
     if(!t_sensor->analogStream)
     {

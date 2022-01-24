@@ -42,7 +42,7 @@ void ZMPT101BRmsReader_Raise_Error_When_ArgumentIsNull()
     ZMPT101B_ACVoltage result = sut->read(nullptr);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(ERROR_ARGUMENT_IS_NULL, result.error, "Expected Argumet Is Null error.");
+    TEST_ASSERT_EQUAL_MESSAGE(ARGUMENT_IS_NULL_ERROR, result.error, "Expected Argumet Is Null error.");
 
     delete sut;
     delete timer;

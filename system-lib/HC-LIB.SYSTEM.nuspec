@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.SYSTEM</id>
-    <version>1.0.2111</version>
+    <version>1.0.2201</version>
     <title>Arduino System Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -20,6 +20,7 @@
   </metadata>
   <files>
     <file src="src\errdef.h" target="src\errdef.h"/>    
+    <file src="src\Expected.h" target="src\Expected.h" />
     <file src="src\timers\ITimer.h" target="src\timers\ITimer.h" />
     <file src="src\timers\ArduinoTimer.h" target="src\timers\ArduinoTimer.h" />
     <file src="src\timers\ArduinoTimer.cpp" target="src\timers\ArduinoTimer.cpp" />
