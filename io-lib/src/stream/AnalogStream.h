@@ -18,9 +18,9 @@
 class AnalogStream : public BaseStream<uint16_t>
 {
     private:
-        IPortAdapter<int> *m_adapter;                
+        IPortAdapter<int>* const m_adapter;                
     public:
-        AnalogStream(IPortAdapter<int>* t_adapter) 
+        AnalogStream(IPortAdapter<int>* const t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
 
         ~AnalogStream() = default;

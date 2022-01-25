@@ -18,9 +18,9 @@
 class DigitalStream : public BaseStream<uint8_t>
 {
     private:
-        IPortAdapter<uint8_t> *m_adapter;                
+        IPortAdapter<uint8_t>* const m_adapter;                
     public:
-        DigitalStream(IPortAdapter<uint8_t>* t_adapter) 
+        DigitalStream(IPortAdapter<uint8_t>* const t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
 
         ~DigitalStream() = default;

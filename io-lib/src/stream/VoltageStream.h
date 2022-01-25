@@ -29,7 +29,7 @@ class IVoltageStream : public IStream<uint16_t>
 class VoltageStream : protected AnalogStream, public IVoltageStream
 {
     public:
-        VoltageStream(IPortAdapter<int>* t_adapter) 
+        VoltageStream(IPortAdapter<int>* const t_adapter) 
             : AnalogStream(t_adapter) {};
 
         ~VoltageStream() = default;
