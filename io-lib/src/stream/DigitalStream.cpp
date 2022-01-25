@@ -24,7 +24,7 @@ void DigitalStream::begin(const StreamMode t_mode)
     }
     else
     {
-       BaseStream::setLastError(IO_ERROR_STREAM_CLOSED); 
+       BaseStream::setLastError(STREAM_CLOSED_IO_ERROR); 
     }
 };
 
@@ -33,7 +33,7 @@ uint8_t DigitalStream::read()
     BaseStream::read();
     if(!canRead())
     {
-        BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return NO_DATA;
     }
     return static_cast<uint8_t>(m_adapter->read());
@@ -44,7 +44,7 @@ void DigitalStream::write(const uint8_t t_data)
     BaseStream::write(t_data);
     if(!canWrite())
     {
-        BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return;
     }
     m_adapter->write(t_data);    
@@ -56,6 +56,6 @@ uint8_t DigitalStream::getState()
     {
         return m_adapter->getState();
     }
-    BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+    BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
     return 0; 
 }

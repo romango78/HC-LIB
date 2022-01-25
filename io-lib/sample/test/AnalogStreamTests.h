@@ -94,7 +94,7 @@ void AnalogStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead()
     TEST_ASSERT_EQUAL_MESSAGE(NO_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is set to some mode.");
     TEST_ASSERT_EQUAL_INT_MESSAGE(NO_DATA, actualValue,"Some data is read.");
     TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(IO_ERROR_STREAM_CLOSED, error,"The wrong error is set.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(STREAM_CLOSED_IO_ERROR, error,"The wrong error is set.");
 
     delete sut;
     delete adapter;
@@ -183,7 +183,7 @@ void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(IO_ERROR_STREAM_CLOSED, error,"The wrong error is set.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(STREAM_CLOSED_IO_ERROR, error,"The wrong error is set.");
 
     delete sut;
     delete adapter;

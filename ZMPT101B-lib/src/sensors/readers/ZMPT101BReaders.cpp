@@ -25,7 +25,7 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor* const t_sensor)
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
     if(!t_sensor)
     {
@@ -33,7 +33,7 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor* const t_sensor)
     }
     if(!t_sensor->analogStream)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)IO_ERROR_STREAM_NOTCREATED);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
     };
     if(!t_sensor->analogStream->canRead())
     {
@@ -73,7 +73,7 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(const ZMPT101BSensor* const t_sen
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
     if(!t_sensor)
     {
@@ -81,7 +81,7 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(const ZMPT101BSensor* const t_sen
     }
     if(!t_sensor->analogStream)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)IO_ERROR_STREAM_NOTCREATED);
+        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
     };
     if(!t_sensor->analogStream->canRead())
     {

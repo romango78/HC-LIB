@@ -10,10 +10,9 @@
 #define _FAKE_STREAM_H_
 
 #include <inttypes.h>
+#include <stdlib.h>
 #include "stream/IStream.h"
 #include "FakeTimer.h"
-
-#define abs(x) ((x)>0?(x):-(x))
 
 class FakeStream : public IStream<uint16_t>
 {
@@ -107,7 +106,7 @@ class FakeStream : public IStream<uint16_t>
         {
             if(hasError())
             {
-                return IO_ERROR_STREAM_CLOSED;
+                return STREAM_CLOSED_IO_ERROR;
             };
             return NO_ERROR;
         };

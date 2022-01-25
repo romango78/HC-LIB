@@ -26,7 +26,7 @@ void ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized()
     ZMPT101B_ACVoltage result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED, result.error, "Expected Timer Is Not Initialized error.");
+    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.error, "Expected Timer Is Not Initialized error.");
 
     delete sut;
     delete sensor;
@@ -60,7 +60,7 @@ void ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized()
     ZMPT101B_ACVoltage result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(IO_ERROR_STREAM_NOTCREATED, result.error, "Expected Stream Is Not Created error.");
+    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.error, "Expected Stream Is Not Created error.");
 
     delete sut;
     delete sensor;
