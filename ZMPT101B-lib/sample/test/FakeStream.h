@@ -18,14 +18,14 @@
 class FakeStream : public IStream<uint16_t>
 {
     private:
-        uint16_t m_minValue;
-        uint16_t m_maxValue;
+        const uint16_t m_minValue;
+        const uint16_t m_maxValue;
         uint16_t m_stepValue;
         uint16_t m_currentValue;
         bool m_isSetToRead;
         bool m_hasError;
     public:
-        FakeStream(uint16_t t_minValue, uint16_t t_maxValue)
+        FakeStream(const uint16_t t_minValue, const uint16_t t_maxValue)
             : m_minValue(t_minValue), m_maxValue(t_maxValue), 
               m_isSetToRead(false), m_hasError(false)
         {
@@ -34,7 +34,7 @@ class FakeStream : public IStream<uint16_t>
 
         ~FakeStream() = default;
 
-        void begin(StreamMode t_mode) override
+        void begin(const StreamMode t_mode) override
         {
             m_hasError = false;
             if(t_mode == StreamMode::Read)
@@ -75,13 +75,18 @@ class FakeStream : public IStream<uint16_t>
             }
         };
 
-        void write(uint16_t t_data) override {};
+        void write(const uint16_t t_data) override {};
 
         void end() override
         {
             m_isSetToRead = false;
             m_hasError = false;
         };
+
+        uint8_t getState() override
+        {
+            return 0;
+        }
 
         bool canRead() override
         {

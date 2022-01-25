@@ -19,7 +19,7 @@
 class ZMPT101BReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
     protected:
-        uint16_t getZero(ZMPT101BSensor* const t_sensor);
+        uint16_t getZero(const ZMPT101BSensor* const t_sensor);
     public:
         ZMPT101BReaderBase(){};
         ~ZMPT101BReaderBase() = default;        
@@ -34,7 +34,7 @@ class ZMPT101BRmsReader : public ZMPT101BReaderBase
             : m_timer(t_timer) {};
         ~ZMPT101BRmsReader() {};
 
-        ZMPT101B_ACVoltage read(ZMPT101BSensor* const t_sensor) override;
+        ZMPT101B_ACVoltage read(const ZMPT101BSensor* const t_sensor) override;
 };
 
 class ZMPT101BTrueRmsReader : public ZMPT101BReaderBase
@@ -46,7 +46,7 @@ class ZMPT101BTrueRmsReader : public ZMPT101BReaderBase
             : m_timer(t_timer) {};
         ~ZMPT101BTrueRmsReader() {};
 
-        ZMPT101B_ACVoltage read(ZMPT101BSensor* const t_sensor) override;
+        ZMPT101B_ACVoltage read(const ZMPT101BSensor* const t_sensor) override;
 };
 
 #endif

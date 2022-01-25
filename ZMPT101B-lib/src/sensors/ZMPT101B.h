@@ -28,17 +28,17 @@ struct ZMPT101B_ACVoltage : SensorData<float>
 {
     ZMPT101B_ACVoltage() : SensorData() {};
     
-    ZMPT101B_ACVoltage(ZMPT101BSensor* const t_sensor, float t_data)
+    ZMPT101B_ACVoltage(const ZMPT101BSensor* const t_sensor, const float t_data)
         : SensorData<float>(t_sensor, t_data) {};    
 
-    ZMPT101B_ACVoltage(ZMPT101BSensor* const t_sensor, err_t t_error)
+    ZMPT101B_ACVoltage(const ZMPT101BSensor* const t_sensor, const err_t t_error)
         : SensorData<float>(t_sensor, t_error) {};  
 };
 
 class ZMPT101B
 {
     public:
-        static void calibrate(ZMPT101BSensor *t_sensor)
+        static void calibrate(ZMPT101BSensor* const t_sensor)
         {
             if(!t_sensor)
             {

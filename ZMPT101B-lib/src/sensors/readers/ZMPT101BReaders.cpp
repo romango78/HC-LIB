@@ -12,16 +12,16 @@
 // The Ploynominal Equation 3
 #define PolynomialEquation(x) (0.00000412*x*x*x - 0.000857*x*x + 2.675*x - 3.198)
 
-uint16_t ZMPT101BReaderBase::getZero(ZMPT101BSensor* const t_sensor)
+uint16_t ZMPT101BReaderBase::getZero(const ZMPT101BSensor* const t_sensor)
 {
     if(!t_sensor)
     {
         return 0;
     }
-    return reinterpret_cast<ZMPT101BSensor*>(t_sensor)->zero;
+    return t_sensor->zero;
 };
 
-ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
+ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor* const t_sensor)
 {   
     if(!m_timer)
     {
@@ -69,7 +69,7 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
     return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, result);
 };
 
-ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
+ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(const ZMPT101BSensor* const t_sensor)
 {   
     if(!m_timer)
     {

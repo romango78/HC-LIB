@@ -16,16 +16,16 @@
 template<typename T>
 struct SensorData
 {
-    ISensor* const sensor;
+    const ISensor* const sensor;
     const T data;
     const err_t error;
 
     SensorData() : sensor(nullptr), data(T()), error(NO_ERROR) {};
     
-    SensorData(ISensor* const t_sensor, T t_data)
+    SensorData(const ISensor* const t_sensor, const T t_data)
         : sensor(t_sensor), data(t_data), error(NO_ERROR) {};
 
-    SensorData(ISensor* const t_sensor, err_t t_error)
+    SensorData(const ISensor* const t_sensor, const err_t t_error)
         : sensor(t_sensor), data(T()), error(t_error) {};
 };
 
