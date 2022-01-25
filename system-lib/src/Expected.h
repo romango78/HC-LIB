@@ -12,8 +12,8 @@
 #define _EXPECTED_H_
 
 #include "errdef.h"
-#include <utility>
 #include <new>
+#include "move.h"
 
 template <class T>
 class Expected
@@ -31,9 +31,6 @@ class Expected
         Expected(const T &t_value)
             : m_value(t_value), m_hasValue(true) {}
 
-        Expected(T &&t_value)
-            : m_value(std::move(t_value)), m_hasValue(true) {}
-
         Expected(const Expected &t_expected) 
             : m_hasValue(t_expected.m_hasValue) 
         {
@@ -46,6 +43,9 @@ class Expected
                 new(&m_error) err_t(t_expected.m_error);
             }
         }
+
+        Expected(T &&t_value)
+            : m_value(std::move(t_value)), m_hasValue(true) {}
 
         Expected(Expected &&t_expected) 
             : m_hasValue(t_expected.m_hasValue) 

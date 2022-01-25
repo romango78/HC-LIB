@@ -25,9 +25,9 @@ class DigitalStream : public BaseStream<uint8_t>
 
         ~DigitalStream() = default;
 
-        void begin(StreamMode t_mode) override;
+        void begin(const StreamMode t_mode) override;
         uint8_t read() override;
-        void write(uint8_t t_data) override;
+        void write(const uint8_t t_data) override;
 
         uint8_t getState() override;
 };

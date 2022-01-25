@@ -17,14 +17,15 @@ class IPortAdapter
     protected:
         const uint8_t m_pin; 
     public:
-        IPortAdapter(const uint8_t t_pin) : m_pin(t_pin) {};
+        IPortAdapter(const uint8_t t_pin) 
+            : m_pin(t_pin) {};
         virtual ~IPortAdapter() = default;
 
         virtual void setInputMode() = 0;
         virtual void setOutputMode() = 0;
 
         virtual T read() = 0;
-        virtual void write(T t_value) = 0;
+        virtual void write(const T t_value) = 0;
 
         virtual uint8_t getState() = 0;
 };

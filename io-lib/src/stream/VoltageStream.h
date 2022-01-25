@@ -23,7 +23,7 @@ class IVoltageStream : public IStream<uint16_t>
         virtual ~IVoltageStream() = default;
 
         virtual float getVoltage() = 0;
-        virtual void setPwm(int t_percentage) = 0;
+        virtual void setPwm(const int t_percentage) = 0;
 };
 
 class VoltageStream : protected AnalogStream, public IVoltageStream
@@ -34,11 +34,13 @@ class VoltageStream : protected AnalogStream, public IVoltageStream
 
         ~VoltageStream() = default;
 
-        void begin(StreamMode t_mode) override;
+        void begin(const StreamMode t_mode) override;
         uint16_t read() override;
-        void write(uint16_t t_data) override;
+        void write(const uint16_t t_data) override;
         void end() override;
 
+        uint8_t getState() override;
+        
         bool canRead() override;
         bool canWrite() override;
         bool hasError() override;
@@ -46,7 +48,7 @@ class VoltageStream : protected AnalogStream, public IVoltageStream
         err_t getLastError() override;
 
         float getVoltage() override;
-        void setPwm(int t_percentage) override;        
+        void setPwm(const int t_percentage) override;        
 };
 
 #endif

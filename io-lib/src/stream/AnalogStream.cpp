@@ -8,7 +8,7 @@
 
 #include "AnalogStream.h"
 
-void AnalogStream::begin(StreamMode t_mode)
+void AnalogStream::begin(const StreamMode t_mode)
 {   
     if(m_adapter)
     {
@@ -39,7 +39,7 @@ uint16_t AnalogStream::read()
     return static_cast<uint16_t>(m_adapter->read());
 };
 
-void AnalogStream::write(uint16_t t_data)
+void AnalogStream::write(const uint16_t t_data)
 {
     BaseStream::write(t_data);
     if(!canWrite())

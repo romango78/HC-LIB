@@ -25,9 +25,9 @@ class AnalogStream : public BaseStream<uint16_t>
 
         ~AnalogStream() = default;
 
-        void begin(StreamMode t_mode) override;
+        void begin(const StreamMode t_mode) override;
         uint16_t read() override;
-        void write(uint16_t t_data) override;
+        void write(const uint16_t t_data) override;
 
         uint8_t getState() override;
 };

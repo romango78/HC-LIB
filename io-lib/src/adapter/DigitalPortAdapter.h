@@ -14,14 +14,15 @@
 class DigitalPortAdapter : IPortAdapter<uint8_t>
 {
     public:
-        DigitalPortAdapter(const uint8_t t_pin) : IPortAdapter(t_pin) {};
+        DigitalPortAdapter(const uint8_t t_pin) 
+            : IPortAdapter(t_pin) {};
         ~DigitalPortAdapter() = default;
         
         void setInputMode() override;
         void setOutputMode() override;
 
         uint8_t read() override;
-        void write(uint8_t t_value) override;
+        void write(const uint8_t t_value) override;
 
         uint8_t getState() override;
 };

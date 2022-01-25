@@ -35,7 +35,7 @@ uint8_t DigitalPortAdapter::read()
     #endif
 };
 
-void DigitalPortAdapter::write(uint8_t t_value)
+void DigitalPortAdapter::write(const uint8_t t_value)
 {
     #if defined(ARDUINO)
     digitalWrite(m_pin, t_value);

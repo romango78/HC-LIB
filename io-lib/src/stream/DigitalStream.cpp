@@ -8,7 +8,7 @@
 
 #include "DigitalStream.h"
 
-void DigitalStream::begin(StreamMode t_mode)
+void DigitalStream::begin(const StreamMode t_mode)
 {   
     if(m_adapter)
     {
@@ -39,7 +39,7 @@ uint8_t DigitalStream::read()
     return static_cast<uint8_t>(m_adapter->read());
 };
 
-void DigitalStream::write(uint8_t t_data)
+void DigitalStream::write(const uint8_t t_data)
 {
     BaseStream::write(t_data);
     if(!canWrite())

@@ -35,7 +35,7 @@ int AnalogPortAdapter::read()
     #endif
 };
 
-void AnalogPortAdapter::write(int t_value)
+void AnalogPortAdapter::write(const int t_value)
 {
     #if defined(ARDUINO)
     analogWrite(m_pin, t_value);
