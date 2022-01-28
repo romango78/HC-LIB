@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.IO</id>
-    <version>1.0.2111</version>
+    <version>1.0.2201</version>
     <title>IO Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -24,13 +24,17 @@
     <file src="src\ioerrdef.h" target="src\ioerrdef.h" />
     <file src="src\adapter\IPortAdapter.h" target="src\adapter\IPortAdapter.h" />
     <file src="src\adapter\AnalogPortAdapter.cpp" target="src\adapter\AnalogPortAdapter.cpp" />
-    <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />    
+    <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />
+    <file src="src\adapter\DigitalPortAdapter.cpp" target="src\adapter\DigitalPortAdapter.cpp" />
+    <file src="src\adapter\DigitalPortAdapter.h" target="src\adapter\DigitalPortAdapter.h" />
     <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
     <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
     <file src="src\stream\AnalogStream.cpp" target="src\stream\AnalogStream.cpp" />
     <file src="src\stream\AnalogStream.h" target="src\stream\AnalogStream.h" />
     <file src="src\stream\VoltageStream.h" target="src\stream\VoltageStream.h" />
     <file src="src\stream\VoltageStream.cpp" target="src\stream\VoltageStream.cpp" />
+    <file src="src\stream\DigitalStream.cpp" target="src\stream\DigitalStream.cpp" />
+    <file src="src\stream\DigitalStream.h" target="src\stream\DigitalStream.h" />
     <file src="library.json" target="library.json" />
     <file src="LICENSE.md" target="LICENSE.md" />
   </files>

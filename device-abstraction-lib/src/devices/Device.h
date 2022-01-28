@@ -11,7 +11,6 @@
 
 #include <stdint.h>
 #include "devicedef.h"
-#include "stream/IStream.h"
 
 enum DeviceCategory
 {
@@ -27,19 +26,21 @@ struct IDevice
         : type(t_type), category(t_category) {};
 };
 
-struct DigitalDevice : public IDevice
+namespace device
 {
-    const uint8_t pin;
-    IStream<uint8_t>* const digitalStream;
+    inline bool is_digital(IDevice t_device) noexcept
+    {
+        return t_device.category == DeviceCategory::digital;
+    }
 
-    DigitalDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_digitalStream) 
-        : IDevice(t_type, DeviceCategory::digital), pin(t_pin), digitalStream(t_digitalStream) {};
-};
-
-struct RelayDevice : public DigitalDevice
-{
-    RelayDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_digitalStream) 
-        : DigitalDevice(t_type, t_pin, t_digitalStream) {};
-};
+    inline bool is_relay(IDevice t_device) noexcept
+    {
+        if(is_digital(t_device))
+        {
+            return t_device.type == RELAY_DEVICE_TYPE;
+        }
+        return false;
+    }
+}
 
 #endif

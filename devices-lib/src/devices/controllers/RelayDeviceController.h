@@ -9,6 +9,7 @@
 #ifndef _RELAY_DEVICE_CONTROLLER_H_
 #define _RELAY_DEVICE_CONTROLLER_H_
 
+#include "devices/DigitalDevices.h"
 #include "devices/controllers/DigitalDeviceController.h"
 
 #ifndef LOW
@@ -31,10 +32,10 @@ class RelayDeviceController : private DigitalDeviceController
         RelayDeviceController() {};
         ~RelayDeviceController() = default;
 
-        err_t on(RelayDevice* t_device);
-        err_t off(RelayDevice* t_device);
+        err_t on(RelayDevice t_device);
+        err_t off(RelayDevice t_device);
 
-        RelayState getState(RelayDevice* t_device);
+        Expected<RelayState> getState(RelayDevice t_device);
 };
 
 #endif

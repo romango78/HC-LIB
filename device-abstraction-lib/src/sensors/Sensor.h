@@ -10,21 +10,11 @@
 #define _SENSOR_H_
 
 #include "devices/Device.h"
-#include "stream/IStream.h"
 
 struct ISensor : IDevice
 {
     ISensor(const uint8_t t_type, const DeviceCategory t_category)
         : IDevice(t_type, t_category) {};
-};
-
-struct AnalogSensor : ISensor
-{
-    const uint8_t pin;
-    IStream<uint16_t>* const analogStream;
-
-    AnalogSensor(const uint8_t t_type, const uint8_t t_pin, IStream<uint16_t>* const t_analogStream) 
-        : ISensor(t_type, DeviceCategory::analog), pin(t_pin), analogStream(t_analogStream) {};
 };
 
 #endif

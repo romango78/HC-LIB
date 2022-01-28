@@ -14,6 +14,7 @@
 #define DEVICE_CATEGORY_DIGITAL 1
 
 // Device Types
+#define UNDEFINED_DEVICE_TYPE 0x00
 #define RELAY_DEVICE_TYPE 0x01
 
 #endif

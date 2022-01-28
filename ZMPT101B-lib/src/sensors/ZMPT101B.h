@@ -9,7 +9,7 @@
 #ifndef _ZMPT101B_H_
 #define _ZMPT101B_H_
 
-#include "sensors/Sensor.h"
+#include "sensors/AnalogSensor.h"
 #include "sensors/sensordef.h"
 #include "sensors/SensorData.h"
 #include "stream/IStream.h"

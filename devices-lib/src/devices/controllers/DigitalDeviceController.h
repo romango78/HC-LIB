@@ -9,7 +9,7 @@
 #ifndef _DIGITAL_DEVICE_CONTROLLER_H_
 #define _DIGITAL_DEVICE_CONTROLLER_H_
 
-#include "devices/Device.h"
+#include "devices/DigitalDevices.h"
 #include "devices/controllers/IDeviceController.h"
 
 class DigitalDeviceController : public IDeviceController<uint8_t, DigitalDevice>
@@ -18,8 +18,8 @@ class DigitalDeviceController : public IDeviceController<uint8_t, DigitalDevice>
         DigitalDeviceController() {};
         ~DigitalDeviceController() = default;
 
-        err_t setState(DigitalDevice* t_device, uint8_t t_data) override;
-        uint8_t getState(DigitalDevice* t_device) override;
+        err_t setState(DigitalDevice t_device, const uint8_t t_data) override;
+        Expected<uint8_t> getState(DigitalDevice t_device) override;
 };
 
 #endif

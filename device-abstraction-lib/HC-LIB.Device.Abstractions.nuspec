@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.Device.Abstractions</id>
-    <version>1.0.2111</version>
+    <version>1.0.2201</version>
     <title>Arduino Device Abstractions Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -13,8 +13,7 @@
     <copyright>Copyright 2021 Roman Gorielov</copyright>
     <tags>native arduino atmelavr device abstractions</tags>
     <dependencies>
-      <dependency id="HC-LIB.SYSTEM" version="1.0.2111" />
-      <dependency id="HC-LIB.IO" version="1.0.2111" />
+      <dependency id="HC-LIB.SYSTEM" version="1.0.2201" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -23,6 +22,9 @@
   </metadata>
   <files>
     <file src="src\deviceerrdef.h" target="src\deviceerrdef.h" />
+    <file src="src\devices\Device.h" target="src\devices\Device.h" />
+    <file src="src\devices\devicedef.h" target="src\devices\devicedef.h" />
+    <file src="src\devices\controllers\IDeviceController.h" target="src\devices\controllers\IDeviceController.h" />
     <file src="src\sensors\Sensor.h" target="src\sensors\Sensor.h" />
     <file src="src\sensors\SensorData.h" target="src\sensors\SensorData.h" />
     <file src="src\sensors\sensordef.h" target="src\sensors\sensordef.h" />

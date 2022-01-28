@@ -9,38 +9,25 @@
 #include "DigitalDeviceController.h"
 #include "ioerrdef.h"
 
-err_t DigitalDeviceController::setState(DigitalDevice* t_device, uint8_t t_data)
+err_t DigitalDeviceController::setState(DigitalDevice t_device, const uint8_t t_data)
 {
-    if(!t_device)
+    if(!t_device.stream)
     {
-        return (err_t)ARGUMENT_IS_NULL_ERROR;
-    }
-    if(!t_device->digitalStream)
-    {
-        return (err_t)IO_ERROR_STREAM_NOTCREATED;
+        return (err_t)STREAM_NOTCREATED_IO_ERROR;
     };
-    if(!t_device->digitalStream->canWrite())
+    if(!t_device.stream->canWrite())
     {
-        t_device->digitalStream->begin(StreamMode::Write);
+        t_device.stream->begin(StreamMode::Write);
     };
-    t_device->digitalStream->write(t_data);
+    t_device.stream->write(t_data);
     return NO_ERROR;
 }
 
-uint8_t DigitalDeviceController::getState(DigitalDevice* t_device)
+Expected<uint8_t> DigitalDeviceController::getState(DigitalDevice t_device)
 {
-/*    StateData stateData = {0, NO_ERROR};
-    if(!t_device)
+    if(!t_device.stream)
     {
-        stateData.error = (err_t)ARGUMENT_IS_NULL_ERROR;
+        return Expected<uint8_t>::fromError(STREAM_NOTCREATED_IO_ERROR);
     }
-    else if(!t_device->digitalStream)
-    {
-        stateData.error = (err_t)IO_ERROR_STREAM_NOTCREATED;
-    }
-    else
-    {
-
-    }*/
-    return t_device->digitalStream->getState();
+    return t_device.stream->getState();
 }

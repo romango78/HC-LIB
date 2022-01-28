@@ -6,14 +6,19 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ERRDEF_H_
-#define _ERRDEF_H_
+#ifndef _ANALOG_SENSOR_H_
+#define _ANALOG_SENSOR_H_
 
-#define NO_ERROR 0x0000
-#define ARGUMENT_IS_NULL_ERROR (NO_ERROR + 1)
-#define OUT_OF_RANGE_ERROR (NO_ERROR + 2)
-#define NOT_SUPPORTED_OPERATION_ERROR (NO_ERROR + 3)
+#include "sensors/Sensor.h"
+#include "stream/IStream.h"
 
-typedef unsigned short err_t;
+struct AnalogSensor : ISensor
+{
+    const uint8_t pin;
+    IStream<uint16_t>* const analogStream;
+
+    AnalogSensor(const uint8_t t_type, const uint8_t t_pin, IStream<uint16_t>* const t_analogStream) 
+        : ISensor(t_type, DeviceCategory::analog), pin(t_pin), analogStream(t_analogStream) {};
+};
 
 #endif

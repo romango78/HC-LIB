@@ -10,6 +10,7 @@
 #define _I_DEVICE_CONTROLLER_H_
 
 #include "errdef.h"
+#include "Expected.h"
 
 template<typename State, typename Device>
 class IDeviceController
@@ -18,8 +19,8 @@ class IDeviceController
         IDeviceController() {};
         virtual ~IDeviceController() = default;
 
-        virtual err_t setState(Device* t_device, State t_state) = 0;    
-        virtual State getState(Device* t_device) = 0;
+        virtual err_t setState(Device t_device, const State t_state) = 0;    
+        virtual Expected<State> getState(Device t_device) = 0;
 };
 
 #endif

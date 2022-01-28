@@ -7,18 +7,24 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 #include "RelayDeviceController.h"
+#include "errdef.h"
 
-err_t RelayDeviceController::on(RelayDevice* t_device)
+err_t RelayDeviceController::on(RelayDevice t_device)
 {
     return setState(t_device, LOW);
 }
 
-err_t RelayDeviceController::off(RelayDevice* t_device)
+err_t RelayDeviceController::off(RelayDevice t_device)
 {
     return setState(t_device, HIGH);
 }
 
-RelayState RelayDeviceController::getState(RelayDevice* t_device)
+Expected<RelayState> RelayDeviceController::getState(RelayDevice t_device)
 {
-    return (RelayState)DigitalDeviceController::getState(t_device);
+    auto state = DigitalDeviceController::getState(t_device);
+    if(state.hasValue())
+    {
+        return Expected<RelayState> {(RelayState)state.getValue()};
+    }
+    return Expected<RelayState>::fromError(state.getError());
 }
