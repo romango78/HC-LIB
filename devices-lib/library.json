@@ -1,0 +1,28 @@
+{
+    "name": "HC-LIB.Devices",
+    "version": "1.0.2201",
+    "description": ">Defines basic classes to communicate with devices that can be connected to Arduino Boards.",
+    "keywords": "device, arduino, atmelavr",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/master/devices-lib"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "dependencies":
+    [
+      {
+        "name": "HC-LIB.Device.Abstractions",
+        "version": ">=1.0.2201"
+      }
+    ],
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": ["atmelavr"]
+  }
