@@ -11,6 +11,7 @@
 #include <unity.h>
 #include "DigitalDeviceControllerTests.h"
 #include "RelayDeviceControllerTests.h"
+#include "DeviceTests.h"
 
 void dummyTest()
 {
@@ -38,6 +39,20 @@ void testsProcess()
     RUN_TEST(Should_RaiseError_WhenTryOffRelay_AndStreamIsNotSet);
     RUN_TEST(ShouldGetRelayState);
     RUN_TEST(Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet);
+
+    /*****************************************
+     * Device Tests
+     *****************************************/
+    RUN_TEST(ShouldConvert_AnalogDeviceToAnalogDevice);
+    RUN_TEST(ShouldConvert_AnalogDeviceToIDevice);
+    RUN_TEST(ShouldMove_AnalogDeviceToAnalogDevice);
+    RUN_TEST(ShouldConvert_DigitalDeviceToDigitalDevice);
+    RUN_TEST(ShouldConvert_DigitalDeviceToIDevice);
+    RUN_TEST(ShouldMove_DigitalDeviceToDigitalDevice);
+    RUN_TEST(ShouldConvert_RelayDeviceToRelayDevice);
+    RUN_TEST(ShouldConvert_RelayDeviceToDigitalDevice);
+    RUN_TEST(ShouldConvert_RelayDeviceToIDevice);
+    RUN_TEST(ShouldMove_RelayDeviceToRelayDevice);
 
     UNITY_END();
 };

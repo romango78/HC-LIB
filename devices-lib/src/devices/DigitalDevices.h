@@ -17,12 +17,9 @@ struct DigitalDevice : public IDevice
     const uint8_t pin;
     IStream<uint8_t>* const stream;
 
+    DigitalDevice() = delete;
     DigitalDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
-        : IDevice(t_type, DeviceCategory::digital), pin(t_pin), stream(t_stream) {};
-    
-    DigitalDevice(const DigitalDevice &t_origin)
-        : IDevice(t_origin), pin(t_origin.pin)
-        , stream(t_origin.stream) {};
+        : IDevice(t_type, DeviceCategory::digital), pin(t_pin), stream(t_stream) {}; 
 };
 
 struct RelayDevice : public DigitalDevice
@@ -31,8 +28,9 @@ struct RelayDevice : public DigitalDevice
         RelayDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
             : DigitalDevice(t_type, t_pin, t_stream) {};
     public:
+        RelayDevice() = delete;
         RelayDevice(const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
-            : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};        
+            : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};
 };
 
 #endif
