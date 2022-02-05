@@ -1,0 +1,28 @@
+{
+    "name": "HC-LIB.SRD05VDCSL",
+    "version": "1.0.2202",
+    "description": "Defines classes for SRD05VDCSL relay device that can be connected to Arduino Boards.",
+    "keywords": "device, arduino, atmelavr, SRD05VDCSL",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/romango78/HC-LIB/tree/master/SRD05VDCSL-lib"
+    },
+    "authors":
+    [
+      {
+        "name": "Roman Gorielov",
+        "email": "romango78@gmail.com"        
+      }
+    ],
+    "dependencies":
+    [
+      {
+        "name": "HC-LIB.Devices",
+        "version": ">=1.0.2201"
+      }
+    ],
+    "license": "MIT",    
+    "frameworks": "*",
+    "platforms": ["atmelavr"]
+  }

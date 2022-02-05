@@ -27,38 +27,38 @@ void setup()
     IPortAdapter<uint8_t> *adapter = (IPortAdapter<uint8_t>*)new DigitalPortAdapter(SRD05VDCSL_PIN);
     IStream<uint8_t> *stream = (IStream<uint8_t> *)new DigitalStream(adapter);
 
-    relayDevice = new SRD05VDCSLDevice(SRD05VDCSL_PIN, stream);
+    SRD05VDCSLDevice device{SRD05VDCSL_PIN, stream};
+    relayDevice = &device;
 
     relayController = new RelayDeviceController();
     
     delay(2000);
-    relayController->off(relayDevice);
+    relayController->off(*relayDevice);
     delay(3000);
 }
 
 void loop() 
 {
     err_t error;
-    auto state = relayController->getState(relayDevice);    
-    if(state == RelayState::off)
-    {
-        Serial.println("State: off");
-        error = relayController->on(relayDevice);
+    auto state = relayController->getState(*relayDevice);
+    if(state.hasValue())
+    {  
+        if(state.getValue() == RelayState::off)
+        {
+            Serial.println("State: off");
+            error = relayController->on(*relayDevice);
+        }
+        else
+        {
+            Serial.println("State: on");
+            error = relayController->off(*relayDevice);
+        }
+        Serial.println("Ok!");
     }
     else
-    {
-        Serial.println("State: on");
-        error = relayController->off(relayDevice);
-    }
-
-    if(error != NO_ERROR)
     {
         Serial.print("Error: ");
         Serial.println(error);
-    }
-    else
-    {
-        Serial.println("Ok!");
     }
     delay(5000);
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2022 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -9,14 +9,13 @@
 #ifndef _SRD05VDCSL_H_
 #define _SRD05VDCSL_H_
 
-#include "devices/Device.h"
-#include "devices/devicedef.h"
-#include "stream/IStream.h"
+#include "devices/DigitalDevices.h"
 
 struct SRD05VDCSLDevice : public RelayDevice
 {
-    SRD05VDCSLDevice(const uint8_t t_pin, IStream<uint8_t>* const t_digitalStream)
-        : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_digitalStream) {};    
+    SRD05VDCSLDevice() = delete;
+    SRD05VDCSLDevice(const uint8_t t_pin, IStream<uint8_t>* const t_stream)
+        : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};    
 };
 
 #endif

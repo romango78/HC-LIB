@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package>
+  <metadata>
+    <id>HC-LIB.SRD05VDCSL</id>
+    <version>1.0.2202</version>
+    <title>Arduino SRD05VDCSL Library</title>
+    <authors>Roman Gorielov</authors>
+    <owners>Roman Gorielov</owners>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/SRD05VDCSL-lib</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Defines classes for SRD05VDCSL relay device that can be connected to Arduino Boards..</description>
+    <releaseNotes>Initial 1.0 release</releaseNotes>
+    <copyright>Copyright 2022 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr device SRD05VDCSL</tags>
+    <dependencies>
+      <dependency id="HC-LIB.Devices" version="1.0.2201" />
+    </dependencies>
+    <summary>For Arduino projects</summary>
+    <packageTypes>
+      <packageType name="Dependency" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="src\devices\SRD05VDCSL.h" target="src\devices\SRD05VDCSL.h" />
+    <file src="library.json" target="library.json" />
+    <file src="LICENSE.md" target="LICENSE.md" />
+  </files>
+</package>
