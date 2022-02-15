@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.2202]
+### Changed
+- Fixed issue with disposing _PortAdapter_ resources.
+
 ## [1.0.2201]
 ### Added
 - Added _DigitalPortAdapter_ class for reading/writing data to digital port and getting digital port state.
