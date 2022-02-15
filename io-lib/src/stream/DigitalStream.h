@@ -13,17 +13,21 @@
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
-#define NO_DATA 0x0
-
 class DigitalStream : public BaseStream<uint8_t>
 {
     private:
         IPortAdapter<uint8_t>* const m_adapter;                
     public:
-        DigitalStream(IPortAdapter<uint8_t>* const t_adapter) 
+        DigitalStream() = delete;
+        DigitalStream(IPortAdapter<uint8_t>* t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
-
-        ~DigitalStream() = default;
+        virtual ~DigitalStream()
+        {
+            if(m_adapter)
+            {
+                delete m_adapter;
+            }
+        };
 
         void begin(const StreamMode t_mode) override;
         uint8_t read() override;

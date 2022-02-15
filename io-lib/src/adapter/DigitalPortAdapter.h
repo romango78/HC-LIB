@@ -14,9 +14,10 @@
 class DigitalPortAdapter : IPortAdapter<uint8_t>
 {
     public:
+        DigitalPortAdapter() = delete;
         DigitalPortAdapter(const uint8_t t_pin) 
             : IPortAdapter(t_pin) {};
-        ~DigitalPortAdapter() = default;
+        virtual ~DigitalPortAdapter() = default;
         
         void setInputMode() override;
         void setOutputMode() override;

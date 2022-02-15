@@ -56,6 +56,6 @@ uint8_t AnalogStream::getState()
     {
         return m_adapter->getState();
     }
-    BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
-    return 0;  
+    BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR);
+    return NO_DATA;  
 }

@@ -31,7 +31,7 @@ uint8_t DigitalPortAdapter::read()
     #if defined(ARDUINO)
     return digitalRead(m_pin);
     #else
-    return false;
+    return NO_DATA;
     #endif
 };
 
@@ -53,8 +53,8 @@ uint8_t DigitalPortAdapter::getState()
     {
         return bitRead(PORTB, m_pin);
     }
-    return 0;
+    return NO_DATA;
     #else
-    return 0;
+    return NO_DATA;
     #endif
 };

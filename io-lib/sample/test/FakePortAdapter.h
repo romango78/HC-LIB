@@ -14,7 +14,7 @@
 #define INPUT_MODE 0
 #define OUTPUT_MODE 1
 
-class FakePortAdapter : IPortAdapter<int>
+class FakePortAdapter : public IPortAdapter<int>
 {
     private:
         int m_mode;
@@ -22,7 +22,7 @@ class FakePortAdapter : IPortAdapter<int>
     public:
         FakePortAdapter() 
             : IPortAdapter(0), m_mode(NO_MODE) {}
-        ~FakePortAdapter() = default;
+        virtual ~FakePortAdapter() = default;
         
         void setInputMode() override
         {

@@ -25,7 +25,7 @@ template<typename T>
 class IStream
 {
     public:
-        IStream(){};
+        IStream() = default;
         virtual ~IStream() = default;
 
         virtual void begin(const StreamMode t_mode) = 0;

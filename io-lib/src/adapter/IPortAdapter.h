@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 20212Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -10,6 +10,8 @@
 #define _I_PORT_ADAPTER_H_
 
 #include <inttypes.h>
+
+#define NO_DATA 0
 
 template<typename T>
 class IPortAdapter

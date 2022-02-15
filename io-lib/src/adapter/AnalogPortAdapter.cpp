@@ -31,7 +31,7 @@ int AnalogPortAdapter::read()
     #if defined(ARDUINO)
     return analogRead(m_pin);
     #else
-    return 0;
+    return NO_DATA;
     #endif
 };
 
@@ -49,8 +49,8 @@ uint8_t AnalogPortAdapter::getState()
     {
         return bitRead(PORTC, m_pin);
     }
-    return 0;
+    return NO_DATA;
     #else
-    return 0;
+    return NO_DATA;
     #endif
 };

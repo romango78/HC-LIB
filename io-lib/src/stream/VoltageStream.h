@@ -29,10 +29,11 @@ class IVoltageStream : public IStream<uint16_t>
 class VoltageStream : protected AnalogStream, public IVoltageStream
 {
     public:
+        VoltageStream() = delete;
         VoltageStream(IPortAdapter<int>* const t_adapter) 
             : AnalogStream(t_adapter) {};
 
-        ~VoltageStream() = default;
+        virtual ~VoltageStream() = default;
 
         void begin(const StreamMode t_mode) override;
         uint16_t read() override;

@@ -32,7 +32,6 @@ void VoltageStream_ShouldReadVoltage()
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue,"The read voltage is not equal the expected value.");
 
     delete sut;
-    delete adapter;
 }
 
 void VoltageStream_ShouldSetPWM()
@@ -53,7 +52,6 @@ void VoltageStream_ShouldSetPWM()
         ,"The write PWM is not equal the expected value.");
 
     delete sut;
-    delete adapter;
 }
 
 #endif
