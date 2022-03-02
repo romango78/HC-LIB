@@ -12,32 +12,19 @@
 // The Ploynominal Equation 3
 #define PolynomialEquation(x) (0.00000412*x*x*x - 0.000857*x*x + 2.675*x - 3.198)
 
-uint16_t ZMPT101BReaderBase::getZero(ZMPT101BSensor* const t_sensor)
-{
-    if(!t_sensor)
-    {
-        return 0;
-    }
-    return reinterpret_cast<ZMPT101BSensor*>(t_sensor)->zero;
-};
-
-ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
+ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor)
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED);
+        return ZMPT101B_ACVoltage(t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
-    if(!t_sensor)
+    if(!t_sensor.stream)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ERROR_ARGUMENT_IS_NULL);
-    }
-    if(!t_sensor->analogStream)
-    {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)IO_ERROR_STREAM_NOTCREATED);
+        return ZMPT101B_ACVoltage(t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
     };
-    if(!t_sensor->analogStream->canRead())
+    if(!t_sensor.stream->canRead())
     {
-        t_sensor->analogStream->begin(StreamMode::Read);
+        t_sensor.stream->begin(StreamMode::Read);
     };
     
     if(m_timer->isStarted())
@@ -52,7 +39,7 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
     float minVoltage = 1000.0f;            
     while(!m_timer->isElapsed())
     {
-        int16_t adjAdcValue = (int16_t)t_sensor->analogStream->read() - getZero(t_sensor);
+        int16_t adjAdcValue = (int16_t)t_sensor.stream->read() - t_sensor.zero;
         float voltage = PolynomialEquation(adjAdcValue);
         if(maxVoltage < voltage)
         {
@@ -66,26 +53,22 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(ZMPT101BSensor* const t_sensor)
     m_timer->stop();
 
     float result = (maxVoltage - minVoltage)/2/sqrt(2);
-    return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, result);
+    return ZMPT101B_ACVoltage(t_sensor, result);
 };
 
-ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
+ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor)
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED);
+        return ZMPT101B_ACVoltage(t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
-    if(!t_sensor)
+    if(!t_sensor.stream)
     {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)ERROR_ARGUMENT_IS_NULL);
-    }
-    if(!t_sensor->analogStream)
-    {
-        return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, (err_t)IO_ERROR_STREAM_NOTCREATED);
+        return ZMPT101B_ACVoltage(t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
     };
-    if(!t_sensor->analogStream->canRead())
+    if(!t_sensor.stream->canRead())
     {
-        t_sensor->analogStream->begin(StreamMode::Read);
+        t_sensor.stream->begin(StreamMode::Read);
     };
     
     if(m_timer->isStarted())
@@ -100,7 +83,7 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
     uint16_t sampleCount = 0;
     while(!m_timer->isElapsed())
     {
-        int16_t adjAdcValue = (int16_t)t_sensor->analogStream->read() - getZero(t_sensor);
+        int16_t adjAdcValue = (int16_t)t_sensor.stream->read() - t_sensor.zero;
         float voltage = PolynomialEquation(adjAdcValue);
         totalVoltage += voltage * voltage;
         sampleCount++;
@@ -108,5 +91,5 @@ ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(ZMPT101BSensor* const t_sensor)
     m_timer->stop();
 
     float result = sqrt(totalVoltage/sampleCount);
-    return ZMPT101B_ACVoltage((ZMPT101BSensor *)t_sensor, result);
+    return ZMPT101B_ACVoltage(t_sensor, result);
 };

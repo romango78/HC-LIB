@@ -1,10 +1,10 @@
 # HC-LIB
-## Arduino ZMPT101B Library v1.0.2111
+## Arduino ZMPT101B Library v1.0.2203
 This __library__ contains ZMPT101B sensor definitions and True RMS/RMS readers.
 
 ### Dependencies
-- HC-LIB.System v1.0.2111
-- HC-LIB.IO     v1.0.2111
+- HC-LIB.System v1.0.2203
+- HC-LIB.IO     v1.0.2203
 - HC-LIB.Device.Abstractions     v1.0.2111
 
 ### Features

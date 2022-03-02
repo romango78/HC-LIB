@@ -10,7 +10,9 @@
 #define _ERRDEF_H_
 
 #define NO_ERROR 0x0000
-#define ERROR_ARGUMENT_IS_NULL (NO_ERROR + 1)
+#define ARGUMENT_IS_NULL_ERROR (NO_ERROR + 1)
+#define OUT_OF_RANGE_ERROR (NO_ERROR + 2)
+#define NOT_SUPPORTED_OPERATION_ERROR (NO_ERROR + 3)
 
 typedef unsigned short err_t;
 

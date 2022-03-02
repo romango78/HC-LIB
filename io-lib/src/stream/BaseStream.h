@@ -16,23 +16,24 @@
 template<typename T>
 class BaseStream : public IStream<T>
 {
-    private:
-        err_t m_lastError;
-        
     protected:
+        err_t m_lastError;
         uint8_t m_isInitialized;
+        
         void resetLastError();
-        void setLastError(err_t lastError);
+        void setLastError(const err_t lastError);
     public:
-        BaseStream() : m_lastError(NO_ERROR), m_isInitialized(UNDEF_MODE)
-        {};
+        BaseStream() 
+            : m_lastError(NO_ERROR), m_isInitialized(UNDEF_MODE) {};
         virtual ~BaseStream() = default;
 
-        virtual void begin(StreamMode t_mode) override;
+        virtual void begin(const StreamMode t_mode) override;
 
         T read() override;
-        void write(T t_data) override;
+        void write(const T t_data) override;
         void end() override;
+
+        virtual uint8_t getState() = 0;
 
         bool canRead() override;
         bool canWrite() override;
@@ -42,7 +43,7 @@ class BaseStream : public IStream<T>
 };
 
 template<typename T>
-void BaseStream<T>::begin(StreamMode t_mode)
+void BaseStream<T>::begin(const StreamMode t_mode)
 {
     resetLastError();
     m_isInitialized = t_mode;
@@ -56,7 +57,7 @@ T BaseStream<T>::read()
 };
 
 template<typename T>
-void BaseStream<T>::write(T t_data)
+void BaseStream<T>::write(const T t_data)
 {
     resetLastError();
 };
@@ -99,7 +100,7 @@ void BaseStream<T>::resetLastError()
 };
 
 template<typename T>
-void BaseStream<T>::setLastError(err_t lastError)
+void BaseStream<T>::setLastError(const err_t lastError)
 {
     m_lastError = lastError;
 };

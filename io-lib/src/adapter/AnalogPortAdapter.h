@@ -14,14 +14,20 @@
 class AnalogPortAdapter : IPortAdapter<int>
 {
     public:
-        AnalogPortAdapter(const uint8_t t_pin) : IPortAdapter(t_pin) {};
-        ~AnalogPortAdapter() = default;
+        AnalogPortAdapter() = delete;
+        AnalogPortAdapter(const uint8_t t_pin) 
+            : IPortAdapter(t_pin) {};
+        virtual ~AnalogPortAdapter() = default;
         
         void setInputMode() override;
         void setOutputMode() override;
 
         int read() override;
-        void write(int t_value) override;
+        void write(const int t_value) override;
+
+        uint8_t getState() override;
+
+        IPortAdapter<int>* clone() const override;
 };
 
 #endif

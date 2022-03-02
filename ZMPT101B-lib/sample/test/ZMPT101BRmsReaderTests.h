@@ -19,33 +19,16 @@
 void ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized()
 {
     // Arrange
-    ZMPT101BSensor* sensor = new ZMPT101BSensor(0, nullptr);
+    ZMPT101BSensor sensor = {0, nullptr};
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(nullptr);
 
     // Act
     ZMPT101B_ACVoltage result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(DEVICE_ERROR_TIMER_IS_NOT_INITIALIZED, result.error, "Expected Timer Is Not Initialized error.");
+    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.error, "Expected Timer Is Not Initialized error.");
 
     delete sut;
-    delete sensor;
-};
-
-void ZMPT101BRmsReader_Raise_Error_When_ArgumentIsNull()
-{
-    // Arrange
-    ITimer* timer = new FakeTimer();
-    ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(timer);
-
-    // Act
-    ZMPT101B_ACVoltage result = sut->read(nullptr);
-
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(ERROR_ARGUMENT_IS_NULL, result.error, "Expected Argumet Is Null error.");
-
-    delete sut;
-    delete timer;
 };
 
 void ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized()
@@ -53,17 +36,16 @@ void ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized()
     // Arrange
     ITimer* timer = new FakeTimer();
 
-    ZMPT101BSensor* sensor = new ZMPT101BSensor(0, nullptr);
+    ZMPT101BSensor sensor = {0, nullptr};
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(timer);
 
     // Act
     ZMPT101B_ACVoltage result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(IO_ERROR_STREAM_NOTCREATED, result.error, "Expected Stream Is Not Created error.");
+    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.error, "Expected Stream Is Not Created error.");
 
     delete sut;
-    delete sensor;
     delete timer;
 };
 
@@ -75,20 +57,18 @@ void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
     ITimer* timer = new FakeTimer();
     IStream<uint16_t>* stream = new FakeStream(0, 1023);
 
-    ZMPT101BSensor* sensor = new ZMPT101BSensor(0, stream);
-    sensor->zero = 512;
+    ZMPT101BSensor sensor = {0, stream};
+    sensor.zero = 512;
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(timer);
 
     // Act
     ZMPT101B_ACVoltage result = sut->read(sensor);
 
     // Asserts   
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.data, "The RMS calculation is falied.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.data, "The RMS calculation is failed.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected.");
 
     delete sut;
-    delete sensor;
-    delete stream;
     delete timer;
 };
 

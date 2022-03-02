@@ -24,7 +24,7 @@ class ArduinoTimer : public ITimer
         ~ArduinoTimer() = default;
 
         uint32_t getInterval() override;
-        void setInterval(uint32_t t_interval) override;
+        void setInterval(const uint32_t t_interval) override;
 
         void start() override;
         void stop() override;

@@ -18,10 +18,10 @@ void AnalogStream_ShouldReadData_WhenStreamIsOpenForRead()
 {
     // Arrange
     int expectedValue = 125;
-    IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();
+    IPortAdapter<int>* adapter = new FakePortAdapter();
     ((FakePortAdapter *)adapter)->setData(expectedValue);
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Read);
@@ -33,7 +33,6 @@ void AnalogStream_ShouldReadData_WhenStreamIsOpenForRead()
     TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, actualValue,"The read value is not equal the expected value.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead()
@@ -55,7 +54,6 @@ void AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead()
     TEST_ASSERT_EQUAL_MESSAGE(false, canWrite,"The stream is not set in read mode.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldBeInUndefinedMode_WhenStreamIsClosed()
@@ -75,7 +73,6 @@ void AnalogStream_ShouldBeInUndefinedMode_WhenStreamIsClosed()
     TEST_ASSERT_EQUAL_MESSAGE(expectedValue, actualValue,"The closed stream is set in incorrect mode.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead()
@@ -94,10 +91,9 @@ void AnalogStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead()
     TEST_ASSERT_EQUAL_MESSAGE(NO_MODE, ((FakePortAdapter *)adapter)->getMode(), "The port is set to some mode.");
     TEST_ASSERT_EQUAL_INT_MESSAGE(NO_DATA, actualValue,"Some data is read.");
     TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(IO_ERROR_STREAM_CLOSED, error,"The wrong error is set.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(STREAM_CLOSED_IO_ERROR, error,"The wrong error is set.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldWriteData_WhenStreamIsOpenForWrite()
@@ -118,7 +114,6 @@ void AnalogStream_ShouldWriteData_WhenStreamIsOpenForWrite()
     TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, ((FakePortAdapter *)adapter)->getData(),"The write value is not equal the expected value.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite()
@@ -140,7 +135,6 @@ void AnalogStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite()
     TEST_ASSERT_EQUAL_MESSAGE(false, canRead,"The stream is not set in write mode.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes()
@@ -166,7 +160,6 @@ void AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes()
     TEST_ASSERT_EQUAL_MESSAGE(true, canRead,"The stream is not set in specific mode.");
 
     delete sut;
-    delete adapter;
 }
 
 void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
@@ -183,10 +176,26 @@ void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
 
     // Assert
     TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(IO_ERROR_STREAM_CLOSED, error,"The wrong error is set.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(STREAM_CLOSED_IO_ERROR, error,"The wrong error is set.");
 
     delete sut;
-    delete adapter;
+}
+
+void AnalogStream_ShouldRaiseError_WhenAdaptorIsNotSet()
+{
+    // Arrange
+    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(nullptr);
+
+    // Act
+    sut->begin(StreamMode::Read);
+    sut->write(125);
+    int error = sut->getLastError();
+
+    // Assert
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut->hasError(),"Some error is expected.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(STREAM_CLOSED_IO_ERROR, error,"The wrong error is set.");
+
+    delete sut;
 }
 
 #endif

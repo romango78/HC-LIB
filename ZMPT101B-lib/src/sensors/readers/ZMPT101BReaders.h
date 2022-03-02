@@ -16,37 +16,28 @@
 
 #define AC_NETWORK_FREQUENCY 50
 
-class ZMPT101BReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
-{
-    protected:
-        uint16_t getZero(ZMPT101BSensor* const t_sensor);
-    public:
-        ZMPT101BReaderBase(){};
-        ~ZMPT101BReaderBase() = default;        
-};
-
-class ZMPT101BRmsReader : public ZMPT101BReaderBase
+class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
     private:
         ITimer* const m_timer;
     public:
         ZMPT101BRmsReader(ITimer* const t_timer)
             : m_timer(t_timer) {};
-        ~ZMPT101BRmsReader() {};
+        virtual ~ZMPT101BRmsReader() = default;
 
-        ZMPT101B_ACVoltage read(ZMPT101BSensor* const t_sensor) override;
+        ZMPT101B_ACVoltage read(const ZMPT101BSensor& t_sensor) override;
 };
 
-class ZMPT101BTrueRmsReader : public ZMPT101BReaderBase
+class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
     private:
         ITimer* const m_timer;
     public:
         ZMPT101BTrueRmsReader(ITimer* const t_timer)
             : m_timer(t_timer) {};
-        ~ZMPT101BTrueRmsReader() {};
+        virtual ~ZMPT101BTrueRmsReader() = default;
 
-        ZMPT101B_ACVoltage read(ZMPT101BSensor* const t_sensor) override;
+        ZMPT101B_ACVoltage read(const ZMPT101BSensor& t_sensor) override;
 };
 
 #endif

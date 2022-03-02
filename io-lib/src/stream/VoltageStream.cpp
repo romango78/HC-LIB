@@ -8,7 +8,7 @@
 
 #include "VoltageStream.h"
 
-void VoltageStream::begin(StreamMode t_mode) 
+void VoltageStream::begin(const StreamMode t_mode) 
 {
     AnalogStream::begin(t_mode);
 };
@@ -18,10 +18,15 @@ uint16_t VoltageStream::read()
     return AnalogStream::read();
 };
 
-void VoltageStream::write(uint16_t t_data) 
+void VoltageStream::write(const uint16_t t_data) 
 {
     AnalogStream::write(t_data);
 };
+
+uint8_t VoltageStream::getState()
+{
+    return AnalogStream::getState();  
+}
 
 void VoltageStream::end() 
 {
@@ -53,17 +58,22 @@ float VoltageStream::getVoltage()
     return (float)AnalogStream::read() * (V_REF/ADC_SCALE);
 };
 
-void VoltageStream::setPwm(int t_percentage)
+void VoltageStream::setPwm(const int t_percentage)
 {
+    uint8_t percentage;
     if(t_percentage < 0)
     {
-        t_percentage = 0;
+        percentage = 0;
     } 
     else if (t_percentage > 100)
     {
-        t_percentage = 100;
+        percentage = 100;
+    }
+    else
+    {
+        percentage = t_percentage;
     }
 
-    int data = static_cast<int>((t_percentage * PWM_MAX)/100);
+    int data = static_cast<int>((percentage * PWM_MAX)/100);
     AnalogStream::write(data);
 };

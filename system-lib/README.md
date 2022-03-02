@@ -1,5 +1,5 @@
 # HC-LIB
-## Arduino System Library v1.0.2111
+## Arduino System Library v1.0.2203
 This __library__ contains fundamental classes and base classes that define commonly-used data types.
 
 ### Dependencies
@@ -8,6 +8,7 @@ No Dependencies
 ### Features
 - Defines error type and constants.
 - Implemented countdown timer that uses either internal Arduino 16MHz clock or external DS3232 32kHz watch crystal.
+- Implemented _Expected<T>_ idiom.
 
 ### Usage
 TBD

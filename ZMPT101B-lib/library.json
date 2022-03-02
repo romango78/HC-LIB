@@ -1,6 +1,6 @@
 {
     "name": "HC-LIB.ZMPT101B",
-    "version": "1.0.2111",
+    "version": "1.0.2203",
     "description": "Contains ZMPT101B sensor definitions and RMS/True RMS readers.",
     "keywords": "zmpt101B, analog, sensor, arduino, atmelavr",
     "repository":
@@ -18,9 +18,13 @@
     "dependencies":
     [
       {
-        "name": "HC-LIB.Device.Abstractions",
-        "version": ">=1.0.2111"
-      }
+        "name": "HC-LIB.Devices",
+        "version": ">=1.0.2203"
+      },
+      {
+        "name": "HC-LIB.IO",
+        "version": ">=1.0.2203"
+      }      
     ],    
     "license": "MIT",    
     "frameworks": "*",

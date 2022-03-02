@@ -1,6 +1,6 @@
 {
     "name": "HC-LIB.IO",
-    "version": "1.0.2111",
+    "version": "1.0.2203",
     "description": "This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.",
     "keywords": "io, arduino, atmelavr",
     "repository":
@@ -19,7 +19,7 @@
     [
       {
         "name": "HC-LIB.System",
-        "version": ">=1.0.2111"
+        "version": ">=1.0.2203"
       }
     ],    
     "license": "MIT",    

@@ -31,13 +31,31 @@ int AnalogPortAdapter::read()
     #if defined(ARDUINO)
     return analogRead(m_pin);
     #else
-    return 0;
+    return NO_DATA;
     #endif
 };
 
-void AnalogPortAdapter::write(int t_value)
+void AnalogPortAdapter::write(const int t_value)
 {
     #if defined(ARDUINO)
     analogWrite(m_pin, t_value);
     #endif
 };
+
+uint8_t AnalogPortAdapter::getState()
+{
+    #if defined(ARDUINO)
+    if(m_pin < 8)
+    {
+        return bitRead(PORTC, m_pin);
+    }
+    return NO_DATA;
+    #else
+    return NO_DATA;
+    #endif
+};
+
+IPortAdapter<int>* AnalogPortAdapter::clone() const 
+{
+    return new AnalogPortAdapter(m_pin);
+}
