@@ -25,7 +25,6 @@ void testsProcess()
      * ZMPT101BRmsReader
      *****************************************/
     RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized);
-    RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_ArgumentIsNull);
     RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized);
     RUN_TEST(ZMPT101BRmsReader_Read_Data_And_Calculate_Rms);
 
@@ -33,7 +32,6 @@ void testsProcess()
      * ZMPT101BTrueRmsReader
      *****************************************/
     RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_TimerIsNotInitialized);
-    RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_ArgumentIsNull);
     RUN_TEST(ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized);
     RUN_TEST(ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms);
 

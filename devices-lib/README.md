@@ -1,10 +1,10 @@
 # HC-LIB
-## Arduino Devices Library v1.0.2201
+## Arduino Devices Library v1.0.2203
 This __library__ defines base classes for devices that can be connected to Arduino Boards.
 
 ### Dependencies
-- HC-LIB.System v1.0.2201
-- HC-LIB.IO     v1.0.2201
+- HC-LIB.System v1.0.2203
+- HC-LIB.IO     v1.0.2203
 - HC-LIB.Device.Abstractions v1.0.2201
 
 ### Features

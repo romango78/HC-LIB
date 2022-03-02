@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.0.2202]
 ### Changed
 - Fixed issue with disposing _PortAdapter_ resources.
+- Implemented _IClonable_ interface for _PortAdapter_ and _Stream_ classes.
 
 ## [1.0.2201]
 ### Added

@@ -10,11 +10,12 @@
 #define _I_PORT_ADAPTER_H_
 
 #include <inttypes.h>
+#include "ICloneable.h"
 
 #define NO_DATA 0
 
 template<typename T>
-class IPortAdapter
+class IPortAdapter : public ICloneable<IPortAdapter<T>>
 {
     protected:
         const uint8_t m_pin; 
@@ -30,6 +31,8 @@ class IPortAdapter
         virtual void write(const T t_value) = 0;
 
         virtual uint8_t getState() = 0;
+
+        virtual IPortAdapter<T>* clone() const = 0;
 };
 
 #endif

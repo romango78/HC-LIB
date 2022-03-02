@@ -26,6 +26,8 @@ class AnalogPortAdapter : IPortAdapter<int>
         void write(const int t_value) override;
 
         uint8_t getState() override;
+
+        IPortAdapter<int>* clone() const override;
 };
 
 #endif

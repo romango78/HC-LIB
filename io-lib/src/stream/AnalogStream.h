@@ -10,7 +10,6 @@
 #define _ANALOG_STREAM_H_
 
 #include <inttypes.h>
-#include "Memory.h"
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
@@ -35,6 +34,8 @@ class AnalogStream : public BaseStream<uint16_t>
         void write(const uint16_t t_data) override;
 
         uint8_t getState() override;
+
+        IStream<uint16_t>* clone() const override;
 };
 
 #endif

@@ -6,37 +6,35 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SRD05VDCSL_TESTS_H_
-#define _SRD05VDCSL_TESTS_H_
+#ifndef _SENSOR_TESTS_H_
+#define _SENSOR_TESTS_H_
 
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "move.h"
+#include "sensors/AnalogSensor.h"
 #include "FakeStream.h"
-#include "devices/SRD05VDCSL.h"
+#include "move.h"
 
-SRD05VDCSLDevice createSRD05VDCSL()
+AnalogSensor createAnalogSensor()
 {
-    IStream<uint8_t>* stream = new FakeStream();
-    SRD05VDCSLDevice result{5, stream};
+    AnalogSensor result{10, 5, (IStream<uint16_t>*)new FakeStream()};
     return result;
 }
 
-SRD05VDCSLDevice createSRD05VDCSL2()
+AnalogSensor createAnalogSensor2()
 {
-    IStream<uint8_t>* stream = new FakeStream();
-    SRD05VDCSLDevice result{15, stream};
+    AnalogSensor result{12, 10, (IStream<uint16_t>*)new FakeStream()};
     return result;
 }
 
-void ShouldConvert_SRD05VDCSLToSRD05VDCSL()
+void ShouldConvert_AnalogSensorToAnalogSensor()
 {
     // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
+    AnalogSensor source = createAnalogSensor();
 
     // Act
-    SRD05VDCSLDevice sut = source;
+    AnalogSensor sut = source;
 
     // Asserts
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
@@ -45,58 +43,27 @@ void ShouldConvert_SRD05VDCSLToSRD05VDCSL()
     TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
 }
 
-
-void ShouldConvert_SRD05VDCSLToRelayDevice()
+void ShouldConvert_AnalogSensorToISensor()
 {
     // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
+    AnalogSensor source = createAnalogSensor();
 
     // Act
-    RelayDevice sut = source;
-
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
-}
-
-void ShouldConvert_SRD05VDCSLToDigitalDevice()
-{
-    // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
-
-    // Act
-    DigitalDevice sut = source;
-
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
-}
-
-void ShouldConvert_SRD05VDCSLToIDevice()
-{
-    // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
-
-    // Act
-    IDevice sut = source;
+    ISensor sut = (ISensor)source;
 
     // Asserts
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
 }
 
-void ShouldMove_SRD05VDCSLToSRD05VDCSL()
+void ShouldMove_AnalogSensorToAnalogSensor()
 {
     // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
+    AnalogSensor source = createAnalogSensor();
     auto sourceStreamAddr = reinterpret_cast<uintptr_t>(source.stream);
 
     // Act
-    SRD05VDCSLDevice sut(std::move(source));
+    AnalogSensor sut(std::move(source));
 
     // Asserts
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
@@ -105,11 +72,11 @@ void ShouldMove_SRD05VDCSLToSRD05VDCSL()
     TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream, "The 'stream' should be same as in origin object.");
 }
 
-void ShouldAssignCopy_SRD05VDCSL()
+void ShouldAssignCopy_AnalogSensor()
 {
     // Arrange
-    SRD05VDCSLDevice source = createSRD05VDCSL();
-    SRD05VDCSLDevice sut = createSRD05VDCSL2();
+    AnalogSensor source = createAnalogSensor();
+    AnalogSensor sut = createAnalogSensor2();
 
     // Act
     sut = source;

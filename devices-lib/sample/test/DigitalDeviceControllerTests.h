@@ -22,6 +22,7 @@ void Should_SetState_WhenDeviceIsInitialized()
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
 
     DigitalDeviceController sut {};
+
     // Act
     err_t result = sut.setState(device, 1);
 

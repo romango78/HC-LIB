@@ -15,7 +15,21 @@ struct SRD05VDCSLDevice : public RelayDevice
 {
     SRD05VDCSLDevice() = delete;
     SRD05VDCSLDevice(const uint8_t t_pin, IStream<uint8_t>* const t_stream)
-        : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};    
+        : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};
+    SRD05VDCSLDevice(const SRD05VDCSLDevice& source) noexcept
+        : RelayDevice(source) {};
+    SRD05VDCSLDevice(SRD05VDCSLDevice&& source) noexcept
+        : RelayDevice(dynamic_cast<RelayDevice&&>(source)) {};
+    virtual ~SRD05VDCSLDevice() = default;
+
+    SRD05VDCSLDevice& operator= (const SRD05VDCSLDevice& source) noexcept
+    {
+        if(this != &source)
+        {
+            RelayDevice::operator=(source);
+        }
+        return *this;
+    }        
 };
 
 #endif

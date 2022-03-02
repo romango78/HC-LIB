@@ -19,22 +19,37 @@
 
 AnalogDevice createAnalogDevice()
 {
-    IStream<uint16_t>* stream = (IStream<uint16_t>*)new FakeStream();
-    AnalogDevice result{10, 5, stream};
+    AnalogDevice result{10, 5, (IStream<uint16_t>*)new FakeStream()};
+    return result;
+}
+
+AnalogDevice createAnalogDevice2()
+{
+    AnalogDevice result{12, 10, (IStream<uint16_t>*)new FakeStream()};
     return result;
 }
 
 DigitalDevice createDigitalDevice()
 {
-    IStream<uint8_t>* stream = new FakeStream();
-    DigitalDevice result{10, 5, stream};
+    DigitalDevice result{10, 5, new FakeStream()};
+    return result;
+}
+
+DigitalDevice createDigitalDevice2()
+{
+    DigitalDevice result{12, 10, new FakeStream()};
     return result;
 }
 
 RelayDevice createRelayDevice()
 {
-    IStream<uint8_t>* stream = new FakeStream();
-    RelayDevice result{5, stream};
+    RelayDevice result{5, new FakeStream()};
+    return result;
+}
+
+RelayDevice createRelayDevice2()
+{
+    RelayDevice result{15, new FakeStream()};
     return result;
 }
 
@@ -50,7 +65,7 @@ void ShouldConvert_AnalogDeviceToAnalogDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_AnalogDeviceToIDevice()
@@ -70,6 +85,7 @@ void ShouldMove_AnalogDeviceToAnalogDevice()
 {
     // Arrange
     AnalogDevice source = createAnalogDevice();
+    auto sourceStreamAddr = reinterpret_cast<uintptr_t>(source.stream);
 
     // Act
     AnalogDevice sut(std::move(source));
@@ -78,7 +94,22 @@ void ShouldMove_AnalogDeviceToAnalogDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream, "The 'stream' should be same as in origin object.");
+}
+
+void ShouldAssignCopy_AnalogDevice()
+{
+    // Arrange
+    AnalogDevice source = createAnalogDevice();
+    AnalogDevice sut = createAnalogDevice2();
+
+    // Act
+    sut = source;
+
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_DigitalDeviceToDigitalDevice()
@@ -93,7 +124,7 @@ void ShouldConvert_DigitalDeviceToDigitalDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_DigitalDeviceToIDevice()
@@ -113,6 +144,7 @@ void ShouldMove_DigitalDeviceToDigitalDevice()
 {
     // Arrange
     DigitalDevice source = createDigitalDevice();
+    auto sourceStreamAddr = reinterpret_cast<uintptr_t>(source.stream);
 
     // Act
     DigitalDevice sut(std::move(source));
@@ -121,7 +153,22 @@ void ShouldMove_DigitalDeviceToDigitalDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream, "The 'stream' should be same as in origin object.");
+}
+
+void ShouldAssignCopy_DigitalDevice()
+{
+    // Arrange
+    DigitalDevice source = createDigitalDevice();
+    DigitalDevice sut = createDigitalDevice2();
+
+    // Act
+    sut = source;
+
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_RelayDeviceToRelayDevice()
@@ -136,7 +183,7 @@ void ShouldConvert_RelayDeviceToRelayDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_RelayDeviceToDigitalDevice()
@@ -151,7 +198,7 @@ void ShouldConvert_RelayDeviceToDigitalDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
 }
 
 void ShouldConvert_RelayDeviceToIDevice()
@@ -171,6 +218,7 @@ void ShouldMove_RelayDeviceToRelayDevice()
 {
     // Arrange
     RelayDevice source = createRelayDevice();
+    auto sourceStreamAddr = reinterpret_cast<uintptr_t>(source.stream);
 
     // Act
     RelayDevice sut(std::move(source));
@@ -179,7 +227,22 @@ void ShouldMove_RelayDeviceToRelayDevice()
     TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.stream, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream, "The 'stream' should be same as in origin object.");
+}
+
+void ShouldAssignCopy_RelayDevice()
+{
+    // Arrange
+    RelayDevice source = createRelayDevice();
+    RelayDevice sut = createRelayDevice2();
+
+    // Act
+    sut = source;
+
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
 }
 
 #endif

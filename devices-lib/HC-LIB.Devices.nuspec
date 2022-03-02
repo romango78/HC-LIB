@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.Devices</id>
-    <version>1.0.2201</version>
+    <version>1.0.2203</version>
     <title>Arduino Devices Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -14,6 +14,7 @@
     <tags>native arduino atmelavr device</tags>
     <dependencies>
       <dependency id="HC-LIB.Device.Abstractions" version="1.0.2201" />
+      <dependency id="HC-LIB.IO" version="1.0.2203" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>

@@ -26,6 +26,8 @@ class DigitalPortAdapter : IPortAdapter<uint8_t>
         void write(const uint8_t t_value) override;
 
         uint8_t getState() override;
+
+        IPortAdapter<uint8_t>* clone() const override;
 };
 
 #endif

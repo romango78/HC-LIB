@@ -58,3 +58,8 @@ uint8_t DigitalPortAdapter::getState()
     return NO_DATA;
     #endif
 };
+
+IPortAdapter<uint8_t>* DigitalPortAdapter::clone() const 
+{
+    return new DigitalPortAdapter(m_pin);
+}

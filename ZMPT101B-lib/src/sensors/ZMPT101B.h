@@ -20,18 +20,18 @@ struct ZMPT101BSensor : AnalogSensor
 {
     uint16_t zero;
 
-    ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_analogStream)
-        : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_analogStream), zero(0) {};
+    ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_stream)
+        : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_stream), zero(0) {};
 };
 
 struct ZMPT101B_ACVoltage : SensorData<float>
 {
-    ZMPT101B_ACVoltage() : SensorData() {};
+    ZMPT101B_ACVoltage() = delete;
     
-    ZMPT101B_ACVoltage(const ZMPT101BSensor* const t_sensor, const float t_data)
+    ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const float t_data)
         : SensorData<float>(t_sensor, t_data) {};    
 
-    ZMPT101B_ACVoltage(const ZMPT101BSensor* const t_sensor, const err_t t_error)
+    ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const err_t t_error)
         : SensorData<float>(t_sensor, t_error) {};  
 };
 
@@ -44,21 +44,21 @@ class ZMPT101B
             {
                 return;
             }
-            if(!t_sensor->analogStream)
+            if(!t_sensor->stream)
             {
                 return;
             }
-            if(!t_sensor->analogStream->canRead())
+            if(!t_sensor->stream->canRead())
             {
-                t_sensor->analogStream->begin(StreamMode::Read);
+                t_sensor->stream->begin(StreamMode::Read);
             }
             uint32_t adcValue = 0;
             for(int index = 0; index < ZMPT101B_READ_ITERATIONS; index++)
             {
-                adcValue += t_sensor->analogStream->read();
+                adcValue += t_sensor->stream->read();
             }
             t_sensor->zero = static_cast<uint16_t>(adcValue / ZMPT101B_READ_ITERATIONS);
-            t_sensor->analogStream->end();
+            t_sensor->stream->end();
         };
 };
 

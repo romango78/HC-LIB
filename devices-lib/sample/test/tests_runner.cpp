@@ -12,6 +12,7 @@
 #include "DigitalDeviceControllerTests.h"
 #include "RelayDeviceControllerTests.h"
 #include "DeviceTests.h"
+#include "SensorTests.h"
 
 void dummyTest()
 {
@@ -46,13 +47,24 @@ void testsProcess()
     RUN_TEST(ShouldConvert_AnalogDeviceToAnalogDevice);
     RUN_TEST(ShouldConvert_AnalogDeviceToIDevice);
     RUN_TEST(ShouldMove_AnalogDeviceToAnalogDevice);
-    RUN_TEST(ShouldConvert_DigitalDeviceToDigitalDevice);
+    RUN_TEST(ShouldAssignCopy_AnalogDevice);
+    RUN_TEST(ShouldConvert_DigitalDeviceToDigitalDevice);    
     RUN_TEST(ShouldConvert_DigitalDeviceToIDevice);
     RUN_TEST(ShouldMove_DigitalDeviceToDigitalDevice);
+    RUN_TEST(ShouldAssignCopy_DigitalDevice);
     RUN_TEST(ShouldConvert_RelayDeviceToRelayDevice);
     RUN_TEST(ShouldConvert_RelayDeviceToDigitalDevice);
     RUN_TEST(ShouldConvert_RelayDeviceToIDevice);
     RUN_TEST(ShouldMove_RelayDeviceToRelayDevice);
+    RUN_TEST(ShouldAssignCopy_RelayDevice);
+
+    /*****************************************
+     * Sensor Tests
+     *****************************************/    
+    RUN_TEST(ShouldConvert_AnalogSensorToAnalogSensor);
+    RUN_TEST(ShouldConvert_AnalogSensorToISensor);
+    RUN_TEST(ShouldMove_AnalogSensorToAnalogSensor);
+    RUN_TEST(ShouldAssignCopy_AnalogSensor);
 
     UNITY_END();
 };
@@ -80,6 +92,16 @@ int main( int argc, char **argv)
 #if defined(ARDUINO)
 
 #include <Arduino.h>
+
+void setUp(void)
+{
+    // STUB
+};
+
+void tearDown(void) 
+{
+    // STUB
+};
 
 void setup() {
     // Setup device

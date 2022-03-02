@@ -16,7 +16,7 @@ class ISensorReader
         ISensorReader() {};
         virtual ~ISensorReader() = default;
 
-        virtual SensorData read(const Sensor* const t_sensor) = 0;
+        virtual SensorData read(const Sensor& t_sensor) = 0;
 };
 
 #endif

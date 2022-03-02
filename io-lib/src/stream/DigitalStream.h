@@ -34,6 +34,8 @@ class DigitalStream : public BaseStream<uint8_t>
         void write(const uint8_t t_data) override;
 
         uint8_t getState() override;
+
+        IStream<uint8_t>* clone() const override;
 };
 
 #endif

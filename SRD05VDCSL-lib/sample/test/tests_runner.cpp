@@ -28,6 +28,7 @@ void testsProcess()
     RUN_TEST(ShouldConvert_SRD05VDCSLToDigitalDevice);
     RUN_TEST(ShouldConvert_SRD05VDCSLToIDevice);
     RUN_TEST(ShouldMove_SRD05VDCSLToSRD05VDCSL);
+    RUN_TEST(ShouldAssignCopy_SRD05VDCSL);
 
     UNITY_END();
 };

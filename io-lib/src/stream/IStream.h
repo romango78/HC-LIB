@@ -10,6 +10,7 @@
 #define _I_STREAM_H_
 
 #include "ioerrdef.h"
+#include "ICloneable.h"
 
 #define UNDEF_MODE 0
 #define READ_MODE 1
@@ -22,7 +23,7 @@ enum StreamMode
 };
 
 template<typename T>
-class IStream
+class IStream : public ICloneable<IStream<T>>
 {
     public:
         IStream() = default;

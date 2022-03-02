@@ -16,11 +16,10 @@
 template<typename T>
 class BaseStream : public IStream<T>
 {
-    private:
-        err_t m_lastError;
-        
     protected:
+        err_t m_lastError;
         uint8_t m_isInitialized;
+        
         void resetLastError();
         void setLastError(const err_t lastError);
     public:

@@ -3,7 +3,7 @@
 This __library__ defines classes for SRD05VDCSL relay device that can be connected to Arduino Boards.
 
 ### Dependencies
-- HC-LIB.Devices v1.0.2201
+- HC-LIB.Devices v1.0.2203
 
 ### Features
 - Defines base device definition class for _SRD05VDCSL_ device.

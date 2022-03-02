@@ -59,3 +59,16 @@ uint8_t AnalogStream::getState()
     BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR);
     return NO_DATA;  
 }
+
+IStream<uint16_t>* AnalogStream::clone() const
+{
+    IPortAdapter<int>* adapter = nullptr;
+    if(m_adapter)
+    {
+        adapter = m_adapter->clone();
+    }
+    auto clone = new AnalogStream(adapter);
+    clone->m_isInitialized = m_isInitialized;
+    clone->m_lastError = m_lastError;
+    return clone;
+}

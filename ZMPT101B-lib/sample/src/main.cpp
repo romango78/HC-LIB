@@ -77,13 +77,13 @@ void setup()
     Serial.begin(115200);      
 
     // Setup Application      
-    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(ZMPT101B_PIN);
-    IStream<uint16_t> *stream = (IStream<uint16_t> *)new AnalogStream(adapter);
+    auto adapter = (IPortAdapter<int>*)new AnalogPortAdapter(ZMPT101B_PIN);
+    auto stream = new AnalogStream(adapter);
 
     sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
     ZMPT101B::calibrate(sensor);
 
-    ITimer *timer = (ITimer *)new ArduinoTimer();
+    auto timer = new ArduinoTimer();
 
     rmsReader = new ZMPT101BRmsReader(timer);
     trueRmsReader = new ZMPT101BTrueRmsReader(timer);
@@ -95,8 +95,8 @@ void setup()
 
 void loop() 
 {
-    ZMPT101B_ACVoltage sensorData1 = rmsReader->read(sensor);
-    ZMPT101B_ACVoltage sensorData2 = trueRmsReader->read(sensor);
+    ZMPT101B_ACVoltage sensorData1 = rmsReader->read(*sensor);
+    ZMPT101B_ACVoltage sensorData2 = trueRmsReader->read(*sensor);
 
     Serial.print(220.00);
     Serial.print(" ");

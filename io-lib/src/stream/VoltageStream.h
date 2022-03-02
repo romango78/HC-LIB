@@ -49,7 +49,7 @@ class VoltageStream : protected AnalogStream, public IVoltageStream
         err_t getLastError() override;
 
         float getVoltage() override;
-        void setPwm(const int t_percentage) override;        
+        void setPwm(const int t_percentage) override; 
 };
 
 #endif

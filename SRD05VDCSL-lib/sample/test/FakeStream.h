@@ -13,19 +13,23 @@
 #include <stdlib.h>
 #include "stream/IStream.h"
 
+uint8_t g_PortState = 0;
+
 class FakeStream : public IStream<uint8_t>
 {
     private:
-        uint8_t m_currentValue;
         bool m_isSetToWrite;
         bool m_hasError;
     public:
         FakeStream()
-            : FakeStream(0) {};
+            : m_isSetToWrite(false), m_hasError(false) {};
         FakeStream(uint8_t t_initialValue) 
-            : m_isSetToWrite(false), m_hasError(false), m_currentValue(t_initialValue) {};
+            : m_isSetToWrite(false), m_hasError(false)
+            {
+                g_PortState = t_initialValue;
+            };
 
-        ~FakeStream() = default;
+        virtual ~FakeStream() = default;
 
         void begin(const StreamMode t_mode) override
         {
@@ -49,7 +53,7 @@ class FakeStream : public IStream<uint8_t>
         {
             if (canWrite())
             {
-                m_currentValue = t_data;
+                g_PortState = t_data;
             }
             else
             {
@@ -65,7 +69,7 @@ class FakeStream : public IStream<uint8_t>
 
         uint8_t getState() override
         {
-            return m_currentValue;
+            return g_PortState;
         }
 
         bool canRead() override
@@ -94,8 +98,17 @@ class FakeStream : public IStream<uint8_t>
 
         uint8_t getWrittenValue()
         {
-            return m_currentValue;
+            return g_PortState;
         }
+
+        IStream<uint8_t>* clone() const override
+        {
+            auto stream = new FakeStream();
+            stream->m_isSetToWrite = m_isSetToWrite;
+            stream->m_hasError = m_hasError;
+
+            return stream;
+        }        
 };
 
 #endif

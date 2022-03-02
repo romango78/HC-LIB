@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.SYSTEM</id>
-    <version>1.0.2201</version>
+    <version>1.0.2203</version>
     <title>Arduino System Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>

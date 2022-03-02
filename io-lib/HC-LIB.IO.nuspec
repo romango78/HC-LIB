@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.IO</id>
-    <version>1.0.2202</version>
+    <version>1.0.2203</version>
     <title>IO Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -13,7 +13,7 @@
     <copyright>Copyright 2021 Roman Gorielov</copyright>
     <tags>native arduino atmelavr io</tags>
     <dependencies>
-      <dependency id="HC-LIB.SYSTEM" version="1.0.2111" />
+      <dependency id="HC-LIB.SYSTEM" version="1.0.2203" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>

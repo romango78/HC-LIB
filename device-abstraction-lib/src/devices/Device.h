@@ -24,6 +24,7 @@ struct IDevice
     const DeviceCategory category;
     IDevice(const uint8_t t_type, const DeviceCategory t_category)
         : type(t_type), category(t_category) {};
+    virtual ~IDevice() = default;
 };
 
 namespace device

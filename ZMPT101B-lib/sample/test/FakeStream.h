@@ -110,6 +110,16 @@ class FakeStream : public IStream<uint16_t>
             };
             return NO_ERROR;
         };
+
+        IStream<uint16_t>* clone() const override
+        {
+            auto stream = new FakeStream(m_minValue, m_maxValue);
+            stream->m_isSetToRead = m_isSetToRead;
+            stream->m_currentValue = m_currentValue;
+            stream->m_hasError = m_hasError;
+
+            return stream;
+        }        
 };
 
 #endif

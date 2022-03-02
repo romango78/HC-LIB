@@ -54,3 +54,8 @@ uint8_t AnalogPortAdapter::getState()
     return NO_DATA;
     #endif
 };
+
+IPortAdapter<int>* AnalogPortAdapter::clone() const 
+{
+    return new AnalogPortAdapter(m_pin);
+}

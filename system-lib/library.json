@@ -1,6 +1,6 @@
 {
     "name": "HC-LIB.System",
-    "version": "1.0.2201",
+    "version": "1.0.2203",
     "description": "Contains fundamental classes and base classes that define commonly-used data types.",
     "keywords": "common, core, system, arduino, atmelavr",
     "repository":
