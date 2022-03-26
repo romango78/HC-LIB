@@ -11,7 +11,7 @@
 #include "IEnumerator.h"
 
 // Exposes an enumerator, which supports a simple iteration over a generic collection.
-template <class T>
+template <typename T>
 class IEnumerable
 {
 public:

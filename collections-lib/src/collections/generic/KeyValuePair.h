@@ -9,7 +9,7 @@
 #ifndef _KEY_VALUE_PAIR_H_
 #define _KEY_VALUE_PAIR_H_
 
-template<class TKey, class TValue>
+template<typename TKey, typename TValue>
 class KeyValuePair
 {
     private:
@@ -22,10 +22,7 @@ class KeyValuePair
             m_value = t_value;
         };
 
-        ~KeyValuePair()
-        {
-
-        };
+        ~KeyValuePair() = default;
 
         TKey& getKey()
         {

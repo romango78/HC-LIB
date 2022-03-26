@@ -3,9 +3,10 @@
 This __library__ contains interfaces and classes that define various collections of objects, such as lists, queues, bit arrays, hash tables and dictionaries.
 
 ### Dependencies
-No dependencies
+- HC-LIB.System v1.0.2201
 
 ### Features
+- Defines generic __Queue{T}__ that represents a first-in, first-out collection of objects.
 - Defines generic IEnumerable{T} and IEnumerator{T} abstraction for supporting simple iteration over a generic collection.
 - Defines a key/value pair that can be set or retrieved.
 

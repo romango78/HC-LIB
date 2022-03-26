@@ -14,7 +14,7 @@
 #include <unity.h>
 #include "collections/generic/IEnumerator.h"
 
-template <class T>
+template <typename T>
 class EnumeratorBaseTest : public EnumeratorBase<T>
 {
     private:

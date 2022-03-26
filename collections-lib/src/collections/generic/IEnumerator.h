@@ -10,7 +10,7 @@
 #define _I_ENUMERATOR_
 
 // Supports a simple iteration over a generic collection.
-template <class T>
+template <typename T>
 class IEnumerator
 {
     public:

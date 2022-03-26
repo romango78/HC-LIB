@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.Collections</id>
-    <version>1.0.2110</version>
+    <version>1.0.2203</version>
     <title>HC-LIB Collections Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -19,6 +19,7 @@
     </packageTypes>
   </metadata>
   <files>
+    <file src="src\collections\generic\Queue.h" target="lib\collections\generic\Queue.h" />
     <file src="src\collections\generic\IEnumerable.h" target="lib\collections\generic\IEnumerable.h" />
     <file src="src\collections\generic\IEnumerator.h" target="lib\collections\generic\IEnumerator.h" />
     <file src="src\collections\generic\KeyValuePair.h" target="lib\collections\generic\KeyValuePair.h" />

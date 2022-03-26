@@ -12,6 +12,7 @@
 
 #include "collections/generic/KeyValuePairTests.h"
 #include "collections/generic/EnumeratorBaseTests.h"
+#include "collections/generic/QueueTests.h"
 
 void dummyTest()
 {
@@ -44,6 +45,18 @@ void testsProcess()
     RUN_TEST(EnumeratorBase_ShouldMoveNext_WhenNoItemsToEnumerate);
     RUN_TEST(EnumeratorBase_ShouldEnumerate_ValueTypes);
     RUN_TEST(EnumeratorBase_ShouldEnumerate_RefTypes); 
+
+    /*****************************************
+     * Collections\Generic\Queue<T>
+     *****************************************/
+    RUN_TEST(Queue_ShouldCreateDefaultQueue_And_EnqueueTenItems);
+    RUN_TEST(Queue_ShouldCreateDefaultQueue_And_DequeueAllItems);
+    RUN_TEST(Queue_ShouldReturnError_WhenDequeueFromEmptyQueue);
+    RUN_TEST(Queue_ShouldReturnError_WhenEnqueue_And_InsufficientMemory);
+    RUN_TEST(Queue_ShouldClearQueue);
+    RUN_TEST(Queue_ShouldClearEmptyQueue);
+    RUN_TEST(Queue_ShouldPeekElementFromQueue);
+    RUN_TEST(Queue_ShouldReturnError_WhenPeekFromEmptyQueue);
 
     UNITY_END();
 };
