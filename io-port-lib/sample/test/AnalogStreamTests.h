@@ -40,7 +40,7 @@ void AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead()
     // Arrange
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Read);
@@ -62,7 +62,7 @@ void AnalogStream_ShouldBeInUndefinedMode_WhenStreamIsClosed()
     bool expectedValue = false;
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Read);
@@ -81,7 +81,7 @@ void AnalogStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead()
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();
     ((FakePortAdapter *)adapter)->setData(125);
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act    
     uint16_t actualValue = sut->read();
@@ -102,7 +102,7 @@ void AnalogStream_ShouldWriteData_WhenStreamIsOpenForWrite()
     uint16_t expectedValue = 125;
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Write);
@@ -121,7 +121,7 @@ void AnalogStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite()
     // Arrange    
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Write);
@@ -142,7 +142,7 @@ void AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes()
     // Arrange    
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Read);
@@ -167,7 +167,7 @@ void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
     // Arrange
     IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();
 
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(adapter);
+    IStream<uint16_t>* sut = new AnalogStream(adapter);
 
     // Act
     sut->begin(StreamMode::Read);
@@ -184,7 +184,7 @@ void AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
 void AnalogStream_ShouldRaiseError_WhenAdaptorIsNotSet()
 {
     // Arrange
-    IStream<uint16_t>* sut = (IStream<uint16_t> *)new AnalogStream(nullptr);
+    IStream<uint16_t>* sut = new AnalogStream(nullptr);
 
     // Act
     sut->begin(StreamMode::Read);

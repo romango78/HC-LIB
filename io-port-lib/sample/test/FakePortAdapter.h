@@ -49,6 +49,14 @@ class FakePortAdapter : public IPortAdapter<int>
             return 0;
         }
 
+        IPortAdapter<int>* clone() const override
+        {
+            auto clone = new FakePortAdapter();
+            clone->m_mode = m_mode;
+            clone->m_data = m_data;
+            return clone;
+        }
+
         int getMode()
         {
             return m_mode;

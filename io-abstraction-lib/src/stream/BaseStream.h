@@ -18,13 +18,16 @@ class BaseStream : public IStream<T>
 {
     protected:
         err_t m_lastError;
-        uint8_t m_isInitialized;
+        uint8_t m_mode;
         
+        BaseStream() 
+            : m_lastError(NO_ERROR), m_mode(UNDEF_MODE) {};
+
         void resetLastError();
         void setLastError(const err_t lastError);
+
+        IStream<T>* clone(BaseStream<T> *t_clone) const;
     public:
-        BaseStream() 
-            : m_lastError(NO_ERROR), m_isInitialized(UNDEF_MODE) {};
         virtual ~BaseStream() = default;
 
         virtual void begin(const StreamMode t_mode) override;
@@ -33,20 +36,18 @@ class BaseStream : public IStream<T>
         void write(const T t_data) override;
         void end() override;
 
-        virtual uint8_t getState() = 0;
-
         bool canRead() override;
         bool canWrite() override;
 
         bool hasError() override;
-        err_t getLastError() override;
+        err_t getLastError() override;        
 };
 
 template<typename T>
 void BaseStream<T>::begin(const StreamMode t_mode)
 {
     resetLastError();
-    m_isInitialized = t_mode;
+    m_mode = t_mode;
 };
 
 template<typename T>
@@ -66,19 +67,19 @@ template<typename T>
 void BaseStream<T>::end()
 {
     resetLastError();
-    m_isInitialized = UNDEF_MODE;
+    m_mode = UNDEF_MODE;
 };
 
 template<typename T>
 bool BaseStream<T>::canRead()
 {
-    return m_isInitialized == READ_MODE;
+    return !(m_mode & UNDEF_MODE) && !(m_mode & WRITE_MODE);
 };
 
 template<typename T>
 bool BaseStream<T>::canWrite()
 {
-    return m_isInitialized == WRITE_MODE;
+    return !(m_mode & UNDEF_MODE) && (m_mode & WRITE_MODE);
 };
 
 template<typename T>
@@ -104,5 +105,16 @@ void BaseStream<T>::setLastError(const err_t lastError)
 {
     m_lastError = lastError;
 };
+
+template<typename T>
+IStream<T>* BaseStream<T>::clone(BaseStream<T> *t_clone) const
+{
+    if(t_clone)
+    {
+        t_clone->m_mode = m_mode;
+        t_clone->m_lastError = m_lastError;
+    }
+    return t_clone;
+}
 
 #endif

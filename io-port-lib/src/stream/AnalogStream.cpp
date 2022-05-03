@@ -13,7 +13,7 @@ void AnalogStream::begin(const StreamMode t_mode)
     if(m_adapter)
     {
         BaseStream::begin(t_mode);
-        if(canRead())
+        if(BaseStream::canRead())
         {        
             m_adapter->setInputMode();
         }
@@ -31,7 +31,7 @@ void AnalogStream::begin(const StreamMode t_mode)
 uint16_t AnalogStream::read()
 {
     BaseStream::read();
-    if(!canRead())
+    if(!BaseStream::canRead())
     {
         BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return NO_DATA;
@@ -42,7 +42,7 @@ uint16_t AnalogStream::read()
 void AnalogStream::write(const uint16_t t_data)
 {
     BaseStream::write(t_data);
-    if(!canWrite())
+    if(!BaseStream::canWrite())
     {
         BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return;
@@ -67,8 +67,6 @@ IStream<uint16_t>* AnalogStream::clone() const
     {
         adapter = m_adapter->clone();
     }
-    auto clone = new AnalogStream(adapter);
-    clone->m_isInitialized = m_isInitialized;
-    clone->m_lastError = m_lastError;
-    return clone;
+    auto clone = new AnalogStream(adapter);    
+    return BaseStream::clone(clone);
 }

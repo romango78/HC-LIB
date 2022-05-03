@@ -12,9 +12,9 @@
 #include "ioerrdef.h"
 #include "ICloneable.h"
 
-#define UNDEF_MODE 0
-#define READ_MODE 1
-#define WRITE_MODE 2
+#define UNDEF_MODE 0x80
+#define READ_MODE 0x00
+#define WRITE_MODE 0x01
 
 enum StreamMode
 {    
@@ -25,16 +25,15 @@ enum StreamMode
 template<typename T>
 class IStream : public ICloneable<IStream<T>>
 {
-    public:
+    protected:
         IStream() = default;
+    public:
         virtual ~IStream() = default;
 
         virtual void begin(const StreamMode t_mode) = 0;
         virtual T read() = 0;          
         virtual void write(const T t_data) = 0;
         virtual void end() = 0;
-
-        virtual uint8_t getState() = 0;
 
         virtual bool canRead() = 0;
         virtual bool canWrite() = 0;

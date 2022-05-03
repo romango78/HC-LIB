@@ -1,4 +1,4 @@
-// Copyright (c) 2022 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -6,36 +6,36 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ANALOG_STREAM_H_
-#define _ANALOG_STREAM_H_
+#ifndef _DIGITAL_STREAM_H_
+#define _DIGITAL_STREAM_H_
 
 #include <inttypes.h>
 #include "adapter/IPortAdapter.h"
-#include "BaseStream.h"
+#include "IPortStream.h"
 
-class AnalogStream : public BaseStream<uint16_t>
+class DigitalStream : public IPortStream<uint8_t>
 {
     private:
-        IPortAdapter<int>* const m_adapter;                
+        IPortAdapter<uint8_t>* const m_adapter;                
     public:
-        AnalogStream() = delete;
-        AnalogStream(IPortAdapter<int>* const t_adapter) 
-            : BaseStream(), m_adapter(t_adapter) {};
-        virtual ~AnalogStream()
+        DigitalStream() = delete;
+        DigitalStream(IPortAdapter<uint8_t>* t_adapter) 
+            : IPortStream(), m_adapter(t_adapter) {};
+        virtual ~DigitalStream()
         {
             if(m_adapter)
             {
                 delete m_adapter;
             }
-        }
+        };
 
         void begin(const StreamMode t_mode) override;
-        uint16_t read() override;
-        void write(const uint16_t t_data) override;
-
+        uint8_t read() override;
+        void write(const uint8_t t_data) override;
+        
         uint8_t getState() override;
 
-        IStream<uint16_t>* clone() const override;
+        IStream<uint8_t>* clone() const override;
 };
 
 #endif

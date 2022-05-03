@@ -6,13 +6,21 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _IO_ERRDEF_H_
-#define _IO_ERRDEF_H_
+#ifndef _I_PORT_STREAM_H_
+#define _I_PORT_STREAM_H_
 
-#include "errdef.h"
+#include "stream/BaseStream.h"
 
-#define IO_ERROR 0x100
-#define STREAM_NOTCREATED_IO_ERROR (IO_ERROR + 1)
-#define STREAM_CLOSED_IO_ERROR (IO_ERROR + 2)
+template<typename T>
+class IPortStream : public BaseStream<T>
+{
+    protected:
+        IPortStream() 
+            : BaseStream<T>() {};
+    public:
+        virtual ~IPortStream() = default;
+
+        virtual uint8_t getState() = 0;
+};
 
 #endif

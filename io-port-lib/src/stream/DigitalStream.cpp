@@ -58,7 +58,7 @@ uint8_t DigitalStream::getState()
     }
     BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR);
     return NO_DATA;
-}
+};
 
 IStream<uint8_t>* DigitalStream::clone() const
 {
@@ -68,7 +68,5 @@ IStream<uint8_t>* DigitalStream::clone() const
         adapter = m_adapter->clone();
     }
     auto clone = new DigitalStream(adapter);
-    clone->m_isInitialized = m_isInitialized;
-    clone->m_lastError = m_lastError;
-    return clone;
+    return BaseStream::clone(clone);
 }
