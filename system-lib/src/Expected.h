@@ -26,10 +26,10 @@ class Expected
         };  
 
         bool m_hasValue;
-        Expected() {}        
+        Expected() {};     
     public:
         Expected(const T &t_value)
-            : m_value(t_value), m_hasValue(true) {}
+            : m_value(t_value), m_hasValue(true) {};
 
         Expected(const Expected &t_expected) 
             : m_hasValue(t_expected.m_hasValue) 
