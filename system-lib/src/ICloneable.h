@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2022 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -6,12 +6,17 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-void setup() 
-{
-    // put your setup code here, to run once:
-}
+#ifndef _I_CLONEABLE_H_
+#define _I_CLONEABLE_H_
 
-void loop() 
+template <class T>
+class ICloneable
 {
-    // put your main code here, to run repeatedly:
-}
+    public:
+        ICloneable() = default;
+        virtual ~ICloneable() = default;
+
+        virtual T* clone() const = 0;
+};
+
+#endif

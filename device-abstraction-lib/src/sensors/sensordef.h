@@ -9,10 +9,7 @@
 #ifndef _SENSOR_DEF_H_
 #define _SENSOR_DEF_H_
 
-// Sensor Categories
-#define SENSOR_CATEGORY_ANALOG 0
-
 // Sensor Types
-#define ZMPT101B_SENSOR_TYPE 0x001
+#define VOLTAGE_SENSOR_TYPE 0xff
 
 #endif

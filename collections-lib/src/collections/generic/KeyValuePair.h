@@ -16,7 +16,7 @@ class KeyValuePair
         TKey m_key;
         TValue m_value;
     public:        
-        KeyValuePair(TKey t_key, TValue t_value)
+        KeyValuePair(const TKey t_key, const TValue t_value)
         {
             m_key = t_key;
             m_value = t_value;
@@ -27,12 +27,12 @@ class KeyValuePair
 
         };
 
-        TKey getKey()
+        TKey& getKey()
         {
             return m_key;
         };
 
-        TValue getValue()
+        TValue& getValue()
         {
             return m_value;
         };

@@ -9,8 +9,6 @@
 #ifndef _I_SENSOR_READER_H_
 #define _I_SENSOR_READER_H_
 
-#include "sensors/Sensor.h"
-
 template<typename SensorData, typename Sensor>
 class ISensorReader
 {
@@ -18,7 +16,7 @@ class ISensorReader
         ISensorReader() {};
         virtual ~ISensorReader() = default;
 
-        virtual SensorData read(Sensor* t_sensor) = 0;
+        virtual SensorData read(const Sensor& t_sensor) = 0;
 };
 
 #endif

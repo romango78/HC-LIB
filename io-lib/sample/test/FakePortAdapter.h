@@ -14,14 +14,15 @@
 #define INPUT_MODE 0
 #define OUTPUT_MODE 1
 
-class FakePortAdapter : IPortAdapter<int>
+class FakePortAdapter : public IPortAdapter<int>
 {
     private:
         int m_mode;
         int m_data;
     public:
-        FakePortAdapter() : IPortAdapter(0), m_mode(NO_MODE) {}
-        ~FakePortAdapter() = default;
+        FakePortAdapter() 
+            : IPortAdapter(0), m_mode(NO_MODE) {}
+        virtual ~FakePortAdapter() = default;
         
         void setInputMode() override
         {
@@ -38,9 +39,14 @@ class FakePortAdapter : IPortAdapter<int>
             return m_data;
         }
 
-        void write(int t_value) override
+        void write(const int t_value) override
         {
             m_data = t_value;
+        }
+
+        uint8_t getState() override
+        {
+            return 0;
         }
 
         int getMode()
@@ -53,7 +59,7 @@ class FakePortAdapter : IPortAdapter<int>
             return m_data;
         }
 
-        void setData(int t_data)
+        void setData(const int t_data)
         {
             m_data = t_data;
         }

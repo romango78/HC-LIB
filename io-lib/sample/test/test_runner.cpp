@@ -11,6 +11,7 @@
 #include <unity.h>
 
 #include "AnalogStreamTests.h"
+#include "DigitalStreamTests.h"
 #include "VoltageStreamTests.h"
 
 void dummyTest()
@@ -25,6 +26,7 @@ void testsProcess()
     /*****************************************
      * Analog Stream Tests (AnalogStreamTests.h)
      *****************************************/
+    RUN_TEST(AnalogStream_ShouldRaiseError_WhenAdaptorIsNotSet);
     RUN_TEST(AnalogStream_ShouldReadData_WhenStreamIsOpenForRead);
     RUN_TEST(AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead);
     RUN_TEST(AnalogStream_ShouldBeInUndefinedMode_WhenStreamIsClosed);
@@ -35,7 +37,20 @@ void testsProcess()
     RUN_TEST(AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
 
     /*****************************************
-     * Voltage Stream Tests (AnalogStreamTests.h)
+     * Digital Stream Tests (DigitalStreamTests.h)
+     *****************************************/
+    RUN_TEST(DigitalStream_ShouldRaiseError_WhenAdaptorIsNotSet);
+    RUN_TEST(DigitalStream_ShouldReadData_WhenStreamIsOpenForRead);
+    RUN_TEST(DigitalStream_ShouldBeInReadMode_WhenStreamIsOpenForRead);
+    RUN_TEST(DigitalStream_ShouldBeInUndefinedMode_WhenStreamIsClosed);
+    RUN_TEST(DigitalStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead);
+    RUN_TEST(DigitalStream_ShouldWriteData_WhenStreamIsOpenForWrite);
+    RUN_TEST(DigitalStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite);
+    RUN_TEST(DigitalStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes);
+    RUN_TEST(DigitalStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
+
+    /*****************************************
+     * Voltage Stream Tests (VoltageStreamTests.h)
      *****************************************/
     RUN_TEST(VoltageStream_ShouldReadVoltage);
     RUN_TEST(VoltageStream_ShouldSetPWM);

@@ -1,9 +1,9 @@
 # HC-LIB
-## IO Arduino Library v1.0.2111
+## IO Arduino Library v1.0.2203
 This __library__ is a tool to help the programmer to work with I/O Ports on the Arduino Board.
 
 ### Dependencies
-- HC-LIB.System v1.0.2111
+- HC-LIB.System v1.0.2203
 
 ### Features
 - Read data/voltage from the specified Arduino port

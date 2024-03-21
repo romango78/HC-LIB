@@ -8,16 +8,23 @@
 
 #include "AnalogStream.h"
 
-void AnalogStream::begin(StreamMode t_mode)
+void AnalogStream::begin(const StreamMode t_mode)
 {   
-    BaseStream::begin(t_mode);
-    if(canRead())
-    {        
-        m_adapter->setInputMode();
+    if(m_adapter)
+    {
+        BaseStream::begin(t_mode);
+        if(canRead())
+        {        
+            m_adapter->setInputMode();
+        }
+        else
+        {
+            m_adapter->setOutputMode();
+        }
     }
     else
     {
-        m_adapter->setOutputMode();
+       BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR); 
     }
 };
 
@@ -26,19 +33,42 @@ uint16_t AnalogStream::read()
     BaseStream::read();
     if(!canRead())
     {
-        BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return NO_DATA;
     }
     return static_cast<uint16_t>(m_adapter->read());
 };
 
-void AnalogStream::write(uint16_t t_data)
+void AnalogStream::write(const uint16_t t_data)
 {
     BaseStream::write(t_data);
     if(!canWrite())
     {
-        BaseStream::setLastError(IO_ERROR_STREAM_CLOSED);
+        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
         return;
     }
     m_adapter->write(t_data);    
 };
+
+uint8_t AnalogStream::getState()
+{
+    if(m_adapter)
+    {
+        return m_adapter->getState();
+    }
+    BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR);
+    return NO_DATA;  
+}
+
+IStream<uint16_t>* AnalogStream::clone() const
+{
+    IPortAdapter<int>* adapter = nullptr;
+    if(m_adapter)
+    {
+        adapter = m_adapter->clone();
+    }
+    auto clone = new AnalogStream(adapter);
+    clone->m_isInitialized = m_isInitialized;
+    clone->m_lastError = m_lastError;
+    return clone;
+}

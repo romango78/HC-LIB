@@ -12,7 +12,7 @@
 #include "errdef.h"
 
 #define IO_ERROR 0x100
-#define IO_ERROR_STREAM_NOTCREATED (IO_ERROR + 1)
-#define IO_ERROR_STREAM_CLOSED (IO_ERROR + 2)
+#define STREAM_NOTCREATED_IO_ERROR (IO_ERROR + 1)
+#define STREAM_CLOSED_IO_ERROR (IO_ERROR + 2)
 
 #endif

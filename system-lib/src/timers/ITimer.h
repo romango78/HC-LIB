@@ -23,7 +23,7 @@ class ITimer
         virtual uint32_t getInterval() = 0;
 
         // Sets the interval, expressed in milliseconds, at which the IsElapsed flag is set in true.
-        virtual void setInterval(uint32_t t_interval) = 0;
+        virtual void setInterval(const uint32_t t_interval) = 0;
 
         // Starts counting interval.
         virtual void start() = 0;

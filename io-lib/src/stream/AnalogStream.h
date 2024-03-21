@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2022 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -13,21 +13,29 @@
 #include "adapter/IPortAdapter.h"
 #include "BaseStream.h"
 
-#define NO_DATA UINT16_MAX
-
 class AnalogStream : public BaseStream<uint16_t>
 {
     private:
-        IPortAdapter<int> *m_adapter;                
+        IPortAdapter<int>* const m_adapter;                
     public:
-        AnalogStream(IPortAdapter<int>* t_adapter) 
+        AnalogStream() = delete;
+        AnalogStream(IPortAdapter<int>* const t_adapter) 
             : BaseStream(), m_adapter(t_adapter) {};
+        virtual ~AnalogStream()
+        {
+            if(m_adapter)
+            {
+                delete m_adapter;
+            }
+        }
 
-        ~AnalogStream() = default;
-
-        void begin(StreamMode t_mode) override;
+        void begin(const StreamMode t_mode) override;
         uint16_t read() override;
-        void write(uint16_t t_data) override;
+        void write(const uint16_t t_data) override;
+
+        uint8_t getState() override;
+
+        IStream<uint16_t>* clone() const override;
 };
 
 #endif

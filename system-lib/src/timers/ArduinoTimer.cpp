@@ -17,7 +17,7 @@ uint32_t ArduinoTimer::getInterval()
     return m_interval;
 };
 
-void ArduinoTimer::setInterval(uint32_t t_interval)
+void ArduinoTimer::setInterval(const uint32_t t_interval)
 {
     if(!isStarted())
     {
