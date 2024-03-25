@@ -1,0 +1,20 @@
+name: PlatformIO CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+
+jobs:
+  build:
+    name: Deploy CI-CD host
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cashe/pip
+            ~/.platformio/.cache
+          key: ${{runner.os}}-pio
