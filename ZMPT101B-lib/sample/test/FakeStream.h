@@ -11,10 +11,10 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
-#include "stream/IStream.h"
+#include "stream/AnalogStream.h"
 #include "FakeTimer.h"
 
-class FakeStream : public IStream<uint16_t>
+class FakeStream : public AnalogStream
 {
     private:
         const uint16_t m_minValue;
