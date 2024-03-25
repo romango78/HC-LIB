@@ -1,0 +1,36 @@
+name: PlatformIO CI
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy CI-CD host
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout latest version
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Enable caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cashe/pip
+            ~/.platformio/.cache
+          key: ${{runner.os}}-pio
+      - name: Deploy Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
+      - name: Execute tests for collections-lib
+        run: |
+          cd ./collections-lib/sample
+          pio test -e desktop
+    
