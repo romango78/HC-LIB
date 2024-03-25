@@ -14,7 +14,7 @@
 struct SRD05VDCSLDevice : public RelayDevice
 {
     SRD05VDCSLDevice() = delete;
-    SRD05VDCSLDevice(const uint8_t t_pin, IStream<uint8_t>* const t_stream)
+    SRD05VDCSLDevice(const uint8_t t_pin, DigitalStream* const t_stream)
         : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};
     SRD05VDCSLDevice(const SRD05VDCSLDevice& source) noexcept
         : RelayDevice(source) {};

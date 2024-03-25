@@ -11,11 +11,11 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
-#include "stream/IStream.h"
+#include "stream/DigitalStream.h"
 
 uint8_t g_PortState = 0;
 
-class FakeStream : public IStream<uint8_t>
+class FakeStream : public DigitalStream
 {
     private:
         bool m_isSetToWrite;

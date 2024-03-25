@@ -18,14 +18,14 @@
 
 SRD05VDCSLDevice createSRD05VDCSL()
 {
-    IStream<uint8_t>* stream = new FakeStream();
+    DigitalStream* stream = new FakeStream();
     SRD05VDCSLDevice result{5, stream};
     return result;
 }
 
 SRD05VDCSLDevice createSRD05VDCSL2()
 {
-    IStream<uint8_t>* stream = new FakeStream();
+    DigitalStream* stream = new FakeStream();
     SRD05VDCSLDevice result{15, stream};
     return result;
 }
