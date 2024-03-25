@@ -32,12 +32,12 @@ Get-ChildItem $PSScriptRoot -Filter "test" -Recurse | ForEach-Object {
         Write-Host ""
 
         Invoke-Expression $piocmd | Tee-Object -Variable pioout
-        $pioout | Select-String -Pattern '((\d+) (Tests|Failures|Ignored))' -AllMatches | ForEach-Object {
-            if($_.Line -ne 0) {
-                $script:testcount += [int]$_.Matches[0].Groups[2].Value;
-                $script:failedcount += [int]$_.Matches[1].Groups[2].Value;
-                $script:ignoredcount += [int]$_.Matches[2].Groups[2].Value;
-            }
+        $pioout | Select-String -Pattern '((\d+) (test cases|Failures|Ignored))' -AllMatches | ForEach-Object {            
+             if($_.Line -ne 0) {
+                 $script:testcount += [int]$_.Matches[0].Groups[2].Value;
+                 $script:failedcount += If ($_.Matches.Count -ge 2) { [int]$_.Matches[1].Groups[2].Value } Else { 0 };
+                 $script:ignoredcount += If ($_.Matches.Count -eq 3) { [int]$_.Matches[2].Groups[2].Value } Else { 0 };
+             }
         }
         if($pioout | Select-String -Pattern '\sFAILED\s' -Quiet) {
             $script:projectfailed++;
