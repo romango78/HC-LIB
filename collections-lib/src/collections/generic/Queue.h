@@ -6,13 +6,12 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#pragma once
-
-#ifndef _I_ENUMERABLE_
-#define _I_ENUMERABLE_
+#ifndef _QUEUE_
+#define _QUEUE_
 
 #include <inttypes.h>
 #include <string.h>
+#include <stdlib.h>
 #include "Expected.h"
 
 #define GROWTH_FACTOR 2

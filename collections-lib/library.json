@@ -20,6 +20,10 @@
       {
         "name": "HC-LIB.System",
         "version": ">=1.0.2201"
+      },
+      {
+        "name": "Unity",
+        "version": ">=2.5.2"
       }
     ],       
     "export": {

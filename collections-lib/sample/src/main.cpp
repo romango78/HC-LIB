@@ -5,6 +5,7 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
+#if defined(ARDUINO)
 
 #include <Arduino.h>
 
@@ -18,3 +19,14 @@ void loop()
     // put your main code here, to run repeatedly:
     delay(100);
 }
+
+#endif
+
+#if !defined(ARDUINO)
+
+int main( int argc, char **argv) 
+{    
+    return 0;
+};
+
+#endif
