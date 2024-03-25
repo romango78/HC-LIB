@@ -16,9 +16,10 @@
 class AnalogStream : public IPortStream<uint16_t>
 {
     private:
-        IPortAdapter<int>* const m_adapter;                
+        IPortAdapter<int>* const m_adapter;
+    protected:
+        AnalogStream() : m_adapter(nullptr) {};
     public:
-        AnalogStream() = delete;
         AnalogStream(IPortAdapter<int>* const t_adapter) 
             : IPortStream(), m_adapter(t_adapter) {};
         virtual ~AnalogStream()

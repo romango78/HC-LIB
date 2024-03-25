@@ -19,37 +19,37 @@
 
 AnalogDevice createAnalogDevice()
 {
-    AnalogDevice result{10, 5, (IStream<uint16_t>*)new FakeStream()};
+    AnalogDevice result{10, 5, (AnalogStream*)new FakeAnalogStream()};
     return result;
 }
 
 AnalogDevice createAnalogDevice2()
 {
-    AnalogDevice result{12, 10, (IStream<uint16_t>*)new FakeStream()};
+    AnalogDevice result{12, 10, (AnalogStream*)new FakeAnalogStream()};
     return result;
 }
 
 DigitalDevice createDigitalDevice()
 {
-    DigitalDevice result{10, 5, new FakeStream()};
+    DigitalDevice result{10, 5, new FakeDigitalStream()};
     return result;
 }
 
 DigitalDevice createDigitalDevice2()
 {
-    DigitalDevice result{12, 10, new FakeStream()};
+    DigitalDevice result{12, 10, new FakeDigitalStream()};
     return result;
 }
 
 RelayDevice createRelayDevice()
 {
-    RelayDevice result{5, new FakeStream()};
+    RelayDevice result{5, new FakeDigitalStream()};
     return result;
 }
 
 RelayDevice createRelayDevice2()
 {
-    RelayDevice result{15, new FakeStream()};
+    RelayDevice result{15, new FakeDigitalStream()};
     return result;
 }
 

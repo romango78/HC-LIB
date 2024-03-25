@@ -10,28 +10,28 @@
 #define _DIGITAL_DEVICES_H_
 
 #include "devices/Device.h"
-#include "stream/IStream.h"
+#include "stream/DigitalStream.h"
 #include <new>
 
 struct DigitalDevice : public IDevice
 {
 private:
     bool m_isDisposed = false;
-    IStream<uint8_t>* clone_stream(const DigitalDevice& source) const
+    DigitalStream* clone_stream(const DigitalDevice& source) const
     {
         if(!source.m_isDisposed && source.stream)
         {
-            return source.stream->clone();
+            return reinterpret_cast<DigitalStream*>(source.stream->clone());
         }
         return nullptr;
     }
 
 public:
     const uint8_t pin;
-    IStream<uint8_t>* const stream;
+    DigitalStream* const stream;
 
     DigitalDevice() = delete;
-    DigitalDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
+    DigitalDevice(const uint8_t t_type, const uint8_t t_pin, DigitalStream* const t_stream) 
         : IDevice(t_type, DeviceCategory::digital), pin(t_pin), stream(t_stream) {};
     DigitalDevice(const DigitalDevice& source) noexcept
         : IDevice(source), pin(source.pin), stream(clone_stream(source)) 
@@ -72,11 +72,11 @@ public:
 struct RelayDevice : public DigitalDevice
 {
 protected:    
-    RelayDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
+    RelayDevice(const uint8_t t_type, const uint8_t t_pin, DigitalStream* const t_stream) 
         : DigitalDevice(t_type, t_pin, t_stream) {};
 public:
     RelayDevice() = delete;
-    RelayDevice(const uint8_t t_pin, IStream<uint8_t>* const t_stream) 
+    RelayDevice(const uint8_t t_pin, DigitalStream* const t_stream) 
         : RelayDevice(RELAY_DEVICE_TYPE, t_pin, t_stream) {};
     RelayDevice(const RelayDevice& source) noexcept
         : DigitalDevice(source) {};

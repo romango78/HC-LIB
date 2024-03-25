@@ -16,9 +16,10 @@
 class DigitalStream : public IPortStream<uint8_t>
 {
     private:
-        IPortAdapter<uint8_t>* const m_adapter;                
+        IPortAdapter<uint8_t>* const m_adapter;
+    protected:
+        DigitalStream() : m_adapter(nullptr) {};
     public:
-        DigitalStream() = delete;
         DigitalStream(IPortAdapter<uint8_t>* t_adapter) 
             : IPortStream(), m_adapter(t_adapter) {};
         virtual ~DigitalStream()

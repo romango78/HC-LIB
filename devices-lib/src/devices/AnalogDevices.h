@@ -10,28 +10,28 @@
 #define _ANALOG_DEVICES_H_
 
 #include "devices/Device.h"
-#include "stream/IStream.h"
+#include "stream/AnalogStream.h"
 #include <new>
 
 struct AnalogDevice : public IDevice
 {
 private:
     bool m_isDisposed = false;
-    IStream<uint16_t>* clone_stream(const AnalogDevice& source) const
+    AnalogStream* clone_stream(const AnalogDevice& source) const
     {
         if(!source.m_isDisposed && source.stream)
         {
-            return source.stream->clone();
+            return reinterpret_cast<AnalogStream*>(source.stream->clone());
         }
         return nullptr;
     }
 
 public:        
     const uint8_t pin;
-    IStream<uint16_t>* const stream;
+    AnalogStream* const stream;
 
     AnalogDevice() = delete;
-    AnalogDevice(const uint8_t t_type, const uint8_t t_pin, IStream<uint16_t>* const t_stream) 
+    AnalogDevice(const uint8_t t_type, const uint8_t t_pin, AnalogStream* const t_stream) 
         : IDevice(t_type, DeviceCategory::analog), pin(t_pin), stream(t_stream) {};
     AnalogDevice(const AnalogDevice& source) noexcept
         : IDevice(source), pin(source.pin), stream(clone_stream(source)) 

@@ -18,7 +18,7 @@
 void Should_SetState_WhenDeviceIsInitialized()
 {
     // Arrange
-    IStream<uint8_t>* stream = new FakeStream();
+    DigitalStream* stream = new FakeDigitalStream();
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
 
     DigitalDeviceController sut {};
@@ -28,7 +28,7 @@ void Should_SetState_WhenDeviceIsInitialized()
 
     // Asserts
     TEST_ASSERT_EQUAL_MESSAGE(NO_ERROR, result, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(1, ((FakeStream*)stream)->getWrittenValue(), "The wrong value was written to port.");
+    TEST_ASSERT_EQUAL_MESSAGE(1, ((FakeDigitalStream*)stream)->getWrittenValue(), "The wrong value was written to port.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected in Stream.");
 }
 
@@ -50,7 +50,7 @@ void Should_GetState_WhenDeviceIsInitialized()
 {
     // Arrange
     uint8_t expectedValue = 1;
-    IStream<uint8_t>* stream = new FakeStream(expectedValue);
+    DigitalStream* stream = new FakeDigitalStream(expectedValue);
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
 
     DigitalDeviceController sut {};

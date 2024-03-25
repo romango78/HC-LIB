@@ -11,25 +11,122 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
-#include "stream/IStream.h"
+#include "stream/AnalogStream.h"
+#include "stream/DigitalStream.h"
 
-uint8_t g_PortState = 0;
+uint16_t g_PortState = 0;
 
-class FakeStream : public IStream<uint8_t>
+class FakeAnalogStream : public AnalogStream
 {
     private:
         bool m_isSetToWrite;
         bool m_hasError;
     public:
-        FakeStream()
+        FakeAnalogStream()
             : m_isSetToWrite(false), m_hasError(false) {};
-        FakeStream(uint8_t t_initialValue) 
+        FakeAnalogStream(uint16_t t_initialValue) 
             : m_isSetToWrite(false), m_hasError(false)
             {
                 g_PortState = t_initialValue;
             };
 
-        virtual ~FakeStream() = default;
+        virtual ~FakeAnalogStream() = default;
+
+        void begin(const StreamMode t_mode) override
+        {
+            m_hasError = false;
+            if(t_mode == StreamMode::Write)
+            {
+                m_isSetToWrite = true;
+            }
+            else
+            {
+                m_isSetToWrite = false;
+            };
+        };
+
+        uint16_t read() override 
+        {
+            return 0;
+        };
+
+        void write(const uint16_t t_data) override 
+        {
+            if (canWrite())
+            {
+                g_PortState = t_data;
+            }
+            else
+            {
+                m_hasError = true;
+            }
+        };
+
+        void end() override
+        {
+            m_isSetToWrite = false;
+            m_hasError = false;
+        };
+
+        uint8_t getState() override
+        {
+            return g_PortState;
+        }
+
+        bool canRead() override
+        {
+            return false;
+        };
+
+        bool canWrite() override
+        {
+            return m_isSetToWrite;
+        };
+        
+        bool hasError() override
+        {
+            return m_hasError;
+        };
+
+        err_t getLastError() override
+        {
+            if(hasError())
+            {
+                return STREAM_CLOSED_IO_ERROR;
+            };
+            return NO_ERROR;
+        };
+
+        uint16_t getWrittenValue()
+        {
+            return g_PortState;
+        }
+
+        IStream<uint16_t>* clone() const override
+        {
+            auto stream = new FakeAnalogStream();
+            stream->m_isSetToWrite = m_isSetToWrite;
+            stream->m_hasError = m_hasError;
+
+            return stream;
+        }
+};
+
+class FakeDigitalStream : public DigitalStream
+{
+    private:
+        bool m_isSetToWrite;
+        bool m_hasError;
+    public:
+        FakeDigitalStream()
+            : m_isSetToWrite(false), m_hasError(false) {};
+        FakeDigitalStream(uint8_t t_initialValue) 
+            : m_isSetToWrite(false), m_hasError(false)
+            {
+                g_PortState = t_initialValue;
+            };
+
+        virtual ~FakeDigitalStream() = default;
 
         void begin(const StreamMode t_mode) override
         {
@@ -103,7 +200,7 @@ class FakeStream : public IStream<uint8_t>
 
         IStream<uint8_t>* clone() const override
         {
-            auto stream = new FakeStream();
+            auto stream = new FakeDigitalStream();
             stream->m_isSetToWrite = m_isSetToWrite;
             stream->m_hasError = m_hasError;
 

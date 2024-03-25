@@ -18,7 +18,7 @@
 void ShouldSwitchRepayInOnStatus()
 {
     // Arrange
-    IStream<uint8_t>* stream = new FakeStream();
+    DigitalStream* stream = new FakeDigitalStream();
     RelayDevice device {1, stream};
 
     RelayDeviceController sut {};
@@ -29,7 +29,7 @@ void ShouldSwitchRepayInOnStatus()
     // Assert
 
     TEST_ASSERT_EQUAL_MESSAGE(NO_ERROR, result, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(RelayState::on, ((FakeStream*)stream)->getWrittenValue(), "The relay should be ON.");
+    TEST_ASSERT_EQUAL_MESSAGE(RelayState::on, ((FakeDigitalStream*)stream)->getWrittenValue(), "The relay should be ON.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected in Stream.");
 }
 
@@ -50,7 +50,7 @@ void Should_RaiseError_WhenTryOnRelay_AndStreamIsNotSet()
 void ShouldSwitchRepayInOffStatus()
 {
     // Arrange
-    IStream<uint8_t>* stream = new FakeStream();
+    DigitalStream* stream = new FakeDigitalStream();
     RelayDevice device {1, stream};
 
     RelayDeviceController sut {};
@@ -61,7 +61,7 @@ void ShouldSwitchRepayInOffStatus()
     // Assert
 
     TEST_ASSERT_EQUAL_MESSAGE(NO_ERROR, result, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(RelayState::off, ((FakeStream*)stream)->getWrittenValue(), "The relay should be OFF.");
+    TEST_ASSERT_EQUAL_MESSAGE(RelayState::off, ((FakeDigitalStream*)stream)->getWrittenValue(), "The relay should be OFF.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected in Stream.");
 }
 
@@ -82,7 +82,7 @@ void Should_RaiseError_WhenTryOffRelay_AndStreamIsNotSet()
 void ShouldGetRelayState()
 {
     // Arrange
-    IStream<uint8_t>* stream = new FakeStream(RelayState::off);
+    DigitalStream* stream = new FakeDigitalStream(RelayState::off);
     RelayDevice device {1, stream};
 
     RelayDeviceController sut {};

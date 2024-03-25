@@ -18,13 +18,13 @@
 
 AnalogSensor createAnalogSensor()
 {
-    AnalogSensor result{10, 5, (IStream<uint16_t>*)new FakeStream()};
+    AnalogSensor result{10, 5, (IStream<uint16_t>*)new FakeAnalogStream()};
     return result;
 }
 
 AnalogSensor createAnalogSensor2()
 {
-    AnalogSensor result{12, 10, (IStream<uint16_t>*)new FakeStream()};
+    AnalogSensor result{12, 10, (IStream<uint16_t>*)new FakeAnalogStream()};
     return result;
 }
 
