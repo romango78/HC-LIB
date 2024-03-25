@@ -78,12 +78,12 @@ class Log
         IDateTimeProvider *m_dateTimeProvider;
 
         bool m_enabled = LOG_ENABLED_DEFAULT;
-        const LogLevelEnum m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;       
+        const LogLevelEnum m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;
+        static constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;     
 
-        constexpr const char* getLogLevelName(const LogLevelEnum t_level)
-        {
-                constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;
-                return level_short_names[t_level];
+        static constexpr const char* GetLogLevelName(const LogLevelEnum t_level)
+        {            
+            return level_short_names[t_level];
         };
     protected:
         template<typename... Args>
@@ -105,7 +105,7 @@ class Log
                         dt.seconds);
                 }
 
-                const char* prefix = this->getLogLevelName(t_level);    
+                const char* prefix = Log::GetLogLevelName(t_level);    
                 sout::fctprintf(&Log::writeBounce, this, "%s ", prefix);
 
                 if(t_module.name)
@@ -129,6 +129,7 @@ class Log
             reinterpret_cast<Log*>(t_thisPtr)->write(t_character);
         };         
     public:
+        Log() = delete;
         Log(ILogPersister *t_logPersister, IDateTimeProvider *t_datetimeProvider)
             : m_logLevelRequested(gLogLevel())
         {

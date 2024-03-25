@@ -20,7 +20,11 @@
       {
         "name": "HC-LIB.System",
         "version": ">=1.0.2203"
-      }
+      },
+      {
+        "name": "Unity",
+        "version": ">=2.5.2"
+      }      
     ],    
     "license": "MIT",    
     "frameworks": "*",
