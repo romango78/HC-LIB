@@ -30,5 +30,7 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
       - name: Execute tests for collections-lib
-        run: .\run_tests.ps1 desktop
+        run: |
+          ls -l
+          .\run_tests.ps1 desktop
     
