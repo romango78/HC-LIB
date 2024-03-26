@@ -30,7 +30,19 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
       - name: Execute tests
-        shell: pwsh
-        run: |          
-          Get-ChildItem -Filter 'pio*' -Recurse | ForEach-Object { Write-Host $_.FullName }       
+        run: |
+          # Initialize variables
+          testcount=0
+          failedcount=0
+          ignoredcount=0
+          projectcount=0
+          projectfailed=0
+          for file in $(find . -name "test" -type f -print); do
+            # Get the parent directory of the current file
+            folder="$(dirname "$file")"    
+            # Check if the parent directory does not contain ".pio"
+            if [[ "$folder" != *".pio"* ]]; then
+              echo "$folder"
+            fi
+          done
     
