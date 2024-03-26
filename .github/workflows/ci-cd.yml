@@ -31,7 +31,6 @@ jobs:
         run: pip install --upgrade platformio
       - name: Execute tests
         shell: pwsh
-        run: |
-          Get-Location
-          Get-ChildItem -Path 'home' -Filter 'pio*' -Recurse | %{$_.FullName}          
+        run: |          
+          Get-ChildItem -Filter 'pio*' -Recurse | ForEach-Object { Write-Host $_.FullName }       
     
