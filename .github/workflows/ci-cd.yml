@@ -32,6 +32,6 @@ jobs:
       - name: Execute tests
         shell: pwsh
         run: |
-          Get-ChildItem -Path 'home' -Filter 'pio*' -Recurse | %{$_.FullName}
-          ./run_tests.ps1 desktop
+          Get-Location
+          Get-ChildItem -Path 'home' -Filter 'pio*' -Recurse | %{$_.FullName}          
     
