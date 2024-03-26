@@ -30,7 +30,7 @@ jobs:
       - name: Install PlatformIO Core
         run: |
           pip install --upgrade platformio
-          ~/pio -h
+          ls -l ~/
           ~/.platformio/penv/Scripts/pio -h
       - name: Execute tests
         shell: pwsh
