@@ -28,7 +28,9 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
+        run: |
+          pip install --upgrade platformio
+          locate pio
       - name: Execute tests
         shell: pwsh
         run: ./run_tests.ps1 desktop
