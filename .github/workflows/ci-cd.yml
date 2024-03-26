@@ -28,11 +28,10 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install PlatformIO Core
-        run: |
-          pip install --upgrade platformio
-          ls -l -R ~/
-          ~/.platformio/penv/Scripts/pio -h
+        run: pip install --upgrade platformio
       - name: Execute tests
         shell: pwsh
-        run: ./run_tests.ps1 desktop
+        run: |
+          Get-ChildItem -Path 'home' -Filter 'pio*' -Recurse | %{$_.FullName}
+          ./run_tests.ps1 desktop
     
