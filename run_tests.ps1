@@ -26,7 +26,7 @@ Get-ChildItem $PSScriptRoot -Filter "test" -Recurse | ForEach-Object {
     $folder = Convert-Path $_.PSParentPath;
     if(!($folder -Match ".pio"))
     {
-        $piocmd = $env:USERPROFILE + "\.platformio\penv\Scripts\pio.exe test -e " + $script:pioenv + " -d " + $folder;
+        $piocmd = "pio.exe test -e " + $script:pioenv + " -d " + $folder;
         
         Write-Host "Processing tests under $folder folder." -BackgroundColor White -ForegroundColor Black
         Write-Host ""
