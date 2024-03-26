@@ -29,6 +29,7 @@ jobs:
           python-version: '3.11'
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
-      - name: Execute tests for collections-lib
+      - name: Execute tests
+        shell: pwsh
         run: ./run_tests.ps1 desktop
     
