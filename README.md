@@ -1,6 +1,20 @@
 # HC-LIB
 Arduino Libraries
 
+## Development Environment
+The __Visual Code IDE__ should be installed with the following plugins:
+* PlatformIO IDE v2.5.0 or higher
+* C/C++ v1.9.2 or higher
+* Code Spell Checker v2.2.3 or higher
+* Native Debug v0.27.0 or higher
+* Makefile Creator v0.0.3 or higher
+* vscode-pdf v1.2.2 or higher
+
+The g++ compiler should be installed locally. In case when compiler was not installed, performs the following steps:
+1) Open PlatformIO Terminal window and execute `pio platform install windows_x86` command. This will install the required packages to compile C/C++ for host PC (Windows). It will install the minGW binaries in the following directory: `{HOME}\.platformio\packages\toolchain-gccmingw32\bin`, where {HOME} is where the current user directory is, for standard installations of PlatformIO.
+2) Now this MinGW binary directory should be added to the environment path, so when the C++ compiler command g++ is called the system knows where it exists.
+3) Run `g++ -v` command from Terminal to check if compiler has been installed successfully (restart VS Code before).
+  
 ## HOW TO ARTICLES
 ### Debug unit tests under __native__ platform
 If you would like to debug unit tests under __native__ platform you need to use __GDB__ debugger. For this, you need to perform the following steps:
