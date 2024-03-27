@@ -23,15 +23,14 @@ jobs:
             ~/.cashe/pip
             ~/.platformio/.cache
           key: ${{runner.os}}-pio
-#      - name: Deploy Python
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.11'
-#      - name: Install PlatformIO Core
-#        run: pip install --upgrade platformio
+      - name: Deploy Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install PlatformIO Core
+        run: pip install --upgrade platformio
       - name: Execute tests
         shell: bash
         run: |
           chmod +x ./run_tests.sh
-          find . -name "test" -type d -print
           ./run_tests.sh
