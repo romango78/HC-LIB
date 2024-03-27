@@ -9,6 +9,8 @@ if [ -z "$pioenv" ]; then
     pioenv="desktop"
 fi
 
+find . -name "test" -type f -print
+
 # Initialize variables
 declare testcount=0
 declare failedcount=0
