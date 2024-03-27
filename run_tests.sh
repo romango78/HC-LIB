@@ -7,12 +7,20 @@
 # contained in it should be construed as commitment by Roman Gorielov.
 #!/bin/bash
 
+function run_project_tests()
+{
+    local environment=$1
+    local project_dir=$2
+
+    pio.exe test -e $environment -d $project_dir
+}
+
 # Get arguments from command line
 pioenv=$1
 
 if [ -z "$pioenv" ]; then
     echo -e "[WARNING] The environment is not specified. The default 'desktop' environment will be used."
-    echo ""
+    echo 
     pioenv="desktop"
 fi
 
@@ -25,10 +33,12 @@ declare projectfailed=0
 
 for folder in $(find . -name "test" -type d -print); do
     # Get the parent directory of the current file
-    echo $folder
+    #echo $folder
     # Check if the parent directory does not contain ".pio"
     if [[ $folder != *".pio"* ]]; then
-        echo -e $folder
-        
+        echo -e "Processing tests under $folder folder."
+        echo 
+        run_project_tests $pioenv $folder
+
     fi
 done
