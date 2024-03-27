@@ -23,7 +23,7 @@ declare ignoredcount=0
 declare projectcount=0
 declare projectfailed=0
 
-for folder in find . -name "test" -type d -print; do
+for folder in $(find . -name "test" -type d -print); do
     # Get the parent directory of the current file
     echo $folder
     # Check if the parent directory does not contain ".pio"
