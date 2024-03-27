@@ -9,8 +9,6 @@ if [ -z "$pioenv" ]; then
     pioenv="desktop"
 fi
 
-pio -h
-
 # Initialize variables
 declare testcount=0
 declare failedcount=0
@@ -20,6 +18,7 @@ declare projectfailed=0
 
 for file in $(find . -name "test" -type f -print); do
     # Get the parent directory of the current file
+    echo $file
     declare folder="$(dirname "$file")"
     # Check if the parent directory does not contain ".pio"
     if [[ "$folder" != *".pio"* ]]; then
