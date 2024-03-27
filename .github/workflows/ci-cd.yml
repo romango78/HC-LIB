@@ -30,4 +30,7 @@ jobs:
       - name: Install PlatformIO Core
         run: pip install --upgrade platformio
       - name: Execute tests
-        run: ./run_tests.sh
+        shell: bash
+        run: |
+          chmod +x ./run_tests.sh
+          ./run_tests.sh
