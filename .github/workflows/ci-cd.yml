@@ -33,5 +33,5 @@ jobs:
         shell: bash
         run: |
           chmod +x ./run_tests.sh
-          find . -name "test" -type f -print
+          find . -name "test" -type d -print
           ./run_tests.sh
