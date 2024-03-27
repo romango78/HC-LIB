@@ -1,3 +1,10 @@
+# Copyright (c) 2024 Roman Gorielov. All Rights Reserved.
+#
+# This software is the confidential and proprietary information of Roman Gorielov.
+# It is furnished under license and may only be used or copied in accordance
+# with the terms of such license.
+# This software is subject to change without notice and no information
+# contained in it should be construed as commitment by Roman Gorielov.
 #!/bin/bash
 
 # Get arguments from command line
@@ -9,8 +16,6 @@ if [ -z "$pioenv" ]; then
     pioenv="desktop"
 fi
 
-find . -name "test" -type f -print
-
 # Initialize variables
 declare testcount=0
 declare failedcount=0
@@ -18,13 +23,12 @@ declare ignoredcount=0
 declare projectcount=0
 declare projectfailed=0
 
-for file in $(find . -name "test" -type f -print); do
+for folder in find . -name "test" -type d -print; do
     # Get the parent directory of the current file
-    echo $file
-    declare folder="$(dirname "$file")"
+    echo $folder
     # Check if the parent directory does not contain ".pio"
-    if [[ "$folder" != *".pio"* ]]; then
-        echo -e "$folder"
+    if [[ $folder != *".pio"* ]]; then
+        echo -e $folder
         
     fi
 done
