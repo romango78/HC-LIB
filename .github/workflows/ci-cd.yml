@@ -32,5 +32,6 @@ jobs:
       - name: Execute tests
         shell: bash
         run: |
-          chmod +x ./run_tests.sh
-          ./run_tests.sh
+          pio test -e desktop -d ./logger-lib/sample -vvv
+#          chmod +x ./run_tests.sh
+#          ./run_tests.sh
