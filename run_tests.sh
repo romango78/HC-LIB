@@ -39,7 +39,7 @@ for folder in $(find . -name "test" -type d -print); do
         folder=$folder/.
         echo -e "Processing tests under $folder folder."
         echo         
-        piocmd_out=run_project_tests $pioenv $folder
+        piocmd_out=$(run_project_tests $pioenv $folder)
         echo $piocmd_out
 
     fi
