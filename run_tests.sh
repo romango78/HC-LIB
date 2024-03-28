@@ -36,7 +36,7 @@ for folder in $(find . -name "test" -type d -print); do
     #echo $folder
     # Check if the parent directory does not contain ".pio"
     if [[ $folder != *".pio"* ]]; then
-        folder=$folder/.
+        folder=$folder/..
         echo -e "Processing tests under $folder folder."
         echo         
         piocmd_out=$(run_project_tests $pioenv $folder)
