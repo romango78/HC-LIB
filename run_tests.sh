@@ -64,8 +64,8 @@ for folder in $(find . -name "test" -type d -print); do
             echo "Arr Val: ${counts[@]}"
             echo "Tests: ${counts["Tests"]}"
             echo " "
-        done << (run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
-        
+        done < <(run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
+
         echo " "
 
     fi
