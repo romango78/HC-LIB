@@ -32,7 +32,7 @@ declare projectcount=0
 declare projectfailed=0
 
 # Initialize the counters
-declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0 ["Project"]=0 ["FailedProject"]=0)
+declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0 ["Projects"]=0 ["FailedProjects"]=0)
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -57,11 +57,12 @@ for folder in $(find . -name "test" -type d -print); do
         do
             counts[$type]=$(( counts[type] + count ))
             if [[ "$type" -eq "Failures" && "$count" -ne 0 ]]; then
-                counts["FailedProject"]=$(( counts["FailedProject"] + 1))
+                counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
+                echo "FailedProjects [$type;$count]"
             fi
         done < <(run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
 
-        counts["Project"]=$(( counts["Project"] + 1))
+        counts["Projects"]=$(( counts["Projects"] + 1))
         echo " "
 
     fi
@@ -69,7 +70,8 @@ for folder in $(find . -name "test" -type d -print); do
 done
 
 # Output the counts
-echo "${counts["Tests"]}"
-echo "${counts["Failures"]}"
-echo "${counts["Ignored"]}"
+echo "========================= [TOTAL] ==========================="
+echo "${counts["Projects"]} Projectes ${counts["FailedProjects"]} Failed"
+echo "${counts["Tests"]} Tests ${counts["Failures"]} Failures ${counts["Ignored"]} Ignored"
+
 echo "${counts[@]}"
