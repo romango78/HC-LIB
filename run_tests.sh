@@ -20,7 +20,7 @@ pioenv=$1
 
 if [ -z "$pioenv" ]; then
     echo -e "[WARNING] The environment is not specified. The default 'desktop' environment will be used."
-    echo .
+    echo '\n'
     pioenv="desktop"
 fi
 
@@ -33,6 +33,8 @@ declare projectfailed=0
 
 # Initialize the counters
 declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
+
+counts[0] = 20
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -65,7 +67,7 @@ for folder in $(find . -name "test" -type d -print); do
 
 
 
-        echo .
+        echo '\n'
 
     fi
     break
