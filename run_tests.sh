@@ -76,4 +76,4 @@ done
 echo "${counts["Tests"]}"
 echo "${counts["Failures"]}"
 echo "${counts["Ignored"]}"
-echo ${counts[*]}
+echo ${counts[@]}
