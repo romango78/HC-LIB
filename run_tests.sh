@@ -69,6 +69,6 @@ for folder in $(find . -name "test" -type d -print); do
 done
 
 # Output the counts
-echo "${counts["test"]}"
+echo "${counts["Tests"]}"
 echo "${counts["Failures"]}"
 echo "${counts["Ignored"]}"
