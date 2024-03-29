@@ -59,7 +59,6 @@ for folder in $(find . -name "test" -type d -print); do
         echo " "
 
     fi
-    break
 done
 
 # Output the counts
@@ -67,4 +66,7 @@ echo "========================= [TOTAL] ==========================="
 echo "${counts["Projects"]} Projectes ${counts["FailedProjects"]} Failed"
 echo "${counts["Tests"]} Tests ${counts["Failures"]} Failures ${counts["Ignored"]} Ignored"
 
-echo "${counts[@]}"
+if [[ ${counts["FailedProjects"]} -ne 0]]; then
+    exit 1
+fi
+exit 0
