@@ -39,11 +39,10 @@ counts["Tests"]=$((counts["Tests"] + 10))
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
-  /([0-9]+)[[:space:]]+(Failures|Tests|Ignored)/ {
-    count=$1
-    type=$NF
-
-    result[type] += count
+  /([0-9]+)[[:space:]]+(Tests|Failures|Ignored)/ {
+    result[$2] += $1
+    result[$4] += $3
+    result[$6] += $5
   } END {
     for (type in result) {
       printf "%s=%d\n", type, result[type]
