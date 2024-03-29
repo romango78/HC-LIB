@@ -32,7 +32,7 @@ declare projectcount=0
 declare projectfailed=0
 
 # Initialize the counters
-declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
+declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0 ["Project"]=0 ["FailedProject"]=0)
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -47,8 +47,6 @@ awkcmd='
   }'
 
 for folder in $(find . -name "test" -type d -print); do
-    # Get the parent directory of the current file
-    #echo $folder
     # Check if the parent directory does not contain ".pio"
     if [[ $folder != *".pio"* ]]; then
         folder=$folder/..
@@ -58,14 +56,12 @@ for folder in $(find . -name "test" -type d -print); do
         while IFS="=" read -r type count
         do
             counts[$type]=$(( counts[type] + count ))
-            echo "Type: $type"
-            echo "Count: $count"
-            echo "Eval: $(( counts[type] + count ))"
-            echo "Arr Val: ${counts[@]}"
-            echo "Tests: ${counts["Tests"]}"
-            echo " "
+            if [[ "$type" -eq "Failures" && "$count" -ne 0 ]]; then
+                counts["FailedProject"]=$(( counts["FailedProject"] + 1))
+            fi
         done < <(run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
 
+        counts["Project"]=$(( counts["Project"] + 1))
         echo " "
 
     fi
