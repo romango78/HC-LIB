@@ -55,7 +55,8 @@ for folder in $(find . -name "test" -type d -print); do
         echo -e "Processing tests under $folder folder."
         echo
         # Execute pio command and process the output
-        run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" | while IFS="=" read -r type count; do
+        while IFS="=" read -r type count
+        do
             counts[$type]=$(( counts[type] + count ))
             echo "Type: $type"
             echo "Count: $count"
@@ -63,7 +64,7 @@ for folder in $(find . -name "test" -type d -print); do
             echo "Arr Val: ${counts[@]}"
             echo "Tests: ${counts["Tests"]}"
             echo " "
-        done
+        done << run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd"
 
 
 
