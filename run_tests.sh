@@ -61,6 +61,7 @@ for folder in $(find . -name "test" -type d -print); do
             echo "Count: $count"
             echo "Eval: $(( counts[type] + count ))"
             echo "Arr Val: ${counts[@]}"
+            echo "Tests: ${counts["Tests"]}"
             echo " "
         done
 
@@ -76,4 +77,4 @@ done
 echo "${counts["Tests"]}"
 echo "${counts["Failures"]}"
 echo "${counts["Ignored"]}"
-echo ${counts[@]}
+echo "${counts[@]}"
