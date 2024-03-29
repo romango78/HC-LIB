@@ -24,13 +24,6 @@ if [ -z "$pioenv" ]; then
     pioenv="desktop"
 fi
 
-# Initialize variables
-declare testcount=0
-declare failedcount=0
-declare ignoredcount=0
-declare projectcount=0
-declare projectfailed=0
-
 # Initialize the counters
 declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0 ["Projects"]=0 ["FailedProjects"]=0)
 
@@ -56,7 +49,7 @@ for folder in $(find . -name "test" -type d -print); do
         while IFS="=" read -r type count
         do
             counts[$type]=$(( counts[type] + count ))
-            if [[ "$type" -eq "Failures" && "$count" -ne 0 ]]; then
+            if [[ "$type" == "Failures" && "$count" -ne 0 ]]; then
                 counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
                 echo "FailedProjects [$type;$count]"
             fi
