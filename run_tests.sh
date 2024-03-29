@@ -56,11 +56,13 @@ for folder in $(find . -name "test" -type d -print); do
         echo
         # Execute pio command and process the output
         run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" | while IFS="=" read -r type count; do
-            counts[type]=$(( counts[type] + count ))
+            counts[$type]=$(( counts[type] + count ))
             echo $type
             echo $count
+            echo $(( counts[type] + count ))
             echo ${counts[type]}
             echo $counts[$type]
+            echo " "
         done
 
 
@@ -75,3 +77,4 @@ done
 echo "${counts["Tests"]}"
 echo "${counts["Failures"]}"
 echo "${counts["Ignored"]}"
+echo ${counts[*]}
