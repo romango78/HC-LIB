@@ -31,6 +31,27 @@ declare ignoredcount=0
 declare projectcount=0
 declare projectfailed=0
 
+# Initialize the counters
+declare -A counts=(["test"]=0 ["Failures"]=0 ["Ignored"]=0)
+
+# Define the AWK command to increment the correct counter for matching lines
+awkcmd='
+  /([0-9]+)[[:space:]]+(test cases|Failures|Ignored)/ {
+    count=$1
+    type=$(NF-1)
+
+    if (type == "test") {
+      counts[type] += count
+    } else {
+      counts[type] += count
+    }
+  }
+  END {
+    for (type in counts) {
+      printf "%s=%d\n", type, counts[type]
+    }
+  }'
+
 for folder in $(find . -name "test" -type d -print); do
     # Get the parent directory of the current file
     #echo $folder
@@ -38,10 +59,20 @@ for folder in $(find . -name "test" -type d -print); do
     if [[ $folder != *".pio"* ]]; then
         folder=$folder/..
         echo -e "Processing tests under $folder folder."
-        echo         
-        piocmd_out=$(eval $(run_project_tests $pioenv $folder))
-        echo $piocmd_out
+        echo
+        # Execute pio command and process the output
+        eval $(run_project_tests $pioenv $folder) | tee /dev/fd/1 | awk "$awkcmd" | while IFS="=" read -r type count; do
+            counts[$type]=$count
+        done
+
+
+
         echo
 
     fi
 done
+
+# Output the counts
+echo "${counts["test"]}"
+echo "${counts["Failures"]}"
+echo "${counts["Ignored"]}"
