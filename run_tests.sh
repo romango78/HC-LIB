@@ -66,6 +66,7 @@ for folder in $(find . -name "test" -type d -print); do
         echo
 
     fi
+    break
 done
 
 # Output the counts
