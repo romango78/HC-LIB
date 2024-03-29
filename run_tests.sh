@@ -32,7 +32,7 @@ declare projectcount=0
 declare projectfailed=0
 
 # Initialize the counters
-declare -A counts=(["test"]=0 ["Failures"]=0 ["Ignored"]=0)
+declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -40,11 +40,7 @@ awkcmd='
     count=$1
     type=$(NF-1)
 
-    if (type == "test") {
-      counts[type] += count
-    } else {
-      counts[type] += count
-    }
+    counts[type] += count
   }
   END {
     for (type in counts) {
