@@ -12,7 +12,7 @@ function run_project_tests()
     local environment=$1
     local project_dir=$2
 
-    pio test -e $environment -d $project_dir/
+    pio test -e $environment -d $project_dir -v
 }
 
 # Get arguments from command line
