@@ -41,7 +41,7 @@ counts["Tests"]=$((counts["Tests"] + 10))
 awkcmd='
   /([0-9]+)[[:space:]]+(Failures|Tests|Ignored)/ {
     count=$1
-    type=$(NF-1)
+    type=$NF
 
     result[type] += count
   } END {
