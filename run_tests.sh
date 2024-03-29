@@ -20,7 +20,7 @@ pioenv=$1
 
 if [ -z "$pioenv" ]; then
     echo -e "[WARNING] The environment is not specified. The default 'desktop' environment will be used."
-    echo 
+    echo .
     pioenv="desktop"
 fi
 
@@ -57,14 +57,15 @@ for folder in $(find . -name "test" -type d -print); do
         echo -e "Processing tests under $folder folder."
         echo
         # Execute pio command and process the output
-        run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" 
-        #| while IFS="=" read -r type count; do
+        run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" | while IFS="=" read -r type count; do
+            echo $type
+            echo $count
         #    counts[$type]=$count
-        #done
+        done
 
 
 
-        echo
+        echo .
 
     fi
     break
