@@ -34,9 +34,6 @@ declare projectfailed=0
 # Initialize the counters
 declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
 
-counts["Tests"]=20
-counts["Tests"]=$((counts["Tests"] + 10))
-
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
   /([0-9]+)[[:space:]]+(Tests|Failures|Ignored)/ {
@@ -59,9 +56,7 @@ for folder in $(find . -name "test" -type d -print); do
         echo
         # Execute pio command and process the output
         run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" | while IFS="=" read -r type count; do
-            echo $type
-            echo $count
-        #    counts[$type]=$count
+            counts[$type]=$((counts[$type] + count))
         done
 
 
