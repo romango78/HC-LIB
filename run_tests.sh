@@ -12,7 +12,7 @@ function run_project_tests()
     local environment=$1
     local project_dir=$2
 
-    pio test -e $environment -d $project_dir -vv
+    pio test -e $environment -d $project_dir/
 }
 
 # Get arguments from command line
@@ -36,7 +36,7 @@ declare -A counts=(["test"]=0 ["Failures"]=0 ["Ignored"]=0)
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
-  /([0-9]+)[[:space:]]+(test cases|Failures|Ignored)/ {
+  /([0-9]+)[[:space:]]+(Tests|Failures|Ignored)/ {
     count=$1
     type=$(NF-1)
 
