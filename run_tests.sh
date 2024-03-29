@@ -12,7 +12,7 @@ function run_project_tests()
     local environment=$1
     local project_dir=$2
 
-    pio test -e $environment -d $project_dir
+    pio test -e $environment -d $project_dir -vv
 }
 
 # Get arguments from command line
@@ -41,6 +41,7 @@ for folder in $(find . -name "test" -type d -print); do
         echo         
         piocmd_out=$(run_project_tests $pioenv $folder)
         echo $piocmd_out
+        echo
 
     fi
 done
