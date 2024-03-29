@@ -34,7 +34,7 @@ declare projectfailed=0
 # Initialize the counters
 declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
 
-counts["Tests"] = 20
+counts["Tests"]=20
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -67,7 +67,7 @@ for folder in $(find . -name "test" -type d -print); do
 
 
 
-        echo '\n'
+        echo "\n"
 
     fi
     break
