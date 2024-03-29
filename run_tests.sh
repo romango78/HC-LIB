@@ -61,7 +61,7 @@ for folder in $(find . -name "test" -type d -print); do
         echo -e "Processing tests under $folder folder."
         echo
         # Execute pio command and process the output
-        run_project_tests $pioenv $folder | tee /dev/fd/1 | awk "$awkcmd" | while IFS="=" read -r type count; do
+        run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd" | while IFS="=" read -r type count; do
             counts[$type]=$count
         done
 
