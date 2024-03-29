@@ -35,7 +35,7 @@ declare projectfailed=0
 declare -A counts=(["Tests"]=0 ["Failures"]=0 ["Ignored"]=0)
 
 counts["Tests"]=20
-counts["Tests"]=+10
+counts["Tests"]=$((counts["Tests"] + 10))
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
@@ -43,11 +43,10 @@ awkcmd='
     count=$1
     type=$(NF-1)
 
-    counts[type] += count
-  }
-  END {
-    for (type in counts) {
-      printf "%s=%d\n", type, counts[type]
+    result[type] += count
+  } END {
+    for (type in result) {
+      printf "%s=%d\n", type, result[type]
     }
   }'
 
