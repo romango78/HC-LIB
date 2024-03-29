@@ -60,7 +60,7 @@ for folder in $(find . -name "test" -type d -print); do
             echo "Type: $type"
             echo "Count: $count"
             echo "Eval: $(( counts[type] + count ))"
-            echo "Arr Val: ${counts[type]}"
+            echo "Arr Val: ${counts[@]}"
             echo " "
         done
 
