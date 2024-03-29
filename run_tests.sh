@@ -20,7 +20,7 @@ pioenv=$1
 
 if [ -z "$pioenv" ]; then
     echo -e "[WARNING] The environment is not specified. The default 'desktop' environment will be used."
-    echo '\n'
+    echo " "
     pioenv="desktop"
 fi
 
@@ -39,7 +39,7 @@ counts["Tests"]=$((counts["Tests"] + 10))
 
 # Define the AWK command to increment the correct counter for matching lines
 awkcmd='
-  /([0-9]+)[[:space:]]+(Tests|Failures|Ignored)/ {
+  /([0-9]+)[[:space:]]+(Failures|Tests|Ignored)/ {
     count=$1
     type=$(NF-1)
 
