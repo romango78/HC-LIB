@@ -48,7 +48,11 @@ for folder in $(find . -name "test" -type d -print); do
         # Execute pio command and process the output
         while IFS="=" read -r type count
         do
+            echo "Type: $type"
+            echo "Count: $count"
             counts[$type]=$(( counts[type] + count ))
+            echo "Eval. exp: $(( counts[type] ))"
+            echo " "
             if [[ "$type" == "Failures" && "$count" -ne 0 ]]; then
                 counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
                 echo "FailedProjects [$type;$count]"
