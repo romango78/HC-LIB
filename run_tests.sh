@@ -58,7 +58,7 @@ for folder in $(find . -name "test" -type d -print); do
         done < <(run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
 
         counts["Projects"]=$(( counts["Projects"] + 1))
-        if [[ "isErrored" ]]; then 
+        if [[ "$isErrored" ]]; then 
           counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
         fi
         echo " "
