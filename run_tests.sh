@@ -66,7 +66,7 @@ echo "========================= [TOTAL] ==========================="
 echo "${counts["Projects"]} Projectes ${counts["FailedProjects"]} Failed"
 echo "${counts["Tests"]} Tests ${counts["Failures"]} Failures ${counts["Ignored"]} Ignored"
 
-if [[ "${counts["FailedProjects"]}" -ne 0]]; then
+if [[ "${counts["FailedProjects"]}" -ne 0 ]]; then
     exit 1
 fi
 exit 0
