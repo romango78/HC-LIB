@@ -45,21 +45,22 @@ for folder in $(find . -name "test" -type d -print); do
         folder=$folder/..
         echo -e "Processing tests under $folder folder."
         echo
+        declare isErrored=true
         # Execute pio command and process the output
         while IFS="=" read -r type count
         do
-            echo "Type: $type"
-            echo "Count: $count"
             counts[$type]=$(( counts[$type] + count ))
-            echo "Eval. exp: $(( counts[$type] ))"
-            echo " "
             if [[ "$type" == "Failures" && "$count" -ne 0 ]]; then
                 counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
                 echo "FailedProjects [$type;$count]"
             fi
+            isErrored=false
         done < <(run_project_tests $pioenv $folder | tee /dev/fd/2 | awk "$awkcmd")
 
         counts["Projects"]=$(( counts["Projects"] + 1))
+        if [[ "isErrored" ]]; then 
+          counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
+        fi
         echo " "
 
     fi
