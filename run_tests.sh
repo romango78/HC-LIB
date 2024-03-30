@@ -50,8 +50,8 @@ for folder in $(find . -name "test" -type d -print); do
         do
             echo "Type: $type"
             echo "Count: $count"
-            counts[$type]=$(( counts[type] + count ))
-            echo "Eval. exp: $(( counts[type] ))"
+            counts[$type]=$(( counts[$type] + count ))
+            echo "Eval. exp: $(( counts[$type] ))"
             echo " "
             if [[ "$type" == "Failures" && "$count" -ne 0 ]]; then
                 counts["FailedProjects"]=$(( counts["FailedProjects"] + 1))
