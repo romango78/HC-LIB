@@ -79,8 +79,9 @@ class Log
 
         bool m_enabled = LOG_ENABLED_DEFAULT;
         const LogLevelEnum m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;
-        static constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;     
 
+        static constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;
+        
         static constexpr const char* GetLogLevelName(const LogLevelEnum t_level)
         {            
             return level_short_names[t_level];
