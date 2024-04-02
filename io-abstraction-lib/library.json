@@ -1,13 +1,13 @@
 {
-    "name": "HC-LIB.System",
+    "name": "HC-LIB.IO-Abstraction",
     "version": "1.0.2203",
-    "description": "Contains fundamental classes and base classes that define commonly-used data types.",
-    "keywords": "common, core, system, arduino, atmelavr",
+    "description": "This library helps the programmer to work with I/O Ports on the Arduino Board.",
+    "keywords": "io, arduino, atmelavr",
     "repository":
     {
-      "type": "git",
-      "url": "https://github.com/romango78/HC-LIB.git",
-      "branch": "master"
+        "type": "git",
+        "url": "https://github.com/romango78/HC-LIB.git",
+        "branch": "master"
     },
     "authors":
     [
@@ -23,7 +23,7 @@
           "library.json",
           "*.md"
       ]
-    },    
+    },  
     "license": "MIT",    
     "frameworks": "*",
     "platforms": ["atmelavr", "native"]

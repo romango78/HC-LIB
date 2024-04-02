@@ -14,7 +14,7 @@
     <tags>native arduino atmelavr device</tags>
     <dependencies>
       <dependency id="HC-LIB.Device.Abstractions" version="1.0.2201" />
-      <dependency id="HC-LIB.IO" version="1.0.2203" />
+      <dependency id="HC-LIB.IO-Port" version="1.0.2203" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>

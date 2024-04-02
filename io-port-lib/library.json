@@ -1,12 +1,13 @@
 {
-    "name": "HC-LIB.IO",
+    "name": "HC-LIB.IO-Port",
     "version": "1.0.2203",
     "description": "This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.",
     "keywords": "io, arduino, atmelavr",
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/romango78/HC-LIB/tree/main/io-lib"
+      "url": "https://github.com/romango78/HC-LIB.git",
+      "branch": "master"
     },
     "authors":
     [
@@ -20,13 +21,21 @@
       {
         "name": "HC-LIB.System",
         "version": ">=1.0.2203"
-      },
+      },      
       {
-        "name": "Unity",
-        "version": ">=2.5.2"
-      }      
-    ],    
+        "name": "HC-LIB.IO-Abstraction",
+        "version": ">=1.0.2203"
+      }     
+    ],
+    "export": {
+      "include":
+      [
+          "src/*",
+          "library.json",
+          "*.md"
+      ]
+    },
     "license": "MIT",    
     "frameworks": "*",
-    "platforms": ["atmelavr"]
+    "platforms": ["atmelavr", "native"]
   }
