@@ -6,7 +6,8 @@
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/romango78/HC-LIB/tree/master/device-abstraction-lib"
+      "url": "https://github.com/romango78/HC-LIB.git",
+      "branch": "master"
     },
     "authors":
     [
@@ -22,7 +23,15 @@
         "version": ">=1.0.2201"
       }
     ],
+    "export": {
+      "include":
+      [
+          "src/*",
+          "library.json",
+          "*.md"
+      ]
+    },    
     "license": "MIT",    
     "frameworks": "*",
-    "platforms": ["atmelavr"]
+    "platforms": ["atmelavr", "native"]
   }

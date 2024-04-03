@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <package>
   <metadata>
-    <id>HC-LIB.IO</id>
+    <id>HC-LIB.IO-Port</id>
     <version>1.0.2203</version>
     <title>IO Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
-    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-lib</projectUrl>
+    <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-port-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.</description>
     <releaseNotes>Initial 1.0 release</releaseNotes>
@@ -14,6 +14,7 @@
     <tags>native arduino atmelavr io</tags>
     <dependencies>
       <dependency id="HC-LIB.SYSTEM" version="1.0.2203" />
+      <dependency id="HC-LIB.IO-Abstractions" version="1.0.2203" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -21,14 +22,11 @@
     </packageTypes>
   </metadata>
   <files>
-    <file src="src\ioerrdef.h" target="src\ioerrdef.h" />
     <file src="src\adapter\IPortAdapter.h" target="src\adapter\IPortAdapter.h" />
     <file src="src\adapter\AnalogPortAdapter.cpp" target="src\adapter\AnalogPortAdapter.cpp" />
     <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />
     <file src="src\adapter\DigitalPortAdapter.cpp" target="src\adapter\DigitalPortAdapter.cpp" />
     <file src="src\adapter\DigitalPortAdapter.h" target="src\adapter\DigitalPortAdapter.h" />
-    <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
-    <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
     <file src="src\stream\AnalogStream.cpp" target="src\stream\AnalogStream.cpp" />
     <file src="src\stream\AnalogStream.h" target="src\stream\AnalogStream.h" />
     <file src="src\stream\VoltageStream.h" target="src\stream\VoltageStream.h" />

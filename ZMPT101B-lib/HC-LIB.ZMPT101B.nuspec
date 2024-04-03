@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.ZMPT101B</id>
-    <version>1.0.2203/version>
+    <version>1.0.2203</version>
     <title>Arduino ZMPT101B Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
@@ -14,7 +14,6 @@
     <tags>native arduino atmelavr common system</tags>
     <dependencies>
       <dependency id="HC-LIB.Devices" version="1.0.2203" />
-      <dependency id="HC-LIB.IO" version="1.0.2203" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>

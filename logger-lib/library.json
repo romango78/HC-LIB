@@ -6,7 +6,8 @@
     "repository":
     {
       "type": "git",
-      "url": "https://github.com/romango78/HC-LIB/tree/master/logger-lib"
+      "url": "https://github.com/romango78/HC-LIB.git",
+      "branch": "master"
     },
     "authors":
     [
@@ -15,14 +16,16 @@
         "email": "romango78@gmail.com"        
       }
     ],
-    "dependencies":
-    [
-      {
-        "name": "Unity",
-        "version": ">=2.5.2"
-      }      
-    ],       
+    "export": {
+      "include":
+      [
+          "src/*",
+          "include/*",
+          "library.json",
+          "*.md"
+      ]
+    },    
     "license": "MIT",    
     "frameworks": "*",
-    "platforms": ["atmelavr"]
+    "platforms": ["atmelavr", "native"]
   }

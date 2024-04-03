@@ -1,5 +1,5 @@
 # HC-LIB
-## IO Arduino Library v1.0.2203
+## IO Port Arduino Library v1.0.2203
 This __library__ is a tool to help the programmer to work with I/O Ports on the Arduino Board.
 
 ### Dependencies
@@ -23,10 +23,10 @@ The `pio test -e {environment}` command is used for running unit tests on the sp
 
 ### Packages
 * The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
-* The `pio package publish {local_repo_folder}/HC-LIB.IO-1.0.2111.tar.gz` command is used for publishing PlatformIO package.
+* The `pio package publish {local_repo_folder}/HC-LIB.IO-Port-{version}.tar.gz` command is used for publishing PlatformIO package.
 
-* The `nuget.exe pack HC-LIB.IO.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
-* The `nuget.exe install HC-LIB.IO` command is used for installing NuGet package.
+* The `nuget.exe pack HC-LIB.IO-Port.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
+* The `nuget.exe install HC-LIB.IO-Port` command is used for installing NuGet package.
 
 ### Changelog
 See [CHANGELOG.md](CHANGELOG.md)
