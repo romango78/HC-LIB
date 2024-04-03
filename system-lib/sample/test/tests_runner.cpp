@@ -28,7 +28,7 @@ void testsProcess()
     RUN_TEST(ExpectedPointer_ShouldNotContainError_WhenSomeErrorNotOccurred);
     RUN_TEST(ExpectedPointer_ShouldContainError_WhenSomeErrorOccurred);
     RUN_TEST(ExpectedReferenceValue_ShouldNotContainError_WhenSomeErrorNotOccurred);
-    // RUN_TEST(ExpectedReferenceValue_ShouldContainError_WhenSomeErrorOccurred);
+    RUN_TEST(ExpectedReferenceValue_ShouldContainError_WhenSomeErrorOccurred);
     RUN_TEST(ExpectedVoid_ShouldNotContainError_WhenSomeErrorNotOccurred);
     RUN_TEST(ExpectedVoid_ShouldContainError_WhenSomeErrorOccurred);
     RUN_TEST(ExpectedExpectedType_ShouldNotContainError_WhenSomeErrorNotOccurred);
