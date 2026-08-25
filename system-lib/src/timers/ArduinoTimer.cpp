@@ -10,7 +10,20 @@
 
 #if defined(ARDUINO)
 #include <Arduino.h>
+#else
+#include <chrono>
 #endif
+
+static uint32_t nowMs()
+{
+#if defined(ARDUINO)
+    return millis();
+#else
+    using namespace std::chrono;
+    static const steady_clock::time_point origin = steady_clock::now();
+    return static_cast<uint32_t>(duration_cast<milliseconds>(steady_clock::now() - origin).count());
+#endif
+}
 
 uint32_t ArduinoTimer::getInterval()
 {
@@ -28,11 +41,8 @@ void ArduinoTimer::setInterval(const uint32_t t_interval)
 void ArduinoTimer::start()
 {
     m_started = true;
-    #if defined(ARDUINO)
-    m_startedAt = millis();
-    #else
-    m_startedAt = 0;
-    #endif
+    m_elapsed = false;
+    m_startedAt = nowMs();
 };
 
 void ArduinoTimer::stop()
@@ -44,13 +54,13 @@ void ArduinoTimer::stop()
 
 bool ArduinoTimer::isElapsed()
 {
+    if(!m_started)
+    {
+        return false;
+    }
     if(!m_elapsed)
     {
-        #if defined(ARDUINO)
-        m_elapsed = (millis() - m_startedAt >= m_interval);
-        #else
-        m_elapsed = true;
-        #endif
+        m_elapsed = (nowMs() - m_startedAt >= m_interval);
     }
     return m_elapsed;
 };

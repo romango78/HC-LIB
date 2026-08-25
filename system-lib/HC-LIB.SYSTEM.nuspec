@@ -21,6 +21,8 @@
   <files>
     <file src="src\errdef.h" target="src\errdef.h"/>    
     <file src="src\Expected.h" target="src\Expected.h" />
+    <file src="src\ICloneable.h" target="src\ICloneable.h" />
+    <file src="src\move.h" target="src\move.h" />
     <file src="src\timers\ITimer.h" target="src\timers\ITimer.h" />
     <file src="src\timers\ArduinoTimer.h" target="src\timers\ArduinoTimer.h" />
     <file src="src\timers\ArduinoTimer.cpp" target="src\timers\ArduinoTimer.cpp" />

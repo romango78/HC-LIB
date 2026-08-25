@@ -10,6 +10,7 @@
 
 #include <unity.h>
 #include "ExpectedTests.h"
+#include "ArduinoTimerTests.h"
 
 void dummyTest()
 {
@@ -33,6 +34,14 @@ void testsProcess()
     RUN_TEST(ExpectedVoid_ShouldContainError_WhenSomeErrorOccurred);
     RUN_TEST(ExpectedExpectedType_ShouldNotContainError_WhenSomeErrorNotOccurred);
     RUN_TEST(ExpectedExpected_ShouldContainError_WhenSomeErrorOccurred);
+    RUN_TEST(Expected_Move_ShouldLeaveSourceEmpty_AndDestroyValueOnce);
+    RUN_TEST(Expected_MoveAssign_ShouldReplaceValue_AndDestroyPrevious);
+
+    /*****************************************
+     * ArduinoTimer
+     *****************************************/
+    RUN_TEST(ArduinoTimer_IsElapsed_ShouldBeFalse_WhenNotStarted);
+    RUN_TEST(ArduinoTimer_IsElapsed_ShouldBecomeTrue_AfterInterval);
     
     UNITY_END();
 };
