@@ -30,9 +30,6 @@ struct ZMPT101B_ACVoltage : SensorData<float>
     
     ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const float t_data)
         : SensorData<float>(t_sensor, t_data) {};    
-
-    ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const err_t t_error)
-        : SensorData<float>(t_sensor, t_error) {};  
 };
 
 class ZMPT101B

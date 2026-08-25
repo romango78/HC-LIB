@@ -23,27 +23,29 @@ void ZMPT101BTrueRmsReader_Raise_Error_When_TimerIsNotInitialized()
     ZMPT101BTrueRmsReader* sut = new ZMPT101BTrueRmsReader(nullptr);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.error, "Expected Timer Is Not Initialized error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "An error should be occurred.");
+    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.getError(), "Expected Timer Is Not Initialized error.");
 
     delete sut;
 };
 
 void ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized()
 {
-    // Arrange
+//     // Arrange
     ITimer* timer = new FakeTimer();
 
     ZMPT101BSensor sensor = {0, nullptr};
     ZMPT101BTrueRmsReader* sut = new ZMPT101BTrueRmsReader(timer);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.error, "Expected Stream Is Not Created error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "An error should be occurred.");
+    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.getError(), "Expected Stream Is Not Created error.");
 
     delete sut;
     delete timer;
@@ -62,10 +64,11 @@ void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
     ZMPT101BTrueRmsReader* sut = new ZMPT101BTrueRmsReader(timer);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
     // Asserts   
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.data, "The True RMS calculation is falied.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, result.hasValue(), "An error should not be occurred.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The True RMS calculation is falied.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected.");
 
     delete sut;

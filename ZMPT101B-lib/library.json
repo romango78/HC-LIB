@@ -19,9 +19,17 @@
     "dependencies":
     [
       {
+        "name": "HC-LIB.Device.Abstractions",
+        "version": ">=1.0.2404"
+      },
+      {
         "name": "HC-LIB.Devices",
         "version": ">=1.0.2203"
-      }        
+      },
+      {
+        "name": "HC-LIB.System",
+        "version": ">=1.0.2404"
+      }
     ],
     "export": {
       "include":

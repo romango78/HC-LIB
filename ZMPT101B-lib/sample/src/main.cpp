@@ -82,6 +82,9 @@ void setup()
 
     sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
     ZMPT101B::calibrate(sensor);
+    
+    Serial.print("Sensor calibrated. Zero: ");
+    Serial.println(sensor->zero, 2);
 
     auto timer = new ArduinoTimer();
 
@@ -95,15 +98,32 @@ void setup()
 
 void loop() 
 {
-    ZMPT101B_ACVoltage sensorData1 = rmsReader->read(*sensor);
-    ZMPT101B_ACVoltage sensorData2 = trueRmsReader->read(*sensor);
+    Expected<ZMPT101B_ACVoltage> sensorData1 = rmsReader->read(*sensor);
+    Expected<ZMPT101B_ACVoltage> sensorData2 = trueRmsReader->read(*sensor);
 
     Serial.print(220.00);
     Serial.print(" ");
-    Serial.print(sensorData1.data, 2);
+    if(sensorData1.hasValue())
+    {
+        Serial.print(sensorData1.getValue().data, 2);
+    }
+    else
+    {
+        Serial.print("Error (");
+        Serial.print(sensorData1.getError());
+        Serial.print(")");
+    }
     Serial.print(" ");
-    Serial.println(sensorData2.data, 2);
-    
+    if(sensorData2.hasValue())
+    {
+        Serial.println(sensorData2.getValue().data, 2);
+    }
+    else
+    {
+        Serial.print("Error (");
+        Serial.print(sensorData2.getError());
+        Serial.print(")");
+    }
     delay(500);
 }
 

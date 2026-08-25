@@ -18,13 +18,10 @@ struct SensorData
 {
     const ISensor sensor;
     const T data;
-    const err_t error;
 
     SensorData() = delete;    
     SensorData(const ISensor& t_sensor, const T t_data)
-        : sensor(t_sensor), data(t_data), error(NO_ERROR) {};
-    SensorData(const ISensor& t_sensor, const err_t t_error)
-        : sensor(t_sensor), data(T()), error(t_error) {};
+        : sensor(t_sensor), data(t_data) {};
 };
 
 #endif

@@ -60,6 +60,14 @@ class Expected
             }
         }
 
+        ~Expected()
+        {
+            if(m_hasValue)
+            {
+                m_value.~T();
+            }
+        }
+
         bool hasValue()
         {
             return m_hasValue;

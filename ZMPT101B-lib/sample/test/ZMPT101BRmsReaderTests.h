@@ -23,10 +23,11 @@ void ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized()
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(nullptr);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.error, "Expected Timer Is Not Initialized error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "An error should be occurred.");
+    TEST_ASSERT_EQUAL_MESSAGE(TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR, result.getError(), "Expected Timer Is Not Initialized error.");
 
     delete sut;
 };
@@ -40,10 +41,11 @@ void ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized()
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(timer);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.error, "Expected Stream Is Not Created error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "An error should be occurred.");
+    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.getError(), "Expected Stream Is Not Created error.");
 
     delete sut;
     delete timer;
@@ -62,10 +64,11 @@ void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
     ZMPT101BRmsReader* sut = new ZMPT101BRmsReader(timer);
 
     // Act
-    ZMPT101B_ACVoltage result = sut->read(sensor);
+    auto result = sut->read(sensor);
 
-    // Asserts   
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.data, "The RMS calculation is failed.");
+    // Asserts
+    TEST_ASSERT_EQUAL_MESSAGE(true, result.hasValue(), "An error should not be occurred.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
     TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected.");
 
     delete sut;

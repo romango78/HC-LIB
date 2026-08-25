@@ -13,10 +13,12 @@
 #include "sensors/ZMPT101B.h"
 #include "timers/ITimer.h"
 #include "deviceerrdef.h"
+#include "Expected.h"
 
 #define AC_NETWORK_FREQUENCY 50
 
-class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+class ZMPT101BRmsReader : 
+    public ISensorReader<Expected<ZMPT101B_ACVoltage>, ZMPT101BSensor>
 {
     private:
         ITimer* const m_timer;
@@ -25,10 +27,11 @@ class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSenso
             : m_timer(t_timer) {};
         virtual ~ZMPT101BRmsReader() = default;
 
-        ZMPT101B_ACVoltage read(const ZMPT101BSensor& t_sensor) override;
+        Expected<ZMPT101B_ACVoltage> read(const ZMPT101BSensor& t_sensor) override;
 };
 
-class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+class ZMPT101BTrueRmsReader : 
+    public ISensorReader<Expected<ZMPT101B_ACVoltage>, ZMPT101BSensor>
 {
     private:
         ITimer* const m_timer;
@@ -37,7 +40,7 @@ class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BS
             : m_timer(t_timer) {};
         virtual ~ZMPT101BTrueRmsReader() = default;
 
-        ZMPT101B_ACVoltage read(const ZMPT101BSensor& t_sensor) override;
+        Expected<ZMPT101B_ACVoltage> read(const ZMPT101BSensor& t_sensor) override;
 };
 
 #endif

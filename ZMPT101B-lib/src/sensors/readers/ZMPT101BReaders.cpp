@@ -12,15 +12,15 @@
 // The Ploynominal Equation 3
 #define PolynomialEquation(x) (0.00000412*x*x*x - 0.000857*x*x + 2.675*x - 3.198)
 
-ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor)
+Expected<ZMPT101B_ACVoltage> ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor)
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage(t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
+        return Expected<ZMPT101B_ACVoltage>::fromError((err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
     if(!t_sensor.stream)
     {
-        return ZMPT101B_ACVoltage(t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
+        return Expected<ZMPT101B_ACVoltage>::fromError((err_t)STREAM_NOTCREATED_IO_ERROR);
     };
     if(!t_sensor.stream->canRead())
     {
@@ -56,15 +56,15 @@ ZMPT101B_ACVoltage ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor)
     return ZMPT101B_ACVoltage(t_sensor, result);
 };
 
-ZMPT101B_ACVoltage ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor)
+Expected<ZMPT101B_ACVoltage> ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor)
 {   
     if(!m_timer)
     {
-        return ZMPT101B_ACVoltage(t_sensor, (err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
+        return Expected<ZMPT101B_ACVoltage>::fromError((err_t)TIMER_IS_NOT_INITIALIZED_DEVICE_ERROR);
     }
     if(!t_sensor.stream)
     {
-        return ZMPT101B_ACVoltage(t_sensor, (err_t)STREAM_NOTCREATED_IO_ERROR);
+        return Expected<ZMPT101B_ACVoltage>::fromError((err_t)STREAM_NOTCREATED_IO_ERROR);
     };
     if(!t_sensor.stream->canRead())
     {

@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>HC-LIB.Device.Abstractions</id>
-    <version>1.0.2201</version>
+    <version>1.0.2404</version>
     <title>Arduino Device Abstractions Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>

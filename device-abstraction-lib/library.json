@@ -1,6 +1,6 @@
 {
     "name": "HC-LIB.Device.Abstractions",
-    "version": "1.0.2201",
+    "version": "1.0.2404",
     "description": "Defines abstractions for devices that can be connected to Arduino Boards.",
     "keywords": "device, abstractions, arduino, atmelavr",
     "repository":

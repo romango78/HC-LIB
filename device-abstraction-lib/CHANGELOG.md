@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.2404]
+### Changed
+- Removed __error__ member from __SensorData__ class. The __Expected\<SensorData\>__ should be used for storing an error.
+  
 ## [1.0.2201]
 ### Added
 - Added abstraction for Arduino Devices.
