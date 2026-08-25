@@ -4,10 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.2203]
+### Added
+- Added _IPortStream{T}_ as a port-specific stream base class.
+
+### Changed
+- Moved _IStream_ / _BaseStream_ abstractions to __HC-LIB.IO-Abstraction__.
+- Added dependency on __HC-LIB.IO-Abstraction__ v1.0.2203 and __HC-LIB.System__ v1.0.2203.
+
 ## [1.0.2202]
 ### Changed
 - Fixed issue with disposing _PortAdapter_ resources.
-- Implemented _IClonable_ interface for _PortAdapter_ and _Stream_ classes.
+- Implemented _ICloneable_ interface for _PortAdapter_ and _Stream_ classes.
 
 ## [1.0.2201]
 ### Added

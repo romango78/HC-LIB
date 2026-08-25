@@ -1,6 +1,23 @@
 # HC-LIB
 Arduino Libraries
 
+## Libraries
+The following Arduino libraries are available in this repository:
+
+| Library | Folder | Version | Dependencies |
+|---|---|---|---|
+| [HC-LIB.System](system-lib/README.md) | `system-lib` | 1.0.2404 | none |
+| [HC-LIB.Collections](collections-lib/README.md) | `collections-lib` | 1.0.2203 | HC-LIB.System v1.0.2201 |
+| [HC-LIB.Logger](logger-lib/README.md) | `logger-lib` | 1.0.2110 | none |
+| [HC-LIB.IO-Abstraction](io-abstraction-lib/README.md) | `io-abstraction-lib` | 1.0.2203 | HC-LIB.System v1.0.2203 |
+| [HC-LIB.IO-Port](io-port-lib/README.md) | `io-port-lib` | 1.0.2203 | HC-LIB.System v1.0.2203<br>HC-LIB.IO-Abstraction v1.0.2203 |
+| [HC-LIB.Device.Abstractions](device-abstraction-lib/README.md) | `device-abstraction-lib` | 1.0.2404 | HC-LIB.System v1.0.2201 |
+| [HC-LIB.Devices](devices-lib/README.md) | `devices-lib` | 1.0.2203 | HC-LIB.Device.Abstractions v1.0.2201<br>HC-LIB.IO-Port v1.0.2203 |
+| [HC-LIB.ZMPT101B](ZMPT101B-lib/README.md) | `ZMPT101B-lib` | 1.0.2203 | HC-LIB.System v1.0.2404<br>HC-LIB.Device.Abstractions v1.0.2404<br>HC-LIB.Devices v1.0.2203 |
+| [HC-LIB.SRD05VDCSL](SRD05VDCSL-lib/README.md) | `SRD05VDCSL-lib` | 1.0.2203 | HC-LIB.Devices v1.0.2203 |
+
+`io-twi-lib` contains TWI (I2C) stream implementations that depend on HC-LIB.IO-Abstraction. It is not published as a package yet.
+
 ## Development Environment
 The __Visual Code IDE__ should be installed with the following plugins:
 * PlatformIO IDE v2.5.0 or higher

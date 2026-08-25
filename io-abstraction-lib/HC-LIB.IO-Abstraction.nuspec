@@ -8,11 +8,13 @@
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-abstraction-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library helps the programmer to work with I/O Ports on the Arduino Board.</description>
+    <description>Defines abstractions for I/O streams on the Arduino Board.</description>
     <releaseNotes>Initial 1.0 release</releaseNotes>
     <copyright>Copyright 2021 Roman Gorielov</copyright>
     <tags>native arduino atmelavr io</tags>
-    <dependencies/>
+    <dependencies>
+      <dependency id="HC-LIB.SYSTEM" version="1.0.2203" />
+    </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
       <packageType name="Dependency" />
