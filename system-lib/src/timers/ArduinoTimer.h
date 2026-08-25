@@ -20,7 +20,7 @@ class ArduinoTimer : public ITimer
         bool m_elapsed;
     public:
         ArduinoTimer()
-            : m_interval(0), m_started(false), m_elapsed(false) {};
+            : m_interval(0), m_startedAt(0), m_started(false), m_elapsed(false) {};
         ~ArduinoTimer() = default;
 
         uint32_t getInterval() override;

@@ -6,7 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.2404]
 ### Changed
-- Added destructor for __Expected\<T\>__ class.
+- Added destructor, copy/move assignment, and move cleanup for __Expected\<T\>__ so the moved-from instance no longer destroys _T_.
+- _ArduinoTimer_ initializes _m_startedAt_, does not elapse before _start()_, and uses a host clock on native builds.
+- NuGet package now includes _ICloneable.h_ and _move.h_. Replaced vendored libstdc++ move/type_traits headers with a small local _std::move_ helper.
   
 ## [1.0.2203]
 ### Added

@@ -26,7 +26,38 @@ class Expected
         };  
 
         bool m_hasValue;
-        Expected() {};     
+
+        Expected()
+            : m_hasValue(false)
+        {
+            m_error = NO_ERROR;
+        };
+
+        void destroyValue()
+        {
+            if(m_hasValue)
+            {
+                m_value.~T();
+                m_hasValue = false;
+            }
+        };
+
+        void moveFrom(Expected &t_expected)
+        {
+            m_hasValue = t_expected.m_hasValue;
+            if(m_hasValue)
+            {
+                new(&m_value) T(std::move(t_expected.m_value));
+                t_expected.m_value.~T();
+                t_expected.m_hasValue = false;
+                t_expected.m_error = NO_ERROR;
+            }
+            else
+            {
+                m_error = t_expected.m_error;
+            }
+        };
+
     public:
         Expected(const T &t_value)
             : m_value(t_value), m_hasValue(true) {};
@@ -40,65 +71,87 @@ class Expected
             }
             else 
             {
-                new(&m_error) err_t(t_expected.m_error);
+                m_error = t_expected.m_error;
             }
-        }
+        };
 
         Expected(T &&t_value)
-            : m_value(std::move(t_value)), m_hasValue(true) {}
+            : m_value(std::move(t_value)), m_hasValue(true) {};
 
         Expected(Expected &&t_expected) 
-            : m_hasValue(t_expected.m_hasValue) 
+            : m_hasValue(false)
         {
-            if (m_hasValue) 
+            m_error = NO_ERROR;
+            moveFrom(t_expected);
+        };
+
+        Expected& operator=(const Expected &t_expected)
+        {
+            if(this == &t_expected)
             {
-                new(&m_value) T(std::move(t_expected.m_value));
+                return *this;
             }
-            else 
+
+            destroyValue();
+            m_hasValue = t_expected.m_hasValue;
+            if(m_hasValue)
             {
-                new(&m_error) err_t(std::move(t_expected.m_error));
+                new(&m_value) T(t_expected.m_value);
             }
-        }
+            else
+            {
+                m_error = t_expected.m_error;
+            }
+            return *this;
+        };
+
+        Expected& operator=(Expected &&t_expected)
+        {
+            if(this == &t_expected)
+            {
+                return *this;
+            }
+
+            destroyValue();
+            moveFrom(t_expected);
+            return *this;
+        };
 
         ~Expected()
         {
-            if(m_hasValue)
-            {
-                m_value.~T();
-            }
-        }
+            destroyValue();
+        };
 
-        bool hasValue()
+        bool hasValue() const
         {
             return m_hasValue;
-        }
+        };
 
         T& getValue()
         {
             return m_value;
-        }
+        };
 
         const T& getValue() const
         {
             return m_value;
-        }
+        };
 
-        const err_t getError()
+        err_t getError() const
         {
             if(!hasValue())
             {
                 return m_error;
             }
             return NO_ERROR;
-        }
+        };
 
         static Expected<T> fromError(err_t t_error) 
         {
             Expected<T> result;
-            result.m_hasValue = false;
             result.m_error = t_error;
             return result;
-        }
+        };
 };
 
 #endif

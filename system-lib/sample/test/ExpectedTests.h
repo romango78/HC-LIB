@@ -184,5 +184,74 @@ void ExpectedExpected_ShouldContainError_WhenSomeErrorOccurred()
     TEST_ASSERT_EQUAL_MESSAGE(OUT_OF_RANGE_ERROR, sut.getError(),"Expected<T> should contain OUT_OF_RANGE_ERROR error.");
 };
 
+struct DtorCounter
+{
+    static int constructed;
+    static int destroyed;
+    int id;
+
+    DtorCounter(int t_id = 0)
+        : id(t_id)
+    {
+        constructed++;
+    }
+
+    DtorCounter(const DtorCounter &t_other)
+        : id(t_other.id)
+    {
+        constructed++;
+    }
+
+    DtorCounter(DtorCounter &&t_other)
+        : id(t_other.id)
+    {
+        constructed++;
+        t_other.id = -1;
+    }
+
+    ~DtorCounter()
+    {
+        destroyed++;
+    }
+};
+
+int DtorCounter::constructed = 0;
+int DtorCounter::destroyed = 0;
+
+void Expected_Move_ShouldLeaveSourceEmpty_AndDestroyValueOnce()
+{
+    DtorCounter::constructed = 0;
+    DtorCounter::destroyed = 0;
+
+    {
+        Expected<DtorCounter> original = DtorCounter(7);
+        Expected<DtorCounter> moved = std::move(original);
+
+        TEST_ASSERT_EQUAL_MESSAGE(false, original.hasValue(), "Moved-from Expected should be empty.");
+        TEST_ASSERT_EQUAL_MESSAGE(true, moved.hasValue(), "Move destination should contain a value.");
+        TEST_ASSERT_EQUAL_MESSAGE(7, moved.getValue().id, "Moved value should be preserved.");
+    }
+
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "T destructor should run once per constructor.");
+};
+
+void Expected_MoveAssign_ShouldReplaceValue_AndDestroyPrevious()
+{
+    DtorCounter::constructed = 0;
+    DtorCounter::destroyed = 0;
+
+    {
+        Expected<DtorCounter> target = DtorCounter(1);
+        Expected<DtorCounter> source = DtorCounter(2);
+        target = std::move(source);
+
+        TEST_ASSERT_EQUAL_MESSAGE(false, source.hasValue(), "Moved-from Expected should be empty.");
+        TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), "Move assignment destination should contain a value.");
+        TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, "Move assignment should replace the value.");
+    }
+
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "T destructor should run once per constructor.");
+};
+
 #endif
 #endif
