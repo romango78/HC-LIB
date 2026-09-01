@@ -6,11 +6,16 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _ARDUINO_TIMER_H_
-#define _ARDUINO_TIMER_H_
+/// @file ArduinoTimer.h
+/// @brief ITimer implementation based on Arduino millis() (steady_clock on native).
+#ifndef _HC_LIB_ARDUINO_TIMER_H_
+#define _HC_LIB_ARDUINO_TIMER_H_
 
 #include "ITimer.h"
 
+/// @brief One-shot millisecond countdown.
+/// @note isElapsed() latches so a millis() wrap does not clear a fire already observed.
+/// start() restarts the countdown. setInterval() is a no-op while started.
 class ArduinoTimer : public ITimer
 {
     private:
@@ -23,14 +28,14 @@ class ArduinoTimer : public ITimer
             : m_interval(0), m_startedAt(0), m_started(false), m_elapsed(false) {};
         ~ArduinoTimer() = default;
 
-        uint32_t getInterval() override;
+        uint32_t getInterval() const override;
         void setInterval(const uint32_t t_interval) override;
 
         void start() override;
         void stop() override;
 
         bool isElapsed() override;
-        bool isStarted() override;
+        bool isStarted() const override;
 };
 
 #endif

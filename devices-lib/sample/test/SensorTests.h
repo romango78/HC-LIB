@@ -14,7 +14,7 @@
 #include <unity.h>
 #include "sensors/AnalogSensor.h"
 #include "FakeStream.h"
-#include "move.h"
+#include "lib-utility.h"
 
 AnalogSensor createAnalogSensor()
 {

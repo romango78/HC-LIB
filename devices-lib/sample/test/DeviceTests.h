@@ -15,7 +15,7 @@
 #include "devices/AnalogDevices.h"
 #include "devices/DigitalDevices.h"
 #include "FakeStream.h"
-#include "move.h"
+#include "lib-utility.h"
 
 AnalogDevice createAnalogDevice()
 {

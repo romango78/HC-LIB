@@ -2,16 +2,16 @@
 <package>
   <metadata>
     <id>HC-LIB.SYSTEM</id>
-    <version>1.0.2203</version>
+    <version>1.1.2609</version>
     <title>Arduino System Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/system-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library contains fundamental classes and base classes that define commonly-used data types..</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2021 Roman Gorielov</copyright>
-    <tags>native arduino atmelavr common system</tags>
+    <description>Fundamental types for Arduino and native builds: Expected, Error/GenericError, ITimer/ArduinoTimer, ICloneable, and Arduino std utility traits.</description>
+    <releaseNotes>1.1.2609: Error/GenericError, Unexpected/make_error, lib-utility.h (Arduino std::decay), const ITimer accessors. Removed errdef.h.</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr common system expected error timer</tags>
     <dependencies/>    
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -19,10 +19,12 @@
     </packageTypes>
   </metadata>
   <files>
-    <file src="src\errdef.h" target="src\errdef.h"/>    
     <file src="src\Expected.h" target="src\Expected.h" />
     <file src="src\ICloneable.h" target="src\ICloneable.h" />
-    <file src="src\move.h" target="src\move.h" />
+    <file src="src\lib-utility.h" target="src\lib-utility.h" />
+    <file src="src\errors\errors.h" target="src\errors\errors.h" />
+    <file src="src\errors\GenericErrors.h" target="src\errors\GenericErrors.h" />
+    <file src="src\errors\GenericError.cpp" target="src\errors\GenericError.cpp" />
     <file src="src\timers\ITimer.h" target="src\timers\ITimer.h" />
     <file src="src\timers\ArduinoTimer.h" target="src\timers\ArduinoTimer.h" />
     <file src="src\timers\ArduinoTimer.cpp" target="src\timers\ArduinoTimer.cpp" />

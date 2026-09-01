@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"name": "system-lib",
+			"path": "system-lib"
+		}
+	],
+	"settings": {},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "cppdbg",
+				"request": "launch",
+				"name": "native-debug",
+				"program": "${workspaceFolder}/sample/.pio/build/desktop-debug/program.exe",
+				"args": [],
+				"stopAtEntry": false,
+				"cwd": "${workspaceFolder}/sample",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb"
+			}
+		]
+	}
+}

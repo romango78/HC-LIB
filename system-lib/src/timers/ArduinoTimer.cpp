@@ -25,32 +25,32 @@ static uint32_t nowMs()
 #endif
 }
 
-uint32_t ArduinoTimer::getInterval()
+uint32_t ArduinoTimer::getInterval() const
 {
     return m_interval;
-};
+}
 
 void ArduinoTimer::setInterval(const uint32_t t_interval)
 {
-    if(!isStarted())
+    if(!m_started)
     {
         m_interval = t_interval;
     }
-};
+}
 
 void ArduinoTimer::start()
 {
     m_started = true;
     m_elapsed = false;
     m_startedAt = nowMs();
-};
+}
 
 void ArduinoTimer::stop()
 {
     m_started = false;
     m_startedAt = 0;
     m_elapsed = false;
-};
+}
 
 bool ArduinoTimer::isElapsed()
 {
@@ -63,9 +63,9 @@ bool ArduinoTimer::isElapsed()
         m_elapsed = (nowMs() - m_startedAt >= m_interval);
     }
     return m_elapsed;
-};
+}
 
-bool ArduinoTimer::isStarted()
+bool ArduinoTimer::isStarted() const
 {
     return m_started;
 }
