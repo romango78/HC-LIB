@@ -2,6 +2,8 @@
 ## Collections Arduino Library v1.0.2609
 This __library__ defines generic collections for Arduino and native builds: __Queue{T}__, __IEnumerable{T}__ / __IEnumerator{T}__, and __KeyValuePair{TKey, TValue}__.
 
+The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
+
 ### Dependencies
 - HC-LIB.System v1.1.2609
 
@@ -42,18 +44,27 @@ while (enumerator->moveNext())
 delete enumerator;
 ```
 
-### Sample
-The __sample application__ is stored in the __sample__ folder.
+### Environments
+Run commands from this folder (`collections-lib`).
 
-* `pio run -e nano-board` builds Arduino Nano firmware.
-* `pio run -e nano-board -t upload` uploads the firmware.
-* `pio run -e desktop-debug` builds the native Unity tests with debug symbols.
+| Environment | Platform | Purpose |
+|---|---|---|
+| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware: `setup()` / `loop()` from __test/tests_runner.cpp__ |
+| `desktop` | native | Unity tests |
+| `desktop-debug` | native | Unity tests with debug symbols (`-O0 -ggdb3`). Default. |
 
-See the included tests for further usage examples.
+__test/tests_runner.cpp__ is the single entry point: a firmware stub when `UNIT_TEST` is off, and the Unity runner when it is on.
+
+### Build
+```powershell
+pio run -e nano-board
+pio run -e nano-board -t upload
+pio run -e desktop-debug
+```
+
+Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`.
 
 ### Unit tests
-From the __sample__ folder:
-
 ```powershell
 pio test -e desktop-debug
 ```
@@ -61,10 +72,12 @@ pio test -e desktop-debug
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
 
 ### Packages
-* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
+Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).
+
+* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package `HC-LIB.Collections-{version}.tar.gz` in the `{local_repo_folder}` folder.
 * The `pio package publish {local_repo_folder}/HC-LIB.Collections-{version}.tar.gz` command is used for publishing PlatformIO package.
 
-* The `nuget.exe pack HC-LIB.Collections.nuspec -outputdirectory {local_repo_folder}` command is used for creating NuGet package and store it in the {local_repo} folder.
+* The `nuget.exe pack HC-LIB.Collections.nuspec -outputdirectory {local_repo_folder}` command is used for creating NuGet package and store it in the `{local_repo_folder}` folder.
 * The `nuget.exe install HC-LIB.Collections` command is used for installing NuGet package.
 
 ### Changelog

@@ -4,11 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [1.1.2609]
+## [1.0.2609]
 ### Added
 - Unit tests for multi-byte __Queue{T}__ FIFO order and single-item __EnumeratorBase__ destruction.
 
 ### Changed
+- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`). __test/tests_runner.cpp__ is the firmware stub and Unity runner.
 - Requires __HC-LIB.System__ 1.1.2609.
 - __Queue{T}::dequeue__ and __peek__ return __Expected{T, Error}__ via __make_error(GenericError::InvalidOperation)__.
 - __Queue{T}::enqueue__ returns __Error__ (__NoError__ or __OutOfMemory__).

@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/collections-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Generic collections for Arduino and native builds: Queue, IEnumerable/IEnumerator, and KeyValuePair. Queue uses Expected and GenericError from HC-LIB.System.</description>
-    <releaseNotes>1.0.2609: Queue uses Expected/GenericError; fixed EnumeratorBase destructor and Queue memmove size; copy/move disabled. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
+    <releaseNotes>1.0.2609: Queue uses Expected/GenericError; fixed EnumeratorBase destructor and Queue memmove size; copy/move disabled. PlatformIO project is the library root. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
     <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr collections queue enumerable enumerator</tags>
     <dependencies>
@@ -26,6 +26,8 @@
     <file src="src\collections\generic\IEnumerator.h" target="src\collections\generic\IEnumerator.h" />
     <file src="src\collections\generic\KeyValuePair.h" target="src\collections\generic\KeyValuePair.h" />
     <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>

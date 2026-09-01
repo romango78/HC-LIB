@@ -29,6 +29,7 @@
           "src/*",
           "src/collections/generic/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
     },
