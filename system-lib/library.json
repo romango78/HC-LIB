@@ -23,6 +23,7 @@
           "src/errors/*",
           "src/timers/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
     },    

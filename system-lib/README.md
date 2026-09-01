@@ -57,10 +57,10 @@ pio test -e desktop
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
 
 ### Packages
-* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
+* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package `HC-LIB.SYSTEM-{version}.tar.gz` in the `{local_repo_folder}` folder.
 * The `pio package publish {local_repo_folder}/HC-LIB.SYSTEM-{version}.tar.gz` command is used for publishing PlatformIO package.
 
-* The `nuget.exe pack HC-LIB.SYSTEM.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
+* The `nuget.exe pack HC-LIB.SYSTEM.nuspec -outputdirectory {local_repo_folder}` command is used for creating NuGet package and store it in the `{local_repo_folder}` folder.
 * The `nuget.exe install HC-LIB.SYSTEM` command is used for installing NuGet package.
 
 ### Changelog
