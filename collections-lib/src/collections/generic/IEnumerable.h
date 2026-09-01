@@ -5,8 +5,8 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-#ifndef _I_ENUMERABLE_
-#define _I_ENUMERABLE_
+#ifndef _HC_LIB_I_ENUMERABLE_H_
+#define _HC_LIB_I_ENUMERABLE_H_
 
 #include "IEnumerator.h"
 

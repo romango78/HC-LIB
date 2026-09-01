@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.Collections",
-    "version": "1.0.2203",
-    "description": "This library contains interfaces and classes that define various collections of objects, such as lists, queues, bit arrays, hash tables and dictionaries.",
-    "keywords": "collections, arduino, atmelavr",
+    "version": "1.1.2609",
+    "description": "Generic collections for Arduino and native builds: Queue, IEnumerable/IEnumerator, and KeyValuePair. Queue uses Expected and GenericError from HC-LIB.System.",
+    "keywords": "collections, queue, enumerable, enumerator, arduino, atmelavr, native",
     "repository":
     {
       "type": "git",
@@ -20,13 +20,14 @@
     [
       {
         "name": "HC-LIB.System",
-        "version": ">=1.0.2201"
+        "version": ">=1.1.2609"
       }
     ],       
     "export": {
       "include":
       [
           "src/*",
+          "src/collections/generic/*",
           "library.json",
           "*.md"
       ]

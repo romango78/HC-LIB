@@ -39,7 +39,8 @@ void testsProcess()
     RUN_TEST(EnumeratorBase_ShouldNotGetFirstItem_AfterReset);
     RUN_TEST(EnumeratorBase_ShouldGetFirstItem_AfterReset_AndOneCallMoveNext);
     RUN_TEST(EnumeratorBase_ShouldNotGetLastItem_WhenMoveNextReturnFalse);
-    RUN_TEST(EnumeratorBase_ShouldNotGetItem_AfterFirstMoveNext_WithoutReset);
+    RUN_TEST(EnumeratorBase_ShouldGetFirstItem_AfterFirstMoveNext_WithoutReset);
+    RUN_TEST(EnumeratorBase_ShouldDestroy_WhenSingleItem);
     RUN_TEST(EnumeratorBase_ShouldNotGetItem_AfterInitializing_WithoutReset);
     RUN_TEST(EnumeratorBase_ShouldReset_WhenNoItemsToEnumerate);
     RUN_TEST(EnumeratorBase_ShouldMoveNext_WhenNoItemsToEnumerate);
@@ -57,6 +58,7 @@ void testsProcess()
     RUN_TEST(Queue_ShouldClearEmptyQueue);
     RUN_TEST(Queue_ShouldPeekElementFromQueue);
     RUN_TEST(Queue_ShouldReturnError_WhenPeekFromEmptyQueue);
+    RUN_TEST(Queue_ShouldPreserveOrder_WhenElementSizeIsLargerThanByte);
 
     UNITY_END();
 };

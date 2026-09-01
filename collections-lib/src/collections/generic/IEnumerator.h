@@ -6,10 +6,10 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_ENUMERATOR_
-#define _I_ENUMERATOR_
+#ifndef _HC_LIB_I_ENUMERATOR_H_
+#define _HC_LIB_I_ENUMERATOR_H_
 
-// Supports a simple iteration over a generic collection.
+/// @brief Supports a simple iteration over a generic collection.
 template <typename T>
 class IEnumerator
 {
@@ -17,36 +17,34 @@ class IEnumerator
         IEnumerator() = default;
         virtual ~IEnumerator() = default;
 
-        // Sets the enumerator to its initial position, 
-        // which is before the first element in the collection.
-        //
-        // The preferred implementation is to move the enumerator 
-        // to the beginning of the collection, before the first element.  
+        /// @brief Positions the enumerator before the first element.
+        /// @note The preferred implementation is to move the enumerator 
+        /// to the beginning of the collection, before the first element. 
         virtual void reset() = 0;
 
-        // Advances the enumerator to the next element of the collection.
-        // Returns true if the enumerator was successfully advanced to 
-        // the next element; false if the enumerator has passed the end of the collection.
-        //
-        // After an enumerator is created or after the Reset method is called, 
-        // an enumerator is positioned before the first element of the collection, 
-        // and the first call to the MoveNext method moves the enumerator over 
-        // the first element of the collection.
-        // If MoveNext passes the end of the collection, the enumerator is positioned 
-        // after the last element in the collection and MoveNext returns false. 
-        // When the enumerator is at this position, subsequent calls to MoveNext 
-        // also return false until Reset is called.
+        /// @brief Advances to the next element.
+        /// @return true if the enumerator is on an element; false if it passed the end.
+        /// @note After an enumerator is created or after the Reset method is called, 
+        /// an enumerator is positioned before the first element of the collection, 
+        /// and the first call to the MoveNext method moves the enumerator over 
+        /// the first element of the collection.
+        /// If MoveNext passes the end of the collection, the enumerator is positioned 
+        /// after the last element in the collection and MoveNext returns false. 
+        /// When the enumerator is at this position, subsequent calls to MoveNext 
+        /// also return false until Reset is called.
         virtual bool moveNext() = 0;
 
-        // Gets the element in the collection at the current position of the enumerator.
-        // Current is undefined under any of the following conditions:
-        //   - The enumerator is positioned before the first element in the collection, 
-        //     immediately after the enumerator is created. MoveNext must be called to 
-        //     advance the enumerator to the first element of the collection before 
-        //     reading the value of Current.
-        //   - The last call to MoveNext returned false, which indicates the end of the collection.
-        //   - The enumerator is invalidated due to changes made in the collection, 
-        //     such as adding, modifying, or deleting elements.
+        /// @brief Returns the element at the current position.
+        /// @pre moveNext() has succeeded since the last reset().
+        /// @return The element in the collection at the current position of the enumerator.
+        /// @note Current is undefined under any of the following conditions:
+        ///   - The enumerator is positioned before the first element in the collection, 
+        ///     immediately after the enumerator is created. MoveNext must be called to 
+        ///     advance the enumerator to the first element of the collection before 
+        ///     reading the value of Current.
+        ///   - The last call to MoveNext returned false, which indicates the end of the collection.
+        ///   - The enumerator is invalidated due to changes made in the collection, 
+        ///     such as adding, modifying, or deleting elements.
         virtual T getCurrent() = 0;
 };
 
@@ -57,37 +55,38 @@ struct EnumeratedItem
     EnumeratedItem<T> *next = nullptr;
 };
 
-// Provides the abstract base class for a strongly typed enumerator.
+/// @brief Abstract enumerator that walks a singly linked list of EnumeratedItem{T}.
+/// @note Owns the list. Copy and move are disabled.
 template <class T>
 class EnumeratorBase : public IEnumerator<T>
 {
     protected:
         EnumeratedItem<T> *m_head;
         EnumeratedItem<T> *m_current;
-        bool m_isReseted = false;
+        bool m_isReseted;
 
     public:
         const T NULLITEM = {};
 
         EnumeratorBase()
-        {
-            m_head = nullptr;
-            m_current = nullptr;
-        }
-        
+            : m_head(nullptr), m_current(nullptr), m_isReseted(true)
+        {}
+
+        EnumeratorBase(const EnumeratorBase&) = delete;
+        EnumeratorBase& operator=(const EnumeratorBase&) = delete;
+        EnumeratorBase(EnumeratorBase&&) = delete;
+        EnumeratorBase& operator=(EnumeratorBase&&) = delete;
+
         ~EnumeratorBase() override
         {
-            if(m_head)
+            m_current = m_head;
+            while(m_current)
             {
-                m_current = m_head;            
-                do
-                {
-                    EnumeratedItem<T> *item = m_current->next;
-                    delete m_current;
-                    m_current = item;
-                }
-                while(!m_current);
+                EnumeratedItem<T> *item = m_current->next;
+                delete m_current;
+                m_current = item;
             }
+            m_head = nullptr;
         }
 
         void reset() override

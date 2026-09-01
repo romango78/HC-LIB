@@ -89,7 +89,7 @@ void EnumeratorBase_ShouldNotGetLastItem_WhenMoveNextReturnFalse()
     delete sut;
 };
 
-void EnumeratorBase_ShouldNotGetItem_AfterFirstMoveNext_WithoutReset()
+void EnumeratorBase_ShouldGetFirstItem_AfterFirstMoveNext_WithoutReset()
 {
     int values[] = {10,20,30};
     EnumeratorBaseTest<int> *sut = new EnumeratorBaseTest<int>();
@@ -98,7 +98,18 @@ void EnumeratorBase_ShouldNotGetItem_AfterFirstMoveNext_WithoutReset()
     sut->add(values[2]);
     
     sut->moveNext();
-    TEST_ASSERT_EQUAL(0, sut->getCurrent());
+    TEST_ASSERT_EQUAL(values[0], sut->getCurrent());
+
+    delete sut;
+};
+
+void EnumeratorBase_ShouldDestroy_WhenSingleItem()
+{
+    EnumeratorBaseTest<int> *sut = new EnumeratorBaseTest<int>();
+    sut->add(7);
+    sut->reset();
+    TEST_ASSERT_EQUAL(true, sut->moveNext());
+    TEST_ASSERT_EQUAL(7, sut->getCurrent());
 
     delete sut;
 };

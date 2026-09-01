@@ -3,6 +3,10 @@
 		{
 			"name": "system-lib",
 			"path": "system-lib"
+		},
+		{
+			"name": "collections-lib",
+			"path": "collections-lib"
 		}
 	],
 	"settings": {},
