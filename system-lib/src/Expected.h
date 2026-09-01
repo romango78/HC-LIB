@@ -8,149 +8,297 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _EXPECTED_H_
-#define _EXPECTED_H_
+/// @file Expected.h
+/// @brief Defines the Expected{T, E} idiom for returning either a value or an error.
+/// @note Exactly one of _T_ or _E_ is alive. A moved-from instance holds a default-constructed _E_.
+#ifndef _HC_LIB_EXPECTED_H_
+#define _HC_LIB_EXPECTED_H_
 
-#include "errdef.h"
 #include <new>
-#include "move.h"
+#include "lib-utility.h"
 
-template <class T>
+/// @brief Wraps an error so it can be distinguished from a success value of type _T_.
+/// @tparam E The stored error type. Must be copyable or movable into _Expected_.
+/// @note Use make_error() to construct an instance. This type is not the library _Error_ struct.
+template <typename E>
+class Unexpected
+{
+    public:
+        /// @brief The stored error.
+        E error;
+
+        /// @brief Constructs an instance that holds a copy of _t_error_.
+        /// @param t_error The error.
+        Unexpected(const E &t_error): error(t_error) {};
+
+        /// @brief Constructs an instance that holds _t_error_ by move.
+        /// @param t_error The error to move from.
+        Unexpected(E &&t_error): error(std::move(t_error)) {};
+};
+
+/// @brief Creates an error wrapper of type _Unexpected{E}_.
+/// @tparam E The error type.
+/// @param t_error The error to wrap. May be a struct, class, or enum.
+/// @return An unexpected value that constructs _Expected{T, E}_.
+template <typename E>
+Unexpected<typename std::decay<E>::type> make_error(E&& t_error)
+{
+    return Unexpected<typename std::decay<E>::type>(std::forward<E>(t_error));
+}
+
+/// @brief Holds either a value of type _T_ or an error of type _E_.
+/// @tparam T The success value type.
+/// @tparam E The error type. Defaults to _Error_. Must be default-constructible.
+/// @note Call hasValue() before getValue(). getValue() is undefined when the instance holds an error.
+/// @note Exactly one of _T_ or _E_ is alive. A moved-from instance holds a default-constructed _E_.
+template <typename T, typename E>
 class Expected
 {
     private:
+        /// @brief The union of the value and error.
         union
         {
             T m_value;
-            err_t m_error;
+            E m_error;
         };  
 
+        /// @brief Indicates whether the instance holds a value.
         bool m_hasValue;
 
-        Expected()
-            : m_hasValue(false)
-        {
-            m_error = NO_ERROR;
-        };
-
-        void destroyValue()
+        /// @brief Destroys the active union member.
+        void destroy()
         {
             if(m_hasValue)
             {
                 m_value.~T();
-                m_hasValue = false;
-            }
-        };
-
-        void moveFrom(Expected &t_expected)
-        {
-            m_hasValue = t_expected.m_hasValue;
-            if(m_hasValue)
-            {
-                new(&m_value) T(std::move(t_expected.m_value));
-                t_expected.m_value.~T();
-                t_expected.m_hasValue = false;
-                t_expected.m_error = NO_ERROR;
             }
             else
             {
-                m_error = t_expected.m_error;
+                m_error.~E();
+            }
+            m_hasValue = false;
+        };
+
+        /// @brief Moves the value or error from _t_other_ into an uninitialized instance.
+        /// @param t_other The source instance. After the call it holds a default-constructed error.
+        void _move(Expected &t_other)
+        {
+            m_hasValue = t_other.m_hasValue;
+            if(m_hasValue)
+            {
+                ::new(static_cast<void*>(&m_value)) T(std::move(t_other.m_value));
+            }
+            else
+            {
+                ::new(static_cast<void*>(&m_error)) E(std::move(t_other.m_error));
+            }            
+        };
+
+        /// @brief Copies the value or error from _t_other_ into an uninitialized instance.
+        /// @param t_other The instance to copy.
+        void _copy(const Expected &t_other)
+        {
+            m_hasValue = t_other.m_hasValue;
+            if(m_hasValue)
+            {
+                ::new(static_cast<void*>(&m_value)) T(t_other.m_value);
+            }
+            else
+            {
+                ::new(static_cast<void*>(&m_error)) E(t_other.m_error);
             }
         };
 
     public:
+        /// @brief Constructs an instance that holds a copy of _t_value_.
+        /// @param t_value The success value.
         Expected(const T &t_value)
-            : m_value(t_value), m_hasValue(true) {};
+            : m_hasValue(true) {
+                /// @note This is a placement new.
+                ::new(static_cast<void*>(&m_value)) T(t_value);
+            };
 
-        Expected(const Expected &t_expected) 
-            : m_hasValue(t_expected.m_hasValue) 
+        /// @brief Constructs an instance that holds _t_value_ by move.
+        /// @param t_value The success value to move from.
+        Expected(T &&t_value) noexcept
+            : m_hasValue(true) {
+                /// @note This is a placement new.
+                ::new(static_cast<void*>(&m_value)) T(std::move(t_value));
+            };
+
+        /// @brief Constructs an instance that holds _t_error_ by copy.
+        /// @param t_error The error to copy from.
+        Expected(const Unexpected<E> &t_error)
+            : m_hasValue(false) {
+                ::new(static_cast<void*>(&m_error)) E(t_error.error);
+            };
+
+        /// @brief Constructs an instance that holds _t_error_ by move.
+        /// @param t_error The error to move from.
+        Expected(Unexpected<E> &&t_error) noexcept
+            : m_hasValue(false) {
+                ::new(static_cast<void*>(&m_error)) E(std::move(t_error.error));
+            };
+
+        /// @brief Constructs an instance that holds an error converted from _t_error_.
+        /// @tparam U A struct, class, or other type convertible to _E_.
+        /// @param t_error The wrapped error to convert.
+        template<typename U>
+        Expected(const Unexpected<U> &t_error)
+            : m_hasValue(false) {
+                ::new(static_cast<void*>(&m_error)) E(t_error.error);
+            };
+
+        /// @brief Constructs an instance that holds an error converted from _t_error_.
+        /// @tparam U A struct, class, or other type convertible to _E_.
+        /// @param t_error The wrapped error to convert.
+        template<typename U>
+        Expected(Unexpected<U> &&t_error) noexcept
+            : m_hasValue(false) {
+                ::new(static_cast<void*>(&m_error)) E(std::move(t_error.error));
+            };
+
+        /// @brief Copies the value or error from _t_other_.
+        /// @param t_other The instance to copy.
+        Expected(const Expected &t_other)             
         {
-            if (m_hasValue) 
-            {
-                new(&m_value) T(t_expected.m_value);
-            }
-            else 
-            {
-                m_error = t_expected.m_error;
-            }
+            _copy(t_other);
         };
 
-        Expected(T &&t_value)
-            : m_value(std::move(t_value)), m_hasValue(true) {};
-
-        Expected(Expected &&t_expected) 
+        /// @brief Moves the value or error from _t_other_.
+        /// @param t_other The instance to move from. After the call it holds a default-constructed error.
+        Expected(Expected &&t_other) noexcept
             : m_hasValue(false)
         {
-            m_error = NO_ERROR;
-            moveFrom(t_expected);
+            _move(t_other);
         };
 
-        Expected& operator=(const Expected &t_expected)
+        /// @brief Copy-assigns the value or error from _t_other_.
+        /// @param t_other The instance to copy.
+        /// @return A reference to this instance.
+        Expected& operator=(const Expected &t_other)
         {
-            if(this == &t_expected)
+            /// @note This is a self-assignment check.
+            if(this == &t_other)
             {
                 return *this;
             }
 
-            destroyValue();
-            m_hasValue = t_expected.m_hasValue;
-            if(m_hasValue)
-            {
-                new(&m_value) T(t_expected.m_value);
+            /// @note If the types are the same, we can just copy the value or error.
+            if(m_hasValue == t_other.m_hasValue)
+            {                
+                if(m_hasValue)
+                {
+                    m_value = t_other.m_value;
+                }
+                else
+                {
+                    m_error = t_other.m_error;
+                }
             }
+            /// @note If the types are different, we need to destroy the current value or error and copy the new one.
+            else
+            {                
+                destroy();
+                _copy(t_other);
+            }
+
+            return *this;
+        };
+
+        /// @brief Move-assigns the value or error from _t_other_.
+        /// @param t_other The instance to move from. After the call it holds a default-constructed error.
+        /// @return A reference to this instance.
+        Expected& operator=(Expected &&t_other) noexcept
+        {
+            /// @note This is a self-assignment check.
+            if(this == &t_other)
+            {
+                return *this;
+            }
+
+            /// @note If the types are the same, we can just move the value or error.
+            if(m_hasValue == t_other.m_hasValue)
+            {
+                if(m_hasValue)
+                {
+                    m_value = std::move(t_other.m_value);
+                }
+                else
+                {
+                    m_error = std::move(t_other.m_error);
+                }
+            }
+            /// @note If the types are different, we need to destroy the current value or error and move the new one.
             else
             {
-                m_error = t_expected.m_error;
+                destroy();
+                _move(t_other);
             }
+
             return *this;
         };
 
-        Expected& operator=(Expected &&t_expected)
-        {
-            if(this == &t_expected)
-            {
-                return *this;
-            }
-
-            destroyValue();
-            moveFrom(t_expected);
-            return *this;
-        };
-
+        /// @brief Destroys the stored value or error.
         ~Expected()
         {
-            destroyValue();
+            destroy();
         };
 
+        /// @brief Indicates whether this instance holds a value.
+        /// @return true if a value is stored; false if an error is stored.
         bool hasValue() const
         {
             return m_hasValue;
         };
 
+        /// @brief Converts the instance to a boolean.
+        /// @return true if a value is stored; false if an error is stored.
+        explicit operator bool() const
+        {
+            return hasValue();
+        };
+
+        /// @brief Returns a reference to the stored value.
+        /// @return The success value.
+        /// @pre hasValue() is true.
         T& getValue()
         {
             return m_value;
         };
 
+        T& operator*()
+        {
+            return getValue();
+        };
+
+        /// @brief Returns a const reference to the stored value.
+        /// @return The success value.
+        /// @pre hasValue() is true.
         const T& getValue() const
         {
             return m_value;
         };
 
-        err_t getError() const
+        const T& operator*() const
         {
-            if(!hasValue())
-            {
-                return m_error;
-            }
-            return NO_ERROR;
+            return getValue();
         };
 
-        static Expected<T> fromError(err_t t_error) 
+        /// @brief Returns a reference to the stored error.
+        /// @return The error.
+        /// @pre hasValue() is false.
+        E& getError()
         {
-            Expected<T> result;
-            result.m_error = t_error;
-            return result;
+            return m_error;
+        };
+
+        /// @brief Returns a const reference to the stored error.
+        /// @return The error.
+        /// @pre hasValue() is false.
+        const E& getError() const
+        {
+            return m_error;
         };
 };
 

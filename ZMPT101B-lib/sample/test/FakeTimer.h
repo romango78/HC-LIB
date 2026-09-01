@@ -25,7 +25,7 @@ class FakeTimer : public ITimer
         FakeTimer() : m_isElapsed(false), m_isStarted(false)
         {}
 
-        uint32_t getInterval() override
+        uint32_t getInterval() const override
         {
             return m_iterationCount;
         }
@@ -58,7 +58,7 @@ class FakeTimer : public ITimer
             return m_isElapsed;
         }
 
-        bool isStarted() override
+        bool isStarted() const override
         {
             return m_isStarted;
         }

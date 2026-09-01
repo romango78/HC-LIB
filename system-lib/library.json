@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.System",
-    "version": "1.0.2404",
-    "description": "Contains fundamental classes and base classes that define commonly-used data types.",
-    "keywords": "common, core, system, arduino, atmelavr",
+    "version": "1.1.2609",
+    "description": "Fundamental types for Arduino and native builds: Expected, Error/GenericError, ITimer/ArduinoTimer, ICloneable, and Arduino std utility traits.",
+    "keywords": "common, core, system, expected, error, timer, arduino, atmelavr, native",
     "repository":
     {
       "type": "git",
@@ -20,6 +20,8 @@
       "include":
       [
           "src/*",
+          "src/errors/*",
+          "src/timers/*",
           "library.json",
           "*.md"
       ]

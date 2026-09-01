@@ -6,9 +6,14 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_CLONEABLE_H_
-#define _I_CLONEABLE_H_
+#ifndef _HC_LIB_I_CLONEABLE_H_
+#define _HC_LIB_I_CLONEABLE_H_
 
+/// @file ICloneable.h
+/// Defines a generic cloneable abstraction.
+
+/// @brief Supports creating a copy of an instance.
+/// @tparam T The type produced by clone(), usually the most derived interface or class.
 template <class T>
 class ICloneable
 {
@@ -16,6 +21,8 @@ class ICloneable
         ICloneable() = default;
         virtual ~ICloneable() = default;
 
+        /// @brief Creates a new copy of this instance.
+        /// @return A pointer to the cloned object. The caller owns the pointer and must delete it.
         virtual T* clone() const = 0;
 };
 

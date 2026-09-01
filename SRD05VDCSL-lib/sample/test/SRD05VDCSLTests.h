@@ -12,7 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "move.h"
+#include "lib-utility.h"
 #include "FakeStream.h"
 #include "devices/SRD05VDCSL.h"
 

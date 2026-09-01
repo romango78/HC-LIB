@@ -1,27 +1,28 @@
 # HC-LIB
-## Arduino System Library v1.0.2404
-This __library__ contains fundamental classes and base classes that define commonly-used data types.
+## Arduino System Library v1.1.2609
+This __library__ contains fundamental types for Arduino and native builds: __Expected__, __Error__ / __GenericError__, __ITimer__ / __ArduinoTimer__, __ICloneable__, and Arduino std utility traits.
 
 ### Dependencies
 No Dependencies
 
 ### Features
-- Defines error type __err_t__ and constants (__NO_ERROR__, __ARGUMENT_IS_NULL_ERROR__, __OUT_OF_RANGE_ERROR__, __OUT_OF_MEMORY_ERROR__, __NOT_SUPPORTED_OPERATION_ERROR__, __INVALID_OPERATION_ERROR__).
+- Defines __Error__ and __ErrorCategory__, plus __GenericError__ codes (__NO_ERROR__, __ARGUMENT_IS_NULL__, __OUT_OF_RANGE__, __OUT_OF_MEMORY__, __NOT_SUPPORTED_OPERATION__, __INVALID_OPERATION__, __UNKNOWN_ERROR__).
 - Defines generic __ICloneable{T}__ abstraction.
-- Defines __ITimer__ abstraction and __ArduinoTimer__ implementation based on Arduino __millis()__.
-- Implements __Expected{T}__ idiom for returning a value or an error.
+- Defines __ITimer__ abstraction and __ArduinoTimer__ (Arduino __millis()__, host __steady_clock__ on native). One-shot: __isElapsed()__ latches; __start()__ restarts; __setInterval()__ is ignored while running.
+- Implements __Expected{T, E}__ for returning a value or an error via __Unexpected{E}__ and __make_error()__.
+- Provides __lib-utility.h__: Arduino __std::move__, __std::forward__, __std::remove_reference__, __std::remove_cv__, and __std::decay__. Native builds include _\<utility\>_ and _\<type_traits\>_.
 
 ### Usage
-Return a value or an error with __Expected{T}__:
+Return a value or an error with __Expected{T, E}__:
 ```c++
-Expected<uint8_t> result = Expected<uint8_t>::fromError(OUT_OF_RANGE_ERROR);
+Expected<uint8_t, Error> result = make_error(GenericError::OUT_OF_RANGE);
 if (result.hasValue())
 {
     uint8_t value = result.getValue();
 }
 else
 {
-    err_t error = result.getError();
+    Error error = result.getError();
 }
 ```
 
@@ -37,13 +38,23 @@ if (timer->isElapsed())
 ```
 
 ### Sample
-The __sample application__ is stored in __sample__ folder. 
-The `pio run -e nanonew -t upload` command is used for compiling and upload the __sample application__.
+The __sample application__ is stored in the __sample__ folder.
+
+* `pio run -e nano-board` builds Arduino Nano firmware.
+* `pio run -e nano-board -t upload` uploads the firmware.
+* `pio run -e desktop-debug` builds the native Unity tests with debug symbols.
 
 See the included examples and tests for further usage examples.
 
 ### Unit tests
-The `pio test -e {environment}` command is used for running unit tests on the specified {environment}. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details
+From the __sample__ folder:
+
+```powershell
+pio test -e desktop
+```
+
+
+Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
 
 ### Packages
 * The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
