@@ -27,6 +27,7 @@ void loop()
 #include "AnalogStreamTests.h"
 #include "DigitalStreamTests.h"
 #include "VoltageStreamTests.h"
+#include "PortAdapterTests.h"
 
 void testsProcess()
 {
@@ -41,6 +42,11 @@ void testsProcess()
     RUN_TEST(AnalogStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite);
     RUN_TEST(AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes);
     RUN_TEST(AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
+    RUN_TEST(AnalogStream_ShouldRaiseError_WhenBegin_AndAdaptorIsNotSet);
+    RUN_TEST(AnalogStream_ShouldGetState_WhenAdaptorIsSet);
+    RUN_TEST(AnalogStream_ShouldRaiseError_WhenGetState_AndAdaptorIsNotSet);
+    RUN_TEST(AnalogStream_ShouldClone_WhenAdaptorIsSet);
+    RUN_TEST(AnalogStream_ShouldClone_WhenAdaptorIsNotSet);
 
     RUN_TEST(DigitalStream_ShouldRaiseError_WhenAdaptorIsNotSet);
     RUN_TEST(DigitalStream_ShouldReadData_WhenStreamIsOpenForRead);
@@ -51,9 +57,22 @@ void testsProcess()
     RUN_TEST(DigitalStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite);
     RUN_TEST(DigitalStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes);
     RUN_TEST(DigitalStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
+    RUN_TEST(DigitalStream_ShouldRaiseError_WhenBegin_AndAdaptorIsNotSet);
+    RUN_TEST(DigitalStream_ShouldGetState_WhenAdaptorIsSet);
+    RUN_TEST(DigitalStream_ShouldRaiseError_WhenGetState_AndAdaptorIsNotSet);
+    RUN_TEST(DigitalStream_ShouldClone_WhenAdaptorIsSet);
+    RUN_TEST(DigitalStream_ShouldClone_WhenAdaptorIsNotSet);
 
     RUN_TEST(VoltageStream_ShouldReadVoltage);
     RUN_TEST(VoltageStream_ShouldSetPWM);
+    RUN_TEST(VoltageStream_ShouldClampPwm_WhenPercentageIsBelowZero);
+    RUN_TEST(VoltageStream_ShouldClampPwm_WhenPercentageIsAbove100);
+    RUN_TEST(VoltageStream_ShouldClone);
+
+    RUN_TEST(AnalogPortAdapter_ShouldReturnNoData_WhenNotOnArduino);
+    RUN_TEST(AnalogPortAdapter_ShouldClone);
+    RUN_TEST(DigitalPortAdapter_ShouldReturnNoData_WhenNotOnArduino);
+    RUN_TEST(DigitalPortAdapter_ShouldClone);
 
     UNITY_END();
 };

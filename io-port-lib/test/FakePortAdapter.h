@@ -21,9 +21,10 @@ class FakePortAdapter : public IPortAdapter<T>
     private:
         int m_mode;
         T m_data;
+        uint8_t m_state;
     public:
         FakePortAdapter()
-            : IPortAdapter<T>(0), m_mode(NO_MODE), m_data(T()) {}
+            : IPortAdapter<T>(0), m_mode(NO_MODE), m_data(T()), m_state(0) {}
         virtual ~FakePortAdapter() = default;
 
         void setInputMode() override
@@ -48,7 +49,7 @@ class FakePortAdapter : public IPortAdapter<T>
 
         uint8_t getState() override
         {
-            return 0;
+            return m_state;
         }
 
         IPortAdapter<T>* clone() const override
@@ -56,6 +57,7 @@ class FakePortAdapter : public IPortAdapter<T>
             auto clone = new FakePortAdapter<T>();
             clone->m_mode = m_mode;
             clone->m_data = m_data;
+            clone->m_state = m_state;
             return clone;
         }
 
@@ -72,6 +74,11 @@ class FakePortAdapter : public IPortAdapter<T>
         void setData(const T t_data)
         {
             m_data = t_data;
+        }
+
+        void setState(const uint8_t t_state)
+        {
+            m_state = t_state;
         }
 };
 

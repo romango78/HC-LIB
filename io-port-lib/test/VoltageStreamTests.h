@@ -47,5 +47,47 @@ void VoltageStream_ShouldSetPWM()
     delete sut;
 }
 
+void VoltageStream_ShouldClampPwm_WhenPercentageIsBelowZero()
+{
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    VoltageStream sut(adapter);
+
+    sut.begin(StreamMode::Write);
+    sut.setPwm(-10);
+    sut.end();
+
+    TEST_ASSERT_EQUAL_INT_MESSAGE(0, adapter->getData(), "Negative PWM should clamp to 0.");
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+}
+
+void VoltageStream_ShouldClampPwm_WhenPercentageIsAbove100()
+{
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    VoltageStream sut(adapter);
+
+    sut.begin(StreamMode::Write);
+    sut.setPwm(150);
+    sut.end();
+
+    TEST_ASSERT_EQUAL_INT_MESSAGE(PWM_MAX, adapter->getData(), "PWM above 100 should clamp to PWM_MAX.");
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+}
+
+void VoltageStream_ShouldClone()
+{
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    adapter->setData(static_cast<int>(2.5f * ADC_SCALE / V_REF));
+    VoltageStream sut(adapter);
+    sut.begin(StreamMode::Read);
+
+    IStream<uint16_t>* clone = sut.clone();
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(), "The clone should keep the source mode.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(adapter->getData(), clone->read(), "The clone should read the cloned adapter data.");
+
+    delete clone;
+}
+
 #endif
 #endif

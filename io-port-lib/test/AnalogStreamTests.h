@@ -160,5 +160,71 @@ void AnalogStream_ShouldRaiseError_WhenAdaptorIsNotSet()
     delete sut;
 }
 
+void AnalogStream_ShouldRaiseError_WhenBegin_AndAdaptorIsNotSet()
+{
+    AnalogStream sut(nullptr);
+
+    sut.begin(StreamMode::Read);
+
+    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(), "Some error is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_FALSE_MESSAGE(sut.canRead(), "The stream should stay closed when the adapter is missing.");
+}
+
+void AnalogStream_ShouldGetState_WhenAdaptorIsSet()
+{
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    adapter->setState(1);
+    AnalogStream sut(adapter);
+
+    uint8_t actualValue = sut.getState();
+
+    TEST_ASSERT_EQUAL_MESSAGE(1, actualValue, "The adapter state is expected.");
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+}
+
+void AnalogStream_ShouldRaiseError_WhenGetState_AndAdaptorIsNotSet()
+{
+    AnalogStream sut(nullptr);
+
+    uint8_t actualValue = sut.getState();
+
+    TEST_ASSERT_EQUAL_MESSAGE(NO_DATA, actualValue, "NO_DATA is expected when the adapter is missing.");
+    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(), "Some error is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+}
+
+void AnalogStream_ShouldClone_WhenAdaptorIsSet()
+{
+    int expectedValue = 77;
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    adapter->setData(expectedValue);
+    AnalogStream sut(adapter);
+    sut.begin(StreamMode::Read);
+
+    IStream<uint16_t>* clone = sut.clone();
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(), "The clone should keep the source mode.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, clone->read(), "The clone should read the cloned adapter data.");
+    TEST_ASSERT_FALSE_MESSAGE(clone->hasError(), "No errors expected on the clone.");
+
+    delete clone;
+}
+
+void AnalogStream_ShouldClone_WhenAdaptorIsNotSet()
+{
+    AnalogStream sut(nullptr);
+
+    IStream<uint16_t>* clone = sut.clone();
+
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
+    clone->begin(StreamMode::Read);
+    TEST_ASSERT_TRUE_MESSAGE(clone->hasError(), "Some error is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(clone->getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+
+    delete clone;
+}
+
 #endif
 #endif
