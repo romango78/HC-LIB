@@ -24,7 +24,7 @@ void AnalogStream::begin(const StreamMode t_mode)
     }
     else
     {
-       BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR); 
+       BaseStream::setLastError(to_error(IoError::StreamNotCreated)); 
     }
 };
 
@@ -33,7 +33,7 @@ uint16_t AnalogStream::read()
     BaseStream::read();
     if(!BaseStream::canRead())
     {
-        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
+        BaseStream::setLastError(to_error(IoError::StreamClosed));
         return NO_DATA;
     }
     return static_cast<uint16_t>(m_adapter->read());
@@ -44,7 +44,7 @@ void AnalogStream::write(const uint16_t t_data)
     BaseStream::write(t_data);
     if(!BaseStream::canWrite())
     {
-        BaseStream::setLastError(STREAM_CLOSED_IO_ERROR);
+        BaseStream::setLastError(to_error(IoError::StreamClosed));
         return;
     }
     m_adapter->write(t_data);    
@@ -56,7 +56,7 @@ uint8_t AnalogStream::getState()
     {
         return m_adapter->getState();
     }
-    BaseStream::setLastError(STREAM_NOTCREATED_IO_ERROR);
+    BaseStream::setLastError(to_error(IoError::StreamNotCreated));
     return NO_DATA;  
 }
 

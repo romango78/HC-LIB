@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.2609]
+### Changed
+- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
+- Requires __HC-LIB.System__ 1.1.2609 and __HC-LIB.IO-Abstraction__ 1.1.2609.
+- Streams store last error as __Error__ / __IoError__ (_StreamNotCreated_, _StreamClosed_).
+- _DigitalPortAdapter_ and _AnalogPortAdapter_ inherit _IPortAdapter_ publicly.
+
 ## [1.0.2202]
 ### Changed
 - Fixed issue with disposing _PortAdapter_ resources.

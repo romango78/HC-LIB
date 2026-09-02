@@ -6,26 +6,32 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(UNIT_TEST) 
+#if defined(ARDUINO) && !defined(UNIT_TEST)
+
+#include <Arduino.h>
+
+void setup()
+{
+}
+
+void loop()
+{
+    delay(100);
+}
+
+#endif
+
+#if defined(UNIT_TEST)
 
 #include <unity.h>
-
 #include "AnalogStreamTests.h"
 #include "DigitalStreamTests.h"
 #include "VoltageStreamTests.h"
 
-void dummyTest()
-{
-    TEST_ASSERT_EQUAL(2, 1+1);
-}
-
-void testsProcess() 
+void testsProcess()
 {
     UNITY_BEGIN();
 
-    /*****************************************
-     * Analog Stream Tests (AnalogStreamTests.h)
-     *****************************************/
     RUN_TEST(AnalogStream_ShouldRaiseError_WhenAdaptorIsNotSet);
     RUN_TEST(AnalogStream_ShouldReadData_WhenStreamIsOpenForRead);
     RUN_TEST(AnalogStream_ShouldBeInReadMode_WhenStreamIsOpenForRead);
@@ -36,9 +42,6 @@ void testsProcess()
     RUN_TEST(AnalogStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes);
     RUN_TEST(AnalogStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
 
-    /*****************************************
-     * Digital Stream Tests (DigitalStreamTests.h)
-     *****************************************/
     RUN_TEST(DigitalStream_ShouldRaiseError_WhenAdaptorIsNotSet);
     RUN_TEST(DigitalStream_ShouldReadData_WhenStreamIsOpenForRead);
     RUN_TEST(DigitalStream_ShouldBeInReadMode_WhenStreamIsOpenForRead);
@@ -49,9 +52,6 @@ void testsProcess()
     RUN_TEST(DigitalStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes);
     RUN_TEST(DigitalStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite);
 
-    /*****************************************
-     * Voltage Stream Tests (VoltageStreamTests.h)
-     *****************************************/
     RUN_TEST(VoltageStream_ShouldReadVoltage);
     RUN_TEST(VoltageStream_ShouldSetPWM);
 
@@ -62,15 +62,13 @@ void testsProcess()
 
 void setUp(void)
 {
-    // STUB
 };
 
-void tearDown(void) 
+void tearDown(void)
 {
-    // STUB
 };
 
-int main( int argc, char **argv) 
+int main(int argc, char **argv)
 {
     testsProcess();
     return 0;
@@ -83,17 +81,12 @@ int main( int argc, char **argv)
 #include <Arduino.h>
 
 void setup() {
-    // Setup device
     Serial.begin(115200);
-
-    // NOTE!!! Wait for >2 secs
-    // if board doesn't support software reset via Serial.DTR/RTS
     delay(4000);
-
     testsProcess();
 };
 
-void loop() 
+void loop()
 {
     digitalWrite(13, HIGH);
     delay(100);

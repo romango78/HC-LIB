@@ -5,8 +5,9 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-#ifndef _FAKE_PORT_ADAPTER_H_
-#define _FAKE_PORT_ADAPTER_H_
+
+#ifndef _HC_LIB_FAKE_PORT_ADAPTER_H_
+#define _HC_LIB_FAKE_PORT_ADAPTER_H_
 
 #include "adapter/IPortAdapter.h"
 
@@ -14,16 +15,17 @@
 #define INPUT_MODE 0
 #define OUTPUT_MODE 1
 
-class FakePortAdapter : public IPortAdapter<int>
+template<typename T>
+class FakePortAdapter : public IPortAdapter<T>
 {
     private:
         int m_mode;
-        int m_data;
+        T m_data;
     public:
-        FakePortAdapter() 
-            : IPortAdapter(0), m_mode(NO_MODE) {}
+        FakePortAdapter()
+            : IPortAdapter<T>(0), m_mode(NO_MODE), m_data(T()) {}
         virtual ~FakePortAdapter() = default;
-        
+
         void setInputMode() override
         {
             m_mode = INPUT_MODE;
@@ -34,12 +36,12 @@ class FakePortAdapter : public IPortAdapter<int>
             m_mode = OUTPUT_MODE;
         }
 
-        int read() override
+        T read() override
         {
             return m_data;
         }
 
-        void write(const int t_value) override
+        void write(const T t_value) override
         {
             m_data = t_value;
         }
@@ -49,25 +51,25 @@ class FakePortAdapter : public IPortAdapter<int>
             return 0;
         }
 
-        IPortAdapter<int>* clone() const override
+        IPortAdapter<T>* clone() const override
         {
-            auto clone = new FakePortAdapter();
+            auto clone = new FakePortAdapter<T>();
             clone->m_mode = m_mode;
             clone->m_data = m_data;
             return clone;
         }
 
-        int getMode()
+        int getMode() const
         {
             return m_mode;
         }
 
-        int getData()
+        T getData() const
         {
             return m_data;
         }
 
-        void setData(const int t_data)
+        void setData(const T t_data)
         {
             m_data = t_data;
         }

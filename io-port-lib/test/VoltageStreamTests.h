@@ -5,8 +5,9 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-#ifndef _VOLTAGE_STREAM_TESTS_H_
-#define _VOLTAGE_STREAM_TESTS_H_
+
+#ifndef _HC_LIB_VOLTAGE_STREAM_TESTS_H_
+#define _HC_LIB_VOLTAGE_STREAM_TESTS_H_
 
 #ifdef UNIT_TEST
 
@@ -16,40 +17,32 @@
 
 void VoltageStream_ShouldReadVoltage()
 {
-    // Arrange
     float expectedValue = 2.5;
-    IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();
-    ((FakePortAdapter *)adapter)->setData(static_cast<int>(expectedValue*ADC_SCALE/V_REF));
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    adapter->setData(static_cast<int>(expectedValue * ADC_SCALE / V_REF));
+    IVoltageStream* sut = new VoltageStream(adapter);
 
-    IVoltageStream* sut =(IVoltageStream *)new VoltageStream(adapter);
-
-    // Act
     sut->begin(StreamMode::Read);
     float actualValue = sut->getVoltage();
     sut->end();
 
-    // Assert
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue,"The read voltage is not equal the expected value.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue, "The read voltage is not equal the expected value.");
 
     delete sut;
 }
 
 void VoltageStream_ShouldSetPWM()
 {
-    // Arrange
     int expectedValue = 25;
-    IPortAdapter<int>* adapter = (IPortAdapter<int> *)new FakePortAdapter();    
+    FakePortAdapter<int>* adapter = new FakePortAdapter<int>();
+    IVoltageStream* sut = new VoltageStream(adapter);
 
-    IVoltageStream* sut =(IVoltageStream *)new VoltageStream(adapter);
-
-    // Act
     sut->begin(StreamMode::Write);
     sut->setPwm(expectedValue);
     sut->end();
-    
-    // Assert
-    TEST_ASSERT_EQUAL_INT_MESSAGE(static_cast<int>(expectedValue*PWM_MAX/100), ((FakePortAdapter *)adapter)->getData()
-        ,"The write PWM is not equal the expected value.");
+
+    TEST_ASSERT_EQUAL_INT_MESSAGE(static_cast<int>(expectedValue * PWM_MAX / 100), adapter->getData(),
+        "The write PWM is not equal the expected value.");
 
     delete sut;
 }

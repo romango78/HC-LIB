@@ -2,19 +2,19 @@
 <package>
   <metadata>
     <id>HC-LIB.IO-Port</id>
-    <version>1.0.2203</version>
+    <version>1.1.2609</version>
     <title>IO Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-port-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2021 Roman Gorielov</copyright>
-    <tags>native arduino atmelavr io</tags>
+    <description>Arduino port streams: DigitalStream, AnalogStream, VoltageStream, and pin adapters. Uses Error/IoError from HC-LIB.IO-Abstraction.</description>
+    <releaseNotes>1.1.2609: PlatformIO at library root; streams use Error/IoError. Requires HC-LIB.SYSTEM 1.1.2609 and HC-LIB.IO-Abstractions 1.1.2609.</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr io port stream</tags>
     <dependencies>
-      <dependency id="HC-LIB.SYSTEM" version="1.0.2203" />
-      <dependency id="HC-LIB.IO-Abstractions" version="1.0.2203" />
+      <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
+      <dependency id="HC-LIB.IO-Abstractions" version="1.1.2609" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -27,6 +27,7 @@
     <file src="src\adapter\AnalogPortAdapter.h" target="src\adapter\AnalogPortAdapter.h" />
     <file src="src\adapter\DigitalPortAdapter.cpp" target="src\adapter\DigitalPortAdapter.cpp" />
     <file src="src\adapter\DigitalPortAdapter.h" target="src\adapter\DigitalPortAdapter.h" />
+    <file src="src\stream\IPortStream.h" target="src\stream\IPortStream.h" />
     <file src="src\stream\AnalogStream.cpp" target="src\stream\AnalogStream.cpp" />
     <file src="src\stream\AnalogStream.h" target="src\stream\AnalogStream.h" />
     <file src="src\stream\VoltageStream.h" target="src\stream\VoltageStream.h" />
@@ -34,6 +35,8 @@
     <file src="src\stream\DigitalStream.cpp" target="src\stream\DigitalStream.cpp" />
     <file src="src\stream\DigitalStream.h" target="src\stream\DigitalStream.h" />
     <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>
