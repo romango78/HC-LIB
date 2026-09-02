@@ -7,7 +7,15 @@
 		{
 			"name": "collections-lib",
 			"path": "collections-lib"
-		}
+		},
+		{
+			"name": "device-abstraction-lib",
+			"path": "device-abstraction-lib"
+		},
+		{
+			"name": "devices-lib",
+			"path": "devices-lib"
+		}				
 	],
 	"settings": {},
 	"launch": {

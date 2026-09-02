@@ -31,8 +31,7 @@ enum class GenericError : uint8_t
     OutOfRange,
     OutOfMemory,
     NotSupportedOperation,
-    InvalidOperation,
-    UnknownError
+    InvalidOperation
 };
 
 /// @brief Converts a GenericError to an Error.

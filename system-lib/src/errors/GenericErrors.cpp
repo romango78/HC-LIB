@@ -8,12 +8,12 @@
 
 #include "GenericErrors.h"
 
-class GenericCategory : public ErrorCategory
+class GenericErrorCategory : public ErrorCategory
 {
     public:
     StringPtr message(uint8_t t_error) const override {
         switch(static_cast<GenericError>(t_error)) {
-            case GenericError::NoError:           
+            case GenericError::NoError:
                 return GENERIC_ERROR_NO_ERROR;
             case GenericError::ArgumentIsNull:
                 return GENERIC_ERROR_ARGUMENT_IS_NULL;
@@ -27,18 +27,18 @@ class GenericCategory : public ErrorCategory
                 return GENERIC_ERROR_INVALID_OPERATION;
             default:
                 return GENERIC_ERROR_UNKNOWN_ERROR;
-        }        
+        }
     }
 };
 
 /// @brief The instance of the GenericCategory.
-static const GenericCategory genericCategoryInstance;
+static const GenericErrorCategory genericErrorCategoryInstance;
 
 /// @brief Converts a GenericError to an Error.
 /// @param t_error The GenericError to convert.
 /// @return The converted Error.
 Error to_error(GenericError t_error) {
-    return Error{ static_cast<uint8_t>(t_error), &genericCategoryInstance };
+    return Error{ static_cast<uint8_t>(t_error), &genericErrorCategoryInstance };
 }
 
 /// @brief Compares an Error with a GenericError.
@@ -46,7 +46,7 @@ Error to_error(GenericError t_error) {
 /// @param t_error_value The GenericError to compare.
 /// @return True if the Error is equal to the GenericError, false otherwise.
 bool operator==(const Error& t_error, GenericError t_error_value) {
-    return (t_error.category == &genericCategoryInstance) 
+    return (t_error.category == &genericErrorCategoryInstance) 
         && (t_error.error == static_cast<uint8_t>(t_error_value));
 }
 
@@ -55,6 +55,6 @@ bool operator==(const Error& t_error, GenericError t_error_value) {
 /// @param t_error The Error to compare.
 /// @return True if the GenericError is equal to the Error, false otherwise.
 bool operator==(GenericError t_error_value, const Error& t_error) {
-    return (t_error.category == &genericCategoryInstance) 
+    return (t_error.category == &genericErrorCategoryInstance) 
         && (t_error.error == static_cast<uint8_t>(t_error_value));
 }

@@ -32,7 +32,7 @@ public:
 
     AnalogSensor() = delete;
     AnalogSensor(const uint8_t t_type, const uint8_t t_pin, IStream<uint16_t>* const t_stream) 
-        : ISensor(t_type, DeviceCategory::analog), pin(t_pin), stream(t_stream) {};
+        : ISensor(t_type, DeviceCategory::Analog), pin(t_pin), stream(t_stream) {};
     AnalogSensor(const AnalogSensor& source) noexcept
         : ISensor(source), pin(source.pin), stream(clone_stream(source)) 
         {

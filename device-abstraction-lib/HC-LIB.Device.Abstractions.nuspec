@@ -2,18 +2,18 @@
 <package>
   <metadata>
     <id>HC-LIB.Device.Abstractions</id>
-    <version>1.0.2201</version>
+    <version>1.1.2609</version>
     <title>Arduino Device Abstractions Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/device-abstraction-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Defines abstractions for devices that can be connected to Arduino Boards.</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2021 Roman Gorielov</copyright>
+    <description>Device and sensor abstractions: IDevice, IDeviceController, ISensor, ISensorReader, DeviceError. Uses Expected and Error from HC-LIB.System.</description>
+    <releaseNotes>1.1.2609: DeviceError; IDeviceController and ISensorReader use Error/Expected; DeviceCategory is enum class. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr device abstractions</tags>
     <dependencies>
-      <dependency id="HC-LIB.SYSTEM" version="1.0.2201" />
+      <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -21,7 +21,8 @@
     </packageTypes>
   </metadata>
   <files>
-    <file src="src\deviceerrdef.h" target="src\deviceerrdef.h" />
+    <file src="src\errors\DeviceErrors.h" target="src\errors\DeviceErrors.h" />
+    <file src="src\errors\DeviceErrors.cpp" target="src\errors\DeviceErrors.cpp" />
     <file src="src\devices\Device.h" target="src\devices\Device.h" />
     <file src="src\devices\devicedef.h" target="src\devices\devicedef.h" />
     <file src="src\devices\controllers\IDeviceController.h" target="src\devices\controllers\IDeviceController.h" />
@@ -30,6 +31,8 @@
     <file src="src\sensors\sensordef.h" target="src\sensors\sensordef.h" />
     <file src="src\sensors\readers\ISensorReader.h" target="src\sensors\readers\ISensorReader.h" />
     <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>

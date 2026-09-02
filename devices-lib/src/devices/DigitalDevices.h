@@ -32,7 +32,7 @@ public:
 
     DigitalDevice() = delete;
     DigitalDevice(const uint8_t t_type, const uint8_t t_pin, DigitalStream* const t_stream) 
-        : IDevice(t_type, DeviceCategory::digital), pin(t_pin), stream(t_stream) {};
+        : IDevice(t_type, DeviceCategory::Digital), pin(t_pin), stream(t_stream) {};
     DigitalDevice(const DigitalDevice& source) noexcept
         : IDevice(source), pin(source.pin), stream(clone_stream(source)) 
         {

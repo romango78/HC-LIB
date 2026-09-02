@@ -32,7 +32,7 @@ public:
 
     AnalogDevice() = delete;
     AnalogDevice(const uint8_t t_type, const uint8_t t_pin, AnalogStream* const t_stream) 
-        : IDevice(t_type, DeviceCategory::analog), pin(t_pin), stream(t_stream) {};
+        : IDevice(t_type, DeviceCategory::Analog), pin(t_pin), stream(t_stream) {};
     AnalogDevice(const AnalogDevice& source) noexcept
         : IDevice(source), pin(source.pin), stream(clone_stream(source)) 
         {

@@ -6,41 +6,56 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _DEVICE_H_
-#define _DEVICE_H_
+/// @file Device.h
+/// @brief Device category tags and the IDevice value header.
+#ifndef _HC_LIB_DEVICE_H_
+#define _HC_LIB_DEVICE_H_
 
 #include <stdint.h>
 #include "devicedef.h"
 
-enum DeviceCategory
+/// @brief Broad class of a device (analog vs digital).
+enum class DeviceCategory : uint8_t
 {
-    analog = DEVICE_CATEGORY_ANALOG,
-	digital = DEVICE_CATEGORY_DIGITAL
+    Analog = DEVICE_CATEGORY_ANALOG,
+    Digital = DEVICE_CATEGORY_DIGITAL
 };
 
+/// @brief Type and category of a device.
+/// @note Copying IDevice slices derived types (pin, stream, and other fields are dropped).
+///       Pass concrete devices by const reference when those fields are needed.
 struct IDevice
 {
     const uint8_t type;
     const DeviceCategory category;
+
+    /// @brief Initializes the type and category.
+    /// @param t_type Device type code (see _devicedef.h_).
+    /// @param t_category Analog or digital.
     IDevice(const uint8_t t_type, const DeviceCategory t_category)
         : type(t_type), category(t_category) {};
+
     virtual ~IDevice() = default;
 };
 
 namespace device
 {
-    inline bool is_digital(IDevice t_device) noexcept
+    /// @brief True when _t_device_ is digital.
+    inline bool is_digital(const IDevice& t_device) noexcept
     {
-        return t_device.category == DeviceCategory::digital;
+        return t_device.category == DeviceCategory::Digital;
     }
 
-    inline bool is_relay(IDevice t_device) noexcept
+    /// @brief True when _t_device_ is analog.
+    inline bool is_analog(const IDevice& t_device) noexcept
     {
-        if(is_digital(t_device))
-        {
-            return t_device.type == RELAY_DEVICE_TYPE;
-        }
-        return false;
+        return t_device.category == DeviceCategory::Analog;
+    }
+
+    /// @brief True when _t_device_ is a digital relay.
+    inline bool is_relay(const IDevice& t_device) noexcept
+    {
+        return is_digital(t_device) && t_device.type == RELAY_DEVICE_TYPE;
     }
 }
 
