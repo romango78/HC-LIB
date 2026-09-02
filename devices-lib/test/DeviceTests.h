@@ -6,8 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _DEVICE_TESTS_H_
-#define _DEVICE_TESTS_H_
+#ifndef _HC_LIB_DEVICE_TESTS_H_
+#define _HC_LIB_DEVICE_TESTS_H_
 
 #ifdef UNIT_TEST
 

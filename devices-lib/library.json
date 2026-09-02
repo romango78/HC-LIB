@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.Devices",
-    "version": "1.0.2203",
-    "description": ">Defines basic classes to communicate with devices that can be connected to Arduino Boards.",
-    "keywords": "device, arduino, atmelavr",
+    "version": "1.1.2609",
+    "description": "Arduino device types: AnalogDevice, DigitalDevice, RelayDevice, AnalogSensor, and controllers using Error/Expected.",
+    "keywords": "device, relay, sensor, arduino, atmelavr, native",
     "repository":
     {
       "type": "git",
@@ -19,23 +19,31 @@
     "dependencies":
     [
       {
+        "name": "HC-LIB.System",
+        "version": ">=1.1.2609"
+      },
+      {
         "name": "HC-LIB.Device.Abstractions",
-        "version": ">=1.0.2201"
+        "version": ">=1.1.2609"
       },
       {
         "name": "HC-LIB.IO-Port",
-        "version": ">=1.0.2203"
-      }     
+        "version": ">=1.1.2609"
+      }
     ],
     "export": {
       "include":
       [
           "src/*",
+          "src/devices/*",
+          "src/devices/controllers/*",
+          "src/sensors/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
-    },    
-    "license": "MIT",    
+    },
+    "license": "MIT",
     "frameworks": "*",
     "platforms": ["atmelavr", "native"]
   }

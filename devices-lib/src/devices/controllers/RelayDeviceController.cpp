@@ -7,24 +7,23 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 #include "RelayDeviceController.h"
-#include "errdef.h"
 
-err_t RelayDeviceController::on(RelayDevice t_device)
+Error RelayDeviceController::on(const RelayDevice& t_device)
 {
-    return setState(t_device, LOW);
+    return setState(t_device, static_cast<uint8_t>(RelayState::On));
 }
 
-err_t RelayDeviceController::off(RelayDevice t_device)
+Error RelayDeviceController::off(const RelayDevice& t_device)
 {
-    return setState(t_device, HIGH);
+    return setState(t_device, static_cast<uint8_t>(RelayState::Off));
 }
 
-Expected<RelayState> RelayDeviceController::getState(RelayDevice t_device)
+Expected<RelayState, Error> RelayDeviceController::getState(const RelayDevice& t_device) const
 {
-    auto state = DigitalDeviceController::getState(t_device);
+    Expected<uint8_t, Error> state = DigitalDeviceController::getState(t_device);
     if(state.hasValue())
     {
-        return Expected<RelayState> {(RelayState)state.getValue()};
+        return Expected<RelayState, Error>(static_cast<RelayState>(state.getValue()));
     }
-    return Expected<RelayState>::fromError(state.getError());
+    return make_error(state.getError());
 }

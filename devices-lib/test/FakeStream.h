@@ -6,13 +6,13 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _FAKE_STREAM_H_
-#define _FAKE_STREAM_H_
+#ifndef _HC_LIB_FAKE_STREAM_H_
+#define _HC_LIB_FAKE_STREAM_H_
 
 #include <inttypes.h>
-#include <stdlib.h>
 #include "stream/AnalogStream.h"
 #include "stream/DigitalStream.h"
+#include "errors/IoErrors.h"
 
 uint16_t g_PortState = 0;
 
@@ -24,7 +24,7 @@ class FakeAnalogStream : public AnalogStream
     public:
         FakeAnalogStream()
             : m_isSetToWrite(false), m_hasError(false) {};
-        FakeAnalogStream(uint16_t t_initialValue) 
+        FakeAnalogStream(uint16_t t_initialValue)
             : m_isSetToWrite(false), m_hasError(false)
             {
                 g_PortState = t_initialValue;
@@ -35,22 +35,15 @@ class FakeAnalogStream : public AnalogStream
         void begin(const StreamMode t_mode) override
         {
             m_hasError = false;
-            if(t_mode == StreamMode::Write)
-            {
-                m_isSetToWrite = true;
-            }
-            else
-            {
-                m_isSetToWrite = false;
-            };
+            m_isSetToWrite = (t_mode == StreamMode::Write);
         };
 
-        uint16_t read() override 
+        uint16_t read() override
         {
             return 0;
         };
 
-        void write(const uint16_t t_data) override 
+        void write(const uint16_t t_data) override
         {
             if (canWrite())
             {
@@ -70,34 +63,34 @@ class FakeAnalogStream : public AnalogStream
 
         uint8_t getState() override
         {
-            return g_PortState;
+            return static_cast<uint8_t>(g_PortState);
         }
 
-        bool canRead() override
+        bool canRead() const override
         {
             return false;
         };
 
-        bool canWrite() override
+        bool canWrite() const override
         {
             return m_isSetToWrite;
         };
-        
-        bool hasError() override
+
+        bool hasError() const override
         {
             return m_hasError;
         };
 
-        err_t getLastError() override
+        Error getLastError() const override
         {
             if(hasError())
             {
-                return STREAM_CLOSED_IO_ERROR;
-            };
-            return NO_ERROR;
+                return to_error(IoError::StreamClosed);
+            }
+            return to_error(GenericError::NoError);
         };
 
-        uint16_t getWrittenValue()
+        uint16_t getWrittenValue() const
         {
             return g_PortState;
         }
@@ -107,7 +100,6 @@ class FakeAnalogStream : public AnalogStream
             auto stream = new FakeAnalogStream();
             stream->m_isSetToWrite = m_isSetToWrite;
             stream->m_hasError = m_hasError;
-
             return stream;
         }
 };
@@ -120,7 +112,7 @@ class FakeDigitalStream : public DigitalStream
     public:
         FakeDigitalStream()
             : m_isSetToWrite(false), m_hasError(false) {};
-        FakeDigitalStream(uint8_t t_initialValue) 
+        FakeDigitalStream(uint8_t t_initialValue)
             : m_isSetToWrite(false), m_hasError(false)
             {
                 g_PortState = t_initialValue;
@@ -131,22 +123,15 @@ class FakeDigitalStream : public DigitalStream
         void begin(const StreamMode t_mode) override
         {
             m_hasError = false;
-            if(t_mode == StreamMode::Write)
-            {
-                m_isSetToWrite = true;
-            }
-            else
-            {
-                m_isSetToWrite = false;
-            };
+            m_isSetToWrite = (t_mode == StreamMode::Write);
         };
 
-        uint8_t read() override 
+        uint8_t read() override
         {
             return 0;
         };
 
-        void write(const uint8_t t_data) override 
+        void write(const uint8_t t_data) override
         {
             if (canWrite())
             {
@@ -166,36 +151,36 @@ class FakeDigitalStream : public DigitalStream
 
         uint8_t getState() override
         {
-            return g_PortState;
+            return static_cast<uint8_t>(g_PortState);
         }
 
-        bool canRead() override
+        bool canRead() const override
         {
             return false;
         };
 
-        bool canWrite() override
+        bool canWrite() const override
         {
             return m_isSetToWrite;
         };
-        
-        bool hasError() override
+
+        bool hasError() const override
         {
             return m_hasError;
         };
 
-        err_t getLastError() override
+        Error getLastError() const override
         {
             if(hasError())
             {
-                return STREAM_CLOSED_IO_ERROR;
-            };
-            return NO_ERROR;
+                return to_error(IoError::StreamClosed);
+            }
+            return to_error(GenericError::NoError);
         };
 
-        uint8_t getWrittenValue()
+        uint8_t getWrittenValue() const
         {
-            return g_PortState;
+            return static_cast<uint8_t>(g_PortState);
         }
 
         IStream<uint8_t>* clone() const override
@@ -203,7 +188,6 @@ class FakeDigitalStream : public DigitalStream
             auto stream = new FakeDigitalStream();
             stream->m_isSetToWrite = m_isSetToWrite;
             stream->m_hasError = m_hasError;
-
             return stream;
         }
 };

@@ -6,7 +6,22 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(UNIT_TEST) 
+#if defined(ARDUINO) && !defined(UNIT_TEST)
+
+#include <Arduino.h>
+
+void setup()
+{
+}
+
+void loop()
+{
+    delay(100);
+}
+
+#endif
+
+#if defined(UNIT_TEST)
 
 #include <unity.h>
 #include "DigitalDeviceControllerTests.h"
@@ -14,26 +29,15 @@
 #include "DeviceTests.h"
 #include "SensorTests.h"
 
-void dummyTest()
-{
-    TEST_ASSERT_EQUAL(2, 1+1);
-}
-
-void testsProcess() 
+void testsProcess()
 {
     UNITY_BEGIN();
 
-    /*****************************************
-     * DigitalDeviceController Tests
-     *****************************************/
     RUN_TEST(Should_SetState_WhenDeviceIsInitialized);
     RUN_TEST(Should_RaiseError_IfSetState_WhenStreamIsNotSet);
     RUN_TEST(Should_GetState_WhenDeviceIsInitialized);
     RUN_TEST(Should_RaiseError_IfGetState_WhenStreamIsNotSet);
 
-    /*****************************************
-     * RelayDeviceController Tests
-     *****************************************/
     RUN_TEST(ShouldSwitchRepayInOnStatus);
     RUN_TEST(Should_RaiseError_WhenTryOnRelay_AndStreamIsNotSet);
     RUN_TEST(ShouldSwitchRepayInOffStatus);
@@ -41,14 +45,11 @@ void testsProcess()
     RUN_TEST(ShouldGetRelayState);
     RUN_TEST(Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet);
 
-    /*****************************************
-     * Device Tests
-     *****************************************/
     RUN_TEST(ShouldConvert_AnalogDeviceToAnalogDevice);
     RUN_TEST(ShouldConvert_AnalogDeviceToIDevice);
     RUN_TEST(ShouldMove_AnalogDeviceToAnalogDevice);
     RUN_TEST(ShouldAssignCopy_AnalogDevice);
-    RUN_TEST(ShouldConvert_DigitalDeviceToDigitalDevice);    
+    RUN_TEST(ShouldConvert_DigitalDeviceToDigitalDevice);
     RUN_TEST(ShouldConvert_DigitalDeviceToIDevice);
     RUN_TEST(ShouldMove_DigitalDeviceToDigitalDevice);
     RUN_TEST(ShouldAssignCopy_DigitalDevice);
@@ -58,9 +59,6 @@ void testsProcess()
     RUN_TEST(ShouldMove_RelayDeviceToRelayDevice);
     RUN_TEST(ShouldAssignCopy_RelayDevice);
 
-    /*****************************************
-     * Sensor Tests
-     *****************************************/    
     RUN_TEST(ShouldConvert_AnalogSensorToAnalogSensor);
     RUN_TEST(ShouldConvert_AnalogSensorToISensor);
     RUN_TEST(ShouldMove_AnalogSensorToAnalogSensor);
@@ -73,15 +71,13 @@ void testsProcess()
 
 void setUp(void)
 {
-    // STUB
 };
 
-void tearDown(void) 
+void tearDown(void)
 {
-    // STUB
 };
 
-int main( int argc, char **argv) 
+int main(int argc, char **argv)
 {
     testsProcess();
     return 0;
@@ -93,28 +89,13 @@ int main( int argc, char **argv)
 
 #include <Arduino.h>
 
-void setUp(void)
-{
-    // STUB
-};
-
-void tearDown(void) 
-{
-    // STUB
-};
-
 void setup() {
-    // Setup device
     Serial.begin(115200);
-
-    // NOTE!!! Wait for >2 secs
-    // if board doesn't support software reset via Serial.DTR/RTS
     delay(4000);
-
     testsProcess();
 };
 
-void loop() 
+void loop()
 {
     digitalWrite(13, HIGH);
     delay(100);

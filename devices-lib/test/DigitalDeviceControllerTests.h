@@ -6,8 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _DIGITAL_DEVICE_CONTROLLER_TESTS_H_
-#define _DIGITAL_DEVICE_CONTROLLER_TESTS_H_
+#ifndef _HC_LIB_DIGITAL_DEVICE_CONTROLLER_TESTS_H_
+#define _HC_LIB_DIGITAL_DEVICE_CONTROLLER_TESTS_H_
 
 #ifdef UNIT_TEST
 
@@ -17,66 +17,50 @@
 
 void Should_SetState_WhenDeviceIsInitialized()
 {
-    // Arrange
     DigitalStream* stream = new FakeDigitalStream();
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
-
     DigitalDeviceController sut {};
 
-    // Act
-    err_t result = sut.setState(device, 1);
+    Error result = sut.setState(device, 1);
 
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(NO_ERROR, result, "No errors expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::NoError, "No errors expected.");
     TEST_ASSERT_EQUAL_MESSAGE(1, ((FakeDigitalStream*)stream)->getWrittenValue(), "The wrong value was written to port.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
 }
 
 void Should_RaiseError_IfSetState_WhenStreamIsNotSet()
 {
-    // Arrange
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, nullptr};
-
     DigitalDeviceController sut {};
-    
-    // Act
-    err_t result = sut.setState(device, 1);
 
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result, "The STREAM_NOTCREATED_IO_ERROR error is expected.");
+    Error result = sut.setState(device, 1);
+
+    TEST_ASSERT_TRUE_MESSAGE(result == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
 }
 
 void Should_GetState_WhenDeviceIsInitialized()
 {
-    // Arrange
     uint8_t expectedValue = 1;
     DigitalStream* stream = new FakeDigitalStream(expectedValue);
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
-
     DigitalDeviceController sut {};
 
-    // Act
-    auto result = sut.getState(device);
+    Expected<uint8_t, Error> result = sut.getState(device);
 
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(true, result.hasValue(), "No errors expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), "No errors expected.");
     TEST_ASSERT_EQUAL_MESSAGE(expectedValue, result.getValue(), "The Port state is expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
 }
 
 void Should_RaiseError_IfGetState_WhenStreamIsNotSet()
 {
-    // Arrange
     DigitalDevice device {RELAY_DEVICE_TYPE, 1, nullptr};
-
     DigitalDeviceController sut {};
 
-    // Act
-    auto result = sut.getState(device);
+    Expected<uint8_t, Error> result = sut.getState(device);
 
-    // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "The error is expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(STREAM_NOTCREATED_IO_ERROR, result.getError(), "The STREAM_NOTCREATED_IO_ERROR error is expected.");       
+    TEST_ASSERT_FALSE_MESSAGE(result.hasValue(), "The error is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result.getError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
 }
 
 #endif

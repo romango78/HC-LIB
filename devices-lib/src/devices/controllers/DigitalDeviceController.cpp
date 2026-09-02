@@ -7,27 +7,27 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 #include "DigitalDeviceController.h"
-#include "ioerrdef.h"
+#include "errors/IoErrors.h"
 
-err_t DigitalDeviceController::setState(DigitalDevice t_device, const uint8_t t_data)
+Error DigitalDeviceController::setState(const DigitalDevice& t_device, const uint8_t& t_state)
 {
     if(!t_device.stream)
     {
-        return (err_t)STREAM_NOTCREATED_IO_ERROR;
-    };
+        return to_error(IoError::StreamNotCreated);
+    }
     if(!t_device.stream->canWrite())
     {
         t_device.stream->begin(StreamMode::Write);
-    };
-    t_device.stream->write(t_data);
-    return NO_ERROR;
+    }
+    t_device.stream->write(t_state);
+    return to_error(GenericError::NoError);
 }
 
-Expected<uint8_t> DigitalDeviceController::getState(DigitalDevice t_device)
+Expected<uint8_t, Error> DigitalDeviceController::getState(const DigitalDevice& t_device) const
 {
     if(!t_device.stream)
     {
-        return Expected<uint8_t>::fromError(STREAM_NOTCREATED_IO_ERROR);
+        return make_error(IoError::StreamNotCreated);
     }
     return t_device.stream->getState();
 }
