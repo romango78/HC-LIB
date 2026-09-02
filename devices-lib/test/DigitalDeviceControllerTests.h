@@ -63,5 +63,20 @@ void Should_RaiseError_IfGetState_WhenStreamIsNotSet()
     TEST_ASSERT_TRUE_MESSAGE(result.getError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
 }
 
+void Should_SetState_WhenStreamAlreadyWritable()
+{
+    DigitalStream* stream = new FakeDigitalStream();
+    DigitalDevice device {RELAY_DEVICE_TYPE, 1, stream};
+    DigitalDeviceController sut {};
+
+    Error first = sut.setState(device, 1);
+    Error second = sut.setState(device, 0);
+
+    TEST_ASSERT_TRUE_MESSAGE(first == GenericError::NoError, "No errors expected on first write.");
+    TEST_ASSERT_TRUE_MESSAGE(second == GenericError::NoError, "No errors expected when the stream is already writable.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, ((FakeDigitalStream*)stream)->getWrittenValue(), "The last written value is expected.");
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+}
+
 #endif
 #endif

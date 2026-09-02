@@ -87,5 +87,71 @@ void ShouldAssignCopy_AnalogSensor()
     TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
 }
 
+void ShouldClassify_AnalogSensorAsAnalog()
+{
+    AnalogSensor sut = createAnalogSensor();
+
+    TEST_ASSERT_TRUE_MESSAGE(device::is_analog(sut), "AnalogSensor should be analog.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_digital(sut), "AnalogSensor should not be digital.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_relay(sut), "AnalogSensor should not be a relay.");
+}
+
+void ShouldConstruct_AnalogSensor_WithNullStream()
+{
+    AnalogSensor sut{10, 5, nullptr};
+
+    TEST_ASSERT_EQUAL(10, sut.type);
+    TEST_ASSERT_TRUE(sut.category == DeviceCategory::Analog);
+    TEST_ASSERT_EQUAL(5, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_AnalogSensor_WithNullStream()
+{
+    AnalogSensor source{10, 5, nullptr};
+
+    AnalogSensor sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_AnalogSensor_FromMovedSource()
+{
+    AnalogSensor source = createAnalogSensor();
+    AnalogSensor owner(std::move(source));
+
+    AnalogSensor sut(source);
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from sensor should not clone the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
+void ShouldAssign_AnalogSensor_FromNullStream()
+{
+    AnalogSensor source{10, 5, nullptr};
+    AnalogSensor sut = createAnalogSensor();
+
+    sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream sensor should clear the stream.");
+}
+
+void ShouldSelfAssign_AnalogSensor()
+{
+    AnalogSensor sut = createAnalogSensor();
+    IStream<uint16_t>* streamBefore = sut.stream;
+
+    sut = sut;
+
+    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream, "Self-assignment must leave the stream pointer unchanged.");
+    TEST_ASSERT_NOT_NULL(sut.stream);
+}
+
 #endif
 #endif

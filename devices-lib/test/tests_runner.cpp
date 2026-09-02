@@ -37,6 +37,7 @@ void testsProcess()
     RUN_TEST(Should_RaiseError_IfSetState_WhenStreamIsNotSet);
     RUN_TEST(Should_GetState_WhenDeviceIsInitialized);
     RUN_TEST(Should_RaiseError_IfGetState_WhenStreamIsNotSet);
+    RUN_TEST(Should_SetState_WhenStreamAlreadyWritable);
 
     RUN_TEST(ShouldSwitchRepayInOnStatus);
     RUN_TEST(Should_RaiseError_WhenTryOnRelay_AndStreamIsNotSet);
@@ -44,6 +45,7 @@ void testsProcess()
     RUN_TEST(Should_RaiseError_WhenTryOffRelay_AndStreamIsNotSet);
     RUN_TEST(ShouldGetRelayState);
     RUN_TEST(Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet);
+    RUN_TEST(ShouldGetRelayState_WhenRelayIsOn);
 
     RUN_TEST(ShouldConvert_AnalogDeviceToAnalogDevice);
     RUN_TEST(ShouldConvert_AnalogDeviceToIDevice);
@@ -58,11 +60,33 @@ void testsProcess()
     RUN_TEST(ShouldConvert_RelayDeviceToIDevice);
     RUN_TEST(ShouldMove_RelayDeviceToRelayDevice);
     RUN_TEST(ShouldAssignCopy_RelayDevice);
+    RUN_TEST(ShouldClassify_AnalogDeviceAsAnalog);
+    RUN_TEST(ShouldClassify_DigitalDeviceAsDigital);
+    RUN_TEST(ShouldClassify_RelayDeviceAsRelay);
+    RUN_TEST(ShouldConstruct_AnalogDevice_WithNullStream);
+    RUN_TEST(ShouldConstruct_DigitalDevice_WithNullStream);
+    RUN_TEST(ShouldConstruct_RelayDevice_WithNullStream);
+    RUN_TEST(ShouldCopy_AnalogDevice_WithNullStream);
+    RUN_TEST(ShouldCopy_DigitalDevice_WithNullStream);
+    RUN_TEST(ShouldCopy_AnalogDevice_FromMovedSource);
+    RUN_TEST(ShouldCopy_DigitalDevice_FromMovedSource);
+    RUN_TEST(ShouldCopy_RelayDevice_FromMovedSource);
+    RUN_TEST(ShouldAssign_AnalogDevice_FromNullStream);
+    RUN_TEST(ShouldAssign_DigitalDevice_FromNullStream);
+    RUN_TEST(ShouldSelfAssign_AnalogDevice);
+    RUN_TEST(ShouldSelfAssign_DigitalDevice);
+    RUN_TEST(ShouldSelfAssign_RelayDevice);
 
     RUN_TEST(ShouldConvert_AnalogSensorToAnalogSensor);
     RUN_TEST(ShouldConvert_AnalogSensorToISensor);
     RUN_TEST(ShouldMove_AnalogSensorToAnalogSensor);
     RUN_TEST(ShouldAssignCopy_AnalogSensor);
+    RUN_TEST(ShouldClassify_AnalogSensorAsAnalog);
+    RUN_TEST(ShouldConstruct_AnalogSensor_WithNullStream);
+    RUN_TEST(ShouldCopy_AnalogSensor_WithNullStream);
+    RUN_TEST(ShouldCopy_AnalogSensor_FromMovedSource);
+    RUN_TEST(ShouldAssign_AnalogSensor_FromNullStream);
+    RUN_TEST(ShouldSelfAssign_AnalogSensor);
 
     UNITY_END();
 };

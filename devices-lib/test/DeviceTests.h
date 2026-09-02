@@ -245,5 +245,181 @@ void ShouldAssignCopy_RelayDevice()
     TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
 }
 
+void ShouldClassify_AnalogDeviceAsAnalog()
+{
+    AnalogDevice sut = createAnalogDevice();
+
+    TEST_ASSERT_TRUE_MESSAGE(device::is_analog(sut), "AnalogDevice should be analog.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_digital(sut), "AnalogDevice should not be digital.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_relay(sut), "AnalogDevice should not be a relay.");
+}
+
+void ShouldClassify_DigitalDeviceAsDigital()
+{
+    DigitalDevice sut = createDigitalDevice();
+
+    TEST_ASSERT_TRUE_MESSAGE(device::is_digital(sut), "DigitalDevice should be digital.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_analog(sut), "DigitalDevice should not be analog.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_relay(sut), "A generic digital device should not be a relay.");
+}
+
+void ShouldClassify_RelayDeviceAsRelay()
+{
+    RelayDevice sut = createRelayDevice();
+
+    TEST_ASSERT_TRUE_MESSAGE(device::is_digital(sut), "RelayDevice should be digital.");
+    TEST_ASSERT_TRUE_MESSAGE(device::is_relay(sut), "RelayDevice should be a relay.");
+    TEST_ASSERT_FALSE_MESSAGE(device::is_analog(sut), "RelayDevice should not be analog.");
+    TEST_ASSERT_EQUAL_MESSAGE(RELAY_DEVICE_TYPE, sut.type, "RelayDevice type should be RELAY_DEVICE_TYPE.");
+}
+
+void ShouldConstruct_AnalogDevice_WithNullStream()
+{
+    AnalogDevice sut{10, 5, nullptr};
+
+    TEST_ASSERT_EQUAL(10, sut.type);
+    TEST_ASSERT_TRUE(sut.category == DeviceCategory::Analog);
+    TEST_ASSERT_EQUAL(5, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldConstruct_DigitalDevice_WithNullStream()
+{
+    DigitalDevice sut{10, 5, nullptr};
+
+    TEST_ASSERT_EQUAL(10, sut.type);
+    TEST_ASSERT_TRUE(sut.category == DeviceCategory::Digital);
+    TEST_ASSERT_EQUAL(5, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldConstruct_RelayDevice_WithNullStream()
+{
+    RelayDevice sut{7, nullptr};
+
+    TEST_ASSERT_EQUAL(RELAY_DEVICE_TYPE, sut.type);
+    TEST_ASSERT_TRUE(sut.category == DeviceCategory::Digital);
+    TEST_ASSERT_EQUAL(7, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_AnalogDevice_WithNullStream()
+{
+    AnalogDevice source{10, 5, nullptr};
+
+    AnalogDevice sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_DigitalDevice_WithNullStream()
+{
+    DigitalDevice source{10, 5, nullptr};
+
+    DigitalDevice sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_AnalogDevice_FromMovedSource()
+{
+    AnalogDevice source = createAnalogDevice();
+    AnalogDevice owner(std::move(source));
+
+    AnalogDevice sut(source);
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from device should not clone the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
+void ShouldCopy_DigitalDevice_FromMovedSource()
+{
+    DigitalDevice source = createDigitalDevice();
+    DigitalDevice owner(std::move(source));
+
+    DigitalDevice sut(source);
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from device should not clone the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
+void ShouldCopy_RelayDevice_FromMovedSource()
+{
+    RelayDevice source = createRelayDevice();
+    RelayDevice owner(std::move(source));
+
+    RelayDevice sut(source);
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from device should not clone the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
+void ShouldAssign_AnalogDevice_FromNullStream()
+{
+    AnalogDevice source{10, 5, nullptr};
+    AnalogDevice sut = createAnalogDevice();
+
+    sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream device should clear the stream.");
+}
+
+void ShouldAssign_DigitalDevice_FromNullStream()
+{
+    DigitalDevice source{10, 5, nullptr};
+    DigitalDevice sut = createDigitalDevice();
+
+    sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream device should clear the stream.");
+}
+
+void ShouldSelfAssign_AnalogDevice()
+{
+    AnalogDevice sut = createAnalogDevice();
+    AnalogStream* streamBefore = sut.stream;
+
+    sut = sut;
+
+    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream, "Self-assignment must leave the stream pointer unchanged.");
+    TEST_ASSERT_NOT_NULL(sut.stream);
+}
+
+void ShouldSelfAssign_DigitalDevice()
+{
+    DigitalDevice sut = createDigitalDevice();
+    DigitalStream* streamBefore = sut.stream;
+
+    sut = sut;
+
+    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream, "Self-assignment must leave the stream pointer unchanged.");
+    TEST_ASSERT_NOT_NULL(sut.stream);
+}
+
+void ShouldSelfAssign_RelayDevice()
+{
+    RelayDevice sut = createRelayDevice();
+    DigitalStream* streamBefore = sut.stream;
+
+    sut = sut;
+
+    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream, "Self-assignment must leave the stream pointer unchanged.");
+    TEST_ASSERT_NOT_NULL(sut.stream);
+}
+
 #endif
 #endif

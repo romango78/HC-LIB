@@ -85,5 +85,18 @@ void Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet()
     TEST_ASSERT_TRUE_MESSAGE(result.getError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
 }
 
+void ShouldGetRelayState_WhenRelayIsOn()
+{
+    DigitalStream* stream = new FakeDigitalStream(static_cast<uint8_t>(RelayState::On));
+    RelayDevice device {1, stream};
+    RelayDeviceController sut {};
+
+    Expected<RelayState, Error> result = sut.getState(device);
+
+    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), "No errors expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result.getValue() == RelayState::On, "The relay should be ON.");
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+}
+
 #endif
 #endif
