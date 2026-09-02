@@ -23,7 +23,11 @@
 		{
 			"name": "io-port-lib",
 			"path": "io-port-lib"
-		}			
+		},
+		{
+			"name": "logger-lib",
+			"path": "logger-lib"
+		}
 	],
 	"settings": {},
 	"launch": {

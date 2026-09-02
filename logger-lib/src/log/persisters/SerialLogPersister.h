@@ -6,21 +6,30 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SERIAL_LOG_PERSISTER_H_
-#define _SERIAL_LOG_PERSISTER_H_
+/// @file SerialLogPersister.h
+/// @brief ILogPersister that writes to Arduino Serial.
+#ifndef _HC_LIB_SERIAL_LOG_PERSISTER_H_
+#define _HC_LIB_SERIAL_LOG_PERSISTER_H_
 
-#include <Arduino.h>
 #include "ILogPersister.h"
 
+#if defined(ARDUINO)
+#include <Arduino.h>
+
+/// @brief Persists log characters to the Arduino Serial port.
 class SerialLogPersister : public ILogPersister
 {
     public:
-        SerialLogPersister() {};
+        /// @brief Initializes the persister.
+        SerialLogPersister() = default;
 
+        /// @brief Writes one character to the Arduino Serial port.
+        /// @param t_character The character to persist.
         void write(const char t_character) override
         {
-          Serial.write(t_character);
+            Serial.write(t_character);
         };
 };
 
+#endif
 #endif

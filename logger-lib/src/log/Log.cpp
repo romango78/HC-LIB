@@ -9,3 +9,4 @@
 #include "Log.h"
 
 constexpr const char* Log::level_short_names[];
+constexpr LogModule Log::EMPTY_LOG_MODULE;

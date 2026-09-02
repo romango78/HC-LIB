@@ -6,15 +6,17 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 //
-// This file is part of the Logger Library v1.0.1
-//
 // C++ Templates
 // https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl
-#ifndef _LOG_H_
-#define _LOG_H_
 
+/// @file Log.h
+/// @brief Formatted logger with level filtering and optional timestamps.
+#ifndef _HC_LIB_LOG_H_
+#define _HC_LIB_LOG_H_
+
+#include <stdint.h>
 #include "persisters/ILogPersister.h"
-#include "providers/IDatetimeProvider.h"
+#include "providers/IDateTimeProvider.h"
 
 #define LOG_LEVEL_OFF 0 // Logging is disabled
 #define LOG_LEVEL_CRITICAL 1 // Indicates the system is unusable, or an error that is unrecoverable
@@ -31,22 +33,24 @@
 
 #ifndef LOG_LEVEL_NAMES
 #define LOG_LEVEL_NAMES                                                             \
-    {                                                                                     \
+    {                                                                               \
         "O", LOG_LEVEL_CRITICAL_PREFIX, LOG_LEVEL_ERROR_PREFIX, LOG_LEVEL_WARNING_PREFIX, \
-            LOG_LEVEL_INFO_PREFIX, LOG_LEVEL_DEBUG_PREFIX,                                \
+            LOG_LEVEL_INFO_PREFIX, LOG_LEVEL_DEBUG_PREFIX,                          \
     }
 #endif
 
-enum LogLevelEnum
+/// @brief Severity of a log message. Higher values are more verbose.
+enum class LogLevel : uint8_t
 {
-    off = LOG_LEVEL_OFF,
-    critical = LOG_LEVEL_CRITICAL,
-    error = LOG_LEVEL_ERROR,
-    warn = LOG_LEVEL_WARNING,
-    info = LOG_LEVEL_INFO,
-    debug = LOG_LEVEL_DEBUG,
+    Off = LOG_LEVEL_OFF,
+    Critical = LOG_LEVEL_CRITICAL,
+    Error = LOG_LEVEL_ERROR,
+    Warn = LOG_LEVEL_WARNING,
+    Info = LOG_LEVEL_INFO,
+    Debug = LOG_LEVEL_DEBUG
 };
 
+/// @brief Optional source name written as [name] in the log line.
 struct LogModule
 {
     const char *name;
@@ -54,94 +58,110 @@ struct LogModule
 
 /// Whether the logging module is enabled automatically on boot.
 #define LOG_ENABLED_DEFAULT true
-#define LOG_LEVEL_REQUESTED_DEFAULT LogLevelEnum::debug
+#define LOG_LEVEL_REQUESTED_DEFAULT LogLevel::Debug
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/// @brief Namespace for printf functions.
 namespace sout {
     #include "printf.h"
 }
-LogLevelEnum gLogLevel();
+
+/// @brief Application-provided minimum log level. Read once in the Log constructor.
+LogLevel gLogLevel();
 
 #ifdef __cplusplus
 }
 #endif
 
-class Log 
+/// @brief Formats and persists log lines through an ILogPersister.
+/// @note Log does not own the persister or the datetime provider.
+class Log
 {
     private:
-        const LogModule EMPTY_LOG_MODULE = { nullptr };
-        
+        static constexpr LogModule EMPTY_LOG_MODULE = { nullptr };
+
         ILogPersister *m_logPersister;
         IDateTimeProvider *m_dateTimeProvider;
-
+        const LogLevel m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;
         bool m_enabled = LOG_ENABLED_DEFAULT;
-        const LogLevelEnum m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;
 
         static constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;
-        
-        static constexpr const char* GetLogLevelName(const LogLevelEnum t_level)
-        {            
-            return level_short_names[t_level];
+
+        static constexpr const char* GetLogLevelName(const LogLevel t_level)
+        {
+            return static_cast<uint8_t>(t_level) <= static_cast<uint8_t>(LogLevel::Debug)
+                ? level_short_names[static_cast<uint8_t>(t_level)]
+                : "?";
         };
     protected:
         template<typename... Args>
-        void write(const LogLevelEnum t_level, const LogModule t_module, 
+        void write(const LogLevel t_level, const LogModule t_module,
             const char* t_format, const Args&... args) noexcept
         {
-            if(m_enabled && t_level <= m_logLevelRequested)
+            if(!m_enabled || !t_format)
             {
-                if(m_dateTimeProvider)
-                {
-                    DateTime dt = *m_dateTimeProvider->getLocalDatetime();
-                    sout::fctprintf(&Log::writeBounce, this, 
-                        "%i-%02i-%02i %02i:%02i:%02i ", 
-                        dt.year,
-                        dt.month,
-                        dt.day,
-                        dt.hours,
-                        dt.minutes,
-                        dt.seconds);
-                }
-
-                const char* prefix = Log::GetLogLevelName(t_level);    
-                sout::fctprintf(&Log::writeBounce, this, "%s ", prefix);
-
-                if(t_module.name)
-                {
-                    sout::fctprintf(&Log::writeBounce, this, "[%s] ", t_module.name);
-                }
-
-                sout::fctprintf(&Log::writeBounce, this, t_format, args...);
-                // Add new line control symbol
-                sout::fctprintf(&Log::writeBounce, this, "\n");
+                return;
             }
+            if(static_cast<uint8_t>(t_level) > static_cast<uint8_t>(m_logLevelRequested))
+            {
+                return;
+            }
+
+            if(m_dateTimeProvider)
+            {
+                DateTime dt = m_dateTimeProvider->getLocalDatetime();
+                sout::fctprintf(&Log::writeBounce, this,
+                    "%i-%02i-%02i %02i:%02i:%02i ",
+                    dt.year,
+                    dt.month,
+                    dt.day,
+                    dt.hours,
+                    dt.minutes,
+                    dt.seconds);
+            }
+
+            const char* prefix = Log::GetLogLevelName(t_level);
+            sout::fctprintf(&Log::writeBounce, this, "%s ", prefix);
+
+            if(t_module.name)
+            {
+                sout::fctprintf(&Log::writeBounce, this, "[%s] ", t_module.name);
+            }
+
+            sout::fctprintf(&Log::writeBounce, this, t_format, args...);
+            sout::fctprintf(&Log::writeBounce, this, "\n");
         };
 
         void write(const char t_character)
         {
-            m_logPersister->write(t_character);    
+            if(m_logPersister)
+            {
+                m_logPersister->write(t_character);
+            }
         };
 
         static void writeBounce(char t_character, void* t_thisPtr)
-        {   
+        {
             reinterpret_cast<Log*>(t_thisPtr)->write(t_character);
-        };         
+        };
     public:
         Log() = delete;
+
+        /// @brief Initializes the logger. Does not take ownership of the pointers.
+        /// @param t_logPersister Output sink. Logging is disabled when null.
+        /// @param t_datetimeProvider Optional timestamp source. Null omits the date prefix.
         Log(ILogPersister *t_logPersister, IDateTimeProvider *t_datetimeProvider)
-            : m_logLevelRequested(gLogLevel())
+            : m_logPersister(t_logPersister),
+              m_dateTimeProvider(t_datetimeProvider),
+              m_logLevelRequested(gLogLevel()),
+              m_enabled((t_logPersister != nullptr) && (m_logLevelRequested != LogLevel::Off))
         {
-            m_logPersister = t_logPersister;
-            m_dateTimeProvider = t_datetimeProvider;         
-            m_enabled = (m_logPersister != nullptr) 
-                && (m_logLevelRequested != LogLevelEnum::off);
         };
 
         ~Log() = default;
-        
+
         template<typename... Args>
         void debug(const char* t_format, const Args&... args) noexcept
         {
@@ -151,7 +171,7 @@ class Log
         template<typename... Args>
         void debug(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevelEnum::debug, t_module, t_format, args...);
+            write(LogLevel::Debug, t_module, t_format, args...);
         };
 
         template<typename... Args>
@@ -163,7 +183,7 @@ class Log
         template<typename... Args>
         void info(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevelEnum::info, t_module, t_format, args...);
+            write(LogLevel::Info, t_module, t_format, args...);
         };
 
         template<typename... Args>
@@ -175,7 +195,7 @@ class Log
         template<typename... Args>
         void warn(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevelEnum::warn, t_module, t_format, args...);
+            write(LogLevel::Warn, t_module, t_format, args...);
         };
 
         template<typename... Args>
@@ -187,7 +207,7 @@ class Log
         template<typename... Args>
         void error(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevelEnum::error, t_module, t_format, args...);
+            write(LogLevel::Error, t_module, t_format, args...);
         };
 
         template<typename... Args>
@@ -199,7 +219,7 @@ class Log
         template<typename... Args>
         void fatal(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevelEnum::critical, t_module, t_format, args...);
+            write(LogLevel::Critical, t_module, t_format, args...);
         };
 };
 

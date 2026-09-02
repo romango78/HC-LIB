@@ -6,25 +6,30 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#include <Arduino.h>
-#include "log/Log.h"
+#ifndef _HC_LIB_FAKE_LOG_PERSISTER_H_
+#define _HC_LIB_FAKE_LOG_PERSISTER_H_
+
+#include "log/persisters/ILogPersister.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 namespace sout {
     #include "printf.h"
-    #include "printf.c"
 }
 #ifdef __cplusplus
 }
 #endif
 
-LogLevelEnum gLogLevel()
+class FakeLogPersister : public ILogPersister
 {
-    return LogLevelEnum::debug;
+    public:
+        FakeLogPersister() = default;
+
+        void write(const char t_character) override
+        {
+            sout::_putchar(t_character);
+        };
 };
 
-void sout::_putchar(char character)
-{
-    // stub for standard output
-};
+#endif

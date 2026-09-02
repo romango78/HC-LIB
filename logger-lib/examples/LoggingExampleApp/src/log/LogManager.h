@@ -27,9 +27,7 @@ Log* LogManager::getLogger()
 {
     if(m_log == nullptr)
     {
-        m_log = new Log(
-                    reinterpret_cast<ILogPersister*>(new SerialLogPersister()), 
-                    reinterpret_cast<IDateTimeProvider*>(new DateTimeProvider()));
+        m_log = new Log(new SerialLogPersister(), new DateTimeProvider());
     }
     return m_log;
 }

@@ -1,33 +1,59 @@
 # HC-LIB
-## Logger Arduino Library v1.0.2110
-This __library__ is a tool to help the programmer output log statements to a variety of output targets. 
+## Logger Arduino Library v1.0.2609
+This __library__ writes formatted log statements to a pluggable output target.
+
+The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 
 ### Dependencies
-* printf.h - (c) Marco Paland (info@paland.com). Tiny printf, sprintf and snprintf implementation, optimized for speed on embedded systems with a very limited resources.
+- printf.h - (c) Marco Paland (info@paland.com). Tiny printf, sprintf and snprintf implementation, optimized for speed on embedded systems with a very limited resources.
 
 ### Features
-- Persist the formatted log message via specific ILogPersister abstraction
-- Define the log message level for persisting
+- Defines __Log__ with __debug__ / __info__ / __warn__ / __error__ / __fatal__.
+- Defines __LogLevel__ (__Off__, __Critical__, __Error__, __Warn__, __Info__, __Debug__).
+- Persists output through __ILogPersister__ (__SerialLogPersister__ on Arduino).
+- Optional timestamps from __IDateTimeProvider__ (__getLocalDatetime__ returns __DateTime__ by value).
+- The application supplies __gLogLevel()__ as the requested minimum level.
 
-### Usage
-TBD
+### Environments
+Run commands from this folder (`logger-lib`).
 
+| Environment | Platform | Purpose |
+|---|---|---|
+| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware: `setup()` / `loop()` from __test/tests_runner.cpp__ |
+| `desktop` | native | Unity tests |
+| `desktop-debug` | native | Unity tests with debug symbols (`-O0 -ggdb3`). Default. |
 
-### Sample
-The __sample application__ is stored in __sample__ folder. 
-The `pio run -e nanonew -t upload` command is used for compiling and upload the __sample application__.
+__test/tests_runner.cpp__ is the single entry point: a firmware stub when `UNIT_TEST` is off, and the Unity runner when it is on.
 
-See the included examples and tests for further usage examples.
+### Build
+```powershell
+pio run -e nano-board
+pio run -e nano-board -t upload
+pio run -e desktop-debug
+```
+
+Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`.
 
 ### Unit tests
-The `pio test -e {environment}` command is used for running unit tests on the specified {environment}. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details
+```powershell
+pio test -e desktop-debug
+```
 
-### NuGet
+Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
+
+### Sample
+The Serial demo is in the __sample__ folder. From `sample`:
+```powershell
+pio run -e nano-board -t upload
+```
+
 ### Packages
-* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
-* The `pio package publish {local_repo_folder}/HC-LIB.Logger-1.0.2110.tar.gz` command is used for publishing PlatformIO package.
+Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).
 
-* The `nuget.exe pack HC-LIB.Logger.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
+* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package `HC-LIB.Logger-{version}.tar.gz` in the `{local_repo_folder}` folder.
+* The `pio package publish {local_repo_folder}/HC-LIB.Logger-{version}.tar.gz` command is used for publishing PlatformIO package.
+
+* The `nuget.exe pack HC-LIB.Logger.nuspec -outputdirectory {local_repo_folder}` command is used for creating NuGet package and store it in the `{local_repo_folder}` folder.
 * The `nuget.exe install HC-LIB.Logger` command is used for installing NuGet package.
 
 ### Changelog

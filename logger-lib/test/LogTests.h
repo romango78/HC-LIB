@@ -5,8 +5,9 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-#ifndef _LOG_TESTS_H_
-#define _LOG_TESTS_H_
+
+#ifndef _HC_LIB_LOG_TESTS_H_
+#define _HC_LIB_LOG_TESTS_H_
 
 #ifdef UNIT_TEST
 
@@ -38,9 +39,9 @@ namespace sout {
 
 LogModule module = { "Unit Test Module" };
 
-LogLevelEnum gLogLevel()
+LogLevel gLogLevel()
 {
-    return LogLevelEnum::debug;
+    return LogLevel::Debug;
 };
 
 static char ms_outputBuffer[SOUT_BUFFER_SIZE];
@@ -48,7 +49,7 @@ static size_t ms_outputBufferPointer = 0U;
 
 void sout::_putchar(char character)
 {
-  ms_outputBuffer[ms_outputBufferPointer++] = character;
+    ms_outputBuffer[ms_outputBufferPointer++] = character;
 };
 
 void ResetOutputBuffer()
@@ -63,18 +64,13 @@ void Log_ShouldLogDebug_WithoutModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.debug(testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->debug(testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogDebug_WithModule()
@@ -83,18 +79,13 @@ void Log_ShouldLogDebug_WithModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.debug(module, testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->debug(module, testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogInfo_WithoutModule()
@@ -103,18 +94,13 @@ void Log_ShouldLogInfo_WithoutModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.info(testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->info(testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogInfo_WithModule()
@@ -123,18 +109,13 @@ void Log_ShouldLogInfo_WithModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.info(module, testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->info(module, testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogWarning_WithoutModule()
@@ -143,18 +124,13 @@ void Log_ShouldLogWarning_WithoutModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.warn(testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->warn(testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogWarning_WithModule()
@@ -163,18 +139,13 @@ void Log_ShouldLogWarning_WithModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.warn(module, testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->warn(module, testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogError_WithoutModule()
@@ -183,18 +154,13 @@ void Log_ShouldLogError_WithoutModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.error(testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->error(testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogError_WithModule()
@@ -203,18 +169,13 @@ void Log_ShouldLogError_WithModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.error(module, testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->error(module, testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogFatal_WithoutModule()
@@ -223,18 +184,13 @@ void Log_ShouldLogFatal_WithoutModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.fatal(testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->fatal(testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
-
-    delete logger;
-    delete persister;
-    delete provider;
 }
 
 void Log_ShouldLogFatal_WithModule()
@@ -243,18 +199,51 @@ void Log_ShouldLogFatal_WithModule()
     char testMsg[] = "Test message.";
 
     ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
 
-    IDateTimeProvider *provider = (IDateTimeProvider*) new FakeDateTimeProvider();
-    ILogPersister *persister = (ILogPersister*) new FakeLogPersister();
+    logger.fatal(module, testMsg);
 
-    Log *logger = new Log(persister, provider);
-
-    logger->fatal(module, testMsg);
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
+}
 
-    delete logger;
-    delete persister;
-    delete provider;
+void Log_ShouldNotLog_WhenPersisterIsNull()
+{
+    ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    Log logger(nullptr, &provider);
+
+    logger.info("Test message.");
+
+    TEST_ASSERT_EQUAL_STRING("", ms_outputBuffer);
+}
+
+void Log_ShouldLog_WithoutDateTime()
+{
+    char expectedValue[] = "INFO Test message.\n";
+
+    ResetOutputBuffer();
+    FakeLogPersister persister;
+    Log logger(&persister, nullptr);
+
+    logger.info("Test message.");
+
+    TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
+}
+
+void Log_ShouldLog_WithFormatArguments()
+{
+    char expectedValue[] = "1900-01-01 00:00:00 INFO Value 42.\n";
+
+    ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
+
+    logger.info("Value %d.", 42);
+
+    TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
 }
 
 #endif

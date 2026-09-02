@@ -6,16 +6,25 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _FAKE_LOG_PERSISTER_H_
-#define _FAKE_LOG_PERSISTER_H_
+#include <Arduino.h>
+#include "log/Log.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+namespace sout {
+    #include "printf.h"
+    #include "printf.c"
+}
+#ifdef __cplusplus
+}
+#endif
 
-#include "log/persisters/ILogPersister.h"
-
-class FakeLogPersister : public ILogPersister
+LogLevel gLogLevel()
 {
-    public:
-        FakeLogPersister() {};
-        void write(const char t_character) override;
+    return LogLevel::Debug;
 };
 
-#endif
+void sout::_putchar(char character)
+{
+    // stub for standard output
+};

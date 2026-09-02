@@ -6,27 +6,32 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(UNIT_TEST) 
+#if defined(ARDUINO) && !defined(UNIT_TEST)
 
-#include <unity.h>
+#include <Arduino.h>
 
-#include "LogTests.h"
-
-void dummyTest()
+void setup()
 {
-    TEST_ASSERT_EQUAL(2, 1+1);
 }
 
-void testsProcess() 
+void loop()
+{
+    delay(100);
+}
+
+#endif
+
+#if defined(UNIT_TEST)
+
+#include <unity.h>
+#include "LogTests.h"
+
+void testsProcess()
 {
     UNITY_BEGIN();
 
-    /*****************************************
-     * Log Tests (LogTests.h)
-     *****************************************/
     RUN_TEST(Log_ShouldLogDebug_WithoutModule);
     RUN_TEST(Log_ShouldLogDebug_WithModule);
-#if !defined(ARDUINO)    
     RUN_TEST(Log_ShouldLogInfo_WithoutModule);
     RUN_TEST(Log_ShouldLogInfo_WithModule);
     RUN_TEST(Log_ShouldLogWarning_WithoutModule);
@@ -35,7 +40,9 @@ void testsProcess()
     RUN_TEST(Log_ShouldLogError_WithModule);
     RUN_TEST(Log_ShouldLogFatal_WithoutModule);
     RUN_TEST(Log_ShouldLogFatal_WithModule);
-#endif    
+    RUN_TEST(Log_ShouldNotLog_WhenPersisterIsNull);
+    RUN_TEST(Log_ShouldLog_WithoutDateTime);
+    RUN_TEST(Log_ShouldLog_WithFormatArguments);
 
     UNITY_END();
 };
@@ -44,15 +51,13 @@ void testsProcess()
 
 void setUp(void)
 {
-    // STUB
 };
 
-void tearDown(void) 
+void tearDown(void)
 {
-    // STUB
 };
 
-int main( int argc, char **argv) 
+int main(int argc, char **argv)
 {
     testsProcess();
     return 0;
@@ -65,17 +70,12 @@ int main( int argc, char **argv)
 #include <Arduino.h>
 
 void setup() {
-    // Setup device
     Serial.begin(115200);
-
-    // NOTE!!! Wait for >2 secs
-    // if board doesn't support software reset via Serial.DTR/RTS
     delay(4000);
-
     testsProcess();
 };
 
-void loop() 
+void loop()
 {
     digitalWrite(13, HIGH);
     delay(100);

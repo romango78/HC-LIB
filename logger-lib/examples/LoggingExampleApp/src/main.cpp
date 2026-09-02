@@ -6,6 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
+/// @file main.cpp
+/// @brief Main file for the logging example application.
 #include <Arduino.h>
 #include "app.config/app.config.h"
 

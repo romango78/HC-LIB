@@ -10,29 +10,28 @@
 #define _DATETIME_PROVIDER_H_
 
 #include <time.h>
-#include "providers/IDatetimeProvider.h"
+#include "providers/IDateTimeProvider.h"
 
 class DateTimeProvider : public IDateTimeProvider
 {
     public:
-        DateTimeProvider() {};
-        DateTime* getLocalDatetime() override
+        DateTimeProvider() = default;
+
+        DateTime getLocalDatetime() const override
         {
-            DateTime *dt = new DateTime;
-            
+            DateTime dt;
+
             time_t utc = time(nullptr);
-            struct tm  tStruct = *localtime(&utc);
-            dt->year = 1900 + tStruct.tm_year;
-            dt->month = tStruct.tm_mon;
-            dt->day = tStruct.tm_mday;
-            dt->hours = tStruct.tm_hour;
-            dt->minutes = tStruct.tm_min;
-            dt->seconds = tStruct.tm_sec;
+            struct tm tStruct = *localtime(&utc);
+            dt.year = 1900 + tStruct.tm_year;
+            dt.month = tStruct.tm_mon;
+            dt.day = tStruct.tm_mday;
+            dt.hours = tStruct.tm_hour;
+            dt.minutes = tStruct.tm_min;
+            dt.seconds = tStruct.tm_sec;
 
             return dt;
-        };        
-
-
+        };
 };
 
 #endif
