@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.IO-Abstraction",
-    "version": "1.0.2203",
-    "description": "This library helps the programmer to work with I/O Ports on the Arduino Board.",
-    "keywords": "io, arduino, atmelavr",
+    "version": "1.1.2609",
+    "description": "I/O stream abstractions: IStream, BaseStream, and IoError. Uses Error from HC-LIB.System.",
+    "keywords": "io, stream, arduino, atmelavr, native",
     "repository":
     {
         "type": "git",
@@ -16,15 +16,25 @@
         "email": "romango78@gmail.com"        
       }
     ],
+    "dependencies":
+    [
+      {
+        "name": "HC-LIB.System",
+        "version": ">=1.1.2609"
+      }
+    ],
     "export": {
       "include":
       [
           "src/*",
+          "src/errors/*",
+          "src/stream/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
-    },  
-    "license": "MIT",    
+    },
+    "license": "MIT",
     "frameworks": "*",
     "platforms": ["atmelavr", "native"]
   }

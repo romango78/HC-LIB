@@ -15,7 +15,15 @@
 		{
 			"name": "devices-lib",
 			"path": "devices-lib"
-		}				
+		},
+		{
+			"name": "io-abstraction-lib",
+			"path": "io-abstraction-lib"
+		},
+		{
+			"name": "io-port-lib",
+			"path": "io-port-lib"
+		}			
 	],
 	"settings": {},
 	"launch": {

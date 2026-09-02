@@ -2,27 +2,32 @@
 <package>
   <metadata>
     <id>HC-LIB.IO-Abstractions</id>
-    <version>1.0.2203</version>
+    <version>1.1.2609</version>
     <title>IO Abstraction Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/io-abstraction-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library helps the programmer to work with I/O Ports on the Arduino Board.</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2021 Roman Gorielov</copyright>
-    <tags>native arduino atmelavr io</tags>
-    <dependencies/>
+    <description>I/O stream abstractions: IStream, BaseStream, and IoError. Uses Error from HC-LIB.System.</description>
+    <releaseNotes>1.1.2609: IoError; IStream/BaseStream use Error; StreamMode is enum class. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr io stream</tags>
+    <dependencies>
+      <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
+    </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
       <packageType name="Dependency" />
     </packageTypes>
   </metadata>
   <files>
-    <file src="src\ioerrdef.h" target="src\ioerrdef.h" />
+    <file src="src\errors\IoErrors.h" target="src\errors\IoErrors.h" />
+    <file src="src\errors\IoErrors.cpp" target="src\errors\IoErrors.cpp" />
     <file src="src\stream\IStream.h" target="src\stream\IStream.h" />
     <file src="src\stream\BaseStream.h" target="src\stream\BaseStream.h" />
     <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>
