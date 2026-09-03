@@ -22,7 +22,7 @@
 /// @note Native uses the OS local time.
 /// @note The Nano has no RTC. AVR libc time() also stays frozen unless
 ///       system_tick() is called at 1 Hz, which Arduino does not do. This
-///       provider seeds from __DATE__/__TIME__ (the sketch compile instant)
+///       provider seeds from PROGMEM __DATE__/__TIME__ (compile instant)
 ///       and advances with millis().
 class DateTimeProvider : public IDateTimeProvider
 {
@@ -34,7 +34,7 @@ class DateTimeProvider : public IDateTimeProvider
 #if defined(ARDUINO)
             static const time_t compiled = compileUnixTime();
             const time_t now = compiled + static_cast<time_t>(millis() / 1000UL);
-            tm broken;
+            tm broken = {};
             gmtime_r(&now, &broken);
             return fromTm(broken);
 #else
@@ -69,15 +69,23 @@ class DateTimeProvider : public IDateTimeProvider
         };
 
 #if defined(ARDUINO)
-        /// @brief Month 1-12 from the "Mmm" prefix of __DATE__.
+        static char flashChar(const char *t_src, const uint8_t t_index)
+        {
+            return static_cast<char>(pgm_read_byte(t_src + t_index));
+        };
+
+        /// @brief Month 1-12 from the "Mmm" prefix of a PROGMEM __DATE__.
         static int monthFromAbbrev(const char *t_date)
         {
-            switch(t_date[0])
+            const char first = flashChar(t_date, 0);
+            const char second = flashChar(t_date, 1);
+            const char third = flashChar(t_date, 2);
+            switch(first)
             {
-                case 'J': return t_date[1] == 'a' ? 1 : (t_date[2] == 'n' ? 6 : 7);
+                case 'J': return second == 'a' ? 1 : (third == 'n' ? 6 : 7);
                 case 'F': return 2;
-                case 'M': return t_date[2] == 'r' ? 3 : 5;
-                case 'A': return t_date[1] == 'p' ? 4 : 8;
+                case 'M': return third == 'r' ? 3 : 5;
+                case 'A': return second == 'p' ? 4 : 8;
                 case 'S': return 9;
                 case 'O': return 10;
                 case 'N': return 11;
@@ -86,21 +94,22 @@ class DateTimeProvider : public IDateTimeProvider
             }
         };
 
-        /// @brief Unix time of __DATE__ and __TIME__, treated as UTC so gmtime_r
-        ///        prints the compiler's local clock without a timezone offset.
+        /// @brief Unix time of PROGMEM __DATE__ and __TIME__, treated as UTC so
+        ///        gmtime_r prints the compiler's local clock without a timezone offset.
         static time_t compileUnixTime()
         {
-            const char *date = __DATE__;
-            const char *timeOfDay = __TIME__;
+            static const char date[] PROGMEM = __DATE__;
+            static const char timeOfDay[] PROGMEM = __TIME__;
 
             tm compiled = {};
-            compiled.tm_year = (date[7] - '0') * 1000 + (date[8] - '0') * 100
-                + (date[9] - '0') * 10 + (date[10] - '0') - 1900;
+            compiled.tm_year = (flashChar(date, 7) - '0') * 1000 + (flashChar(date, 8) - '0') * 100
+                + (flashChar(date, 9) - '0') * 10 + (flashChar(date, 10) - '0') - 1900;
             compiled.tm_mon = monthFromAbbrev(date) - 1;
-            compiled.tm_mday = (date[4] == ' ' ? 0 : (date[4] - '0') * 10) + (date[5] - '0');
-            compiled.tm_hour = (timeOfDay[0] - '0') * 10 + (timeOfDay[1] - '0');
-            compiled.tm_min = (timeOfDay[3] - '0') * 10 + (timeOfDay[4] - '0');
-            compiled.tm_sec = (timeOfDay[6] - '0') * 10 + (timeOfDay[7] - '0');
+            compiled.tm_mday = (flashChar(date, 4) == ' ' ? 0 : (flashChar(date, 4) - '0') * 10)
+                + (flashChar(date, 5) - '0');
+            compiled.tm_hour = (flashChar(timeOfDay, 0) - '0') * 10 + (flashChar(timeOfDay, 1) - '0');
+            compiled.tm_min = (flashChar(timeOfDay, 3) - '0') * 10 + (flashChar(timeOfDay, 4) - '0');
+            compiled.tm_sec = (flashChar(timeOfDay, 6) - '0') * 10 + (flashChar(timeOfDay, 7) - '0');
             return mk_gmtime(&compiled);
         };
 #endif
