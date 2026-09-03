@@ -6,29 +6,41 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(UNIT_TEST) 
+#if defined(ARDUINO) && !defined(UNIT_TEST)
+
+#include <Arduino.h>
+
+void setup()
+{
+}
+
+void loop()
+{
+    delay(100);
+}
+
+#endif
+
+#if defined(UNIT_TEST)
 
 #include <unity.h>
 #include "SRD05VDCSLTests.h"
 
-void dummyTest()
-{
-    TEST_ASSERT_EQUAL(2, 1+1);
-}
-
-void testsProcess() 
+void testsProcess()
 {
     UNITY_BEGIN();
 
-    /*****************************************
-     * SRD05VDCSL Tests
-     *****************************************/
     RUN_TEST(ShouldConvert_SRD05VDCSLToSRD05VDCSL);
     RUN_TEST(ShouldConvert_SRD05VDCSLToRelayDevice);
     RUN_TEST(ShouldConvert_SRD05VDCSLToDigitalDevice);
     RUN_TEST(ShouldConvert_SRD05VDCSLToIDevice);
     RUN_TEST(ShouldMove_SRD05VDCSLToSRD05VDCSL);
     RUN_TEST(ShouldAssignCopy_SRD05VDCSL);
+    RUN_TEST(ShouldSelfAssign_SRD05VDCSL);
+    RUN_TEST(ShouldConstruct_SRD05VDCSL_WithNullStream);
+    RUN_TEST(ShouldClassify_SRD05VDCSLAsRelay);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_OnAndOff);
+    RUN_TEST(Should_RaiseError_WhenStreamIsNull);
 
     UNITY_END();
 };
@@ -37,15 +49,13 @@ void testsProcess()
 
 void setUp(void)
 {
-    // STUB
 };
 
-void tearDown(void) 
+void tearDown(void)
 {
-    // STUB
 };
 
-int main( int argc, char **argv) 
+int main(int argc, char **argv)
 {
     testsProcess();
     return 0;
@@ -58,17 +68,12 @@ int main( int argc, char **argv)
 #include <Arduino.h>
 
 void setup() {
-    // Setup device
     Serial.begin(115200);
-
-    // NOTE!!! Wait for >2 secs
-    // if board doesn't support software reset via Serial.DTR/RTS
     delay(4000);
-
     testsProcess();
 };
 
-void loop() 
+void loop()
 {
     digitalWrite(13, HIGH);
     delay(100);

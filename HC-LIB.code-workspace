@@ -27,6 +27,14 @@
 		{
 			"name": "logger-lib",
 			"path": "logger-lib"
+		},
+		{
+			"name": "SRD05VDCSL-lib",
+			"path": "SRD05VDCSL-lib"
+		},
+		{
+			"name": "ZMPT101B-lib",
+			"path": "ZMPT101B-lib"
 		}
 	],
 	"settings": {},
