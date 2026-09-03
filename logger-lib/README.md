@@ -13,6 +13,7 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 - Persists output through __ILogPersister__ (__SerialLogPersister__ on Arduino).
 - Optional timestamps from __IDateTimeProvider__ (__getLocalDatetime__ returns __DateTime__ by value).
 - The application supplies __gLogLevel()__ as the requested minimum level.
+- Prefer __F("...")__ for format strings and __LogModule(F("..."))__ so AVR keeps those literals in flash.
 
 ### Environments
 Run commands from this folder (`logger-lib`).
@@ -42,7 +43,7 @@ pio test -e desktop-debug
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
 
 ### Sample
-The Serial demo is in the __sample__ folder. From `sample`:
+The Serial demo is in the __examples/LoggingExampleApp__ folder. From that folder:
 ```powershell
 pio run -e nano-board -t upload
 ```

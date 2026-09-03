@@ -43,6 +43,8 @@ void testsProcess()
     RUN_TEST(Log_ShouldNotLog_WhenPersisterIsNull);
     RUN_TEST(Log_ShouldLog_WithoutDateTime);
     RUN_TEST(Log_ShouldLog_WithFormatArguments);
+    RUN_TEST(Log_ShouldLog_WithFlashFormatString);
+    RUN_TEST(Log_ShouldLog_WithFlashModuleName);
 
     UNITY_END();
 };

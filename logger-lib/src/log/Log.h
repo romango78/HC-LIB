@@ -15,8 +15,20 @@
 #define _HC_LIB_LOG_H_
 
 #include <stdint.h>
+#include <stdarg.h>
+#include <stddef.h>
 #include "persisters/ILogPersister.h"
 #include "providers/IDateTimeProvider.h"
+
+#if defined(ARDUINO)
+#include <Arduino.h>
+#else
+/// @brief Host stand-in so F() / flash overloads compile in native tests.
+class __FlashStringHelper;
+#ifndef F
+#define F(string_literal) (reinterpret_cast<const __FlashStringHelper *>(string_literal))
+#endif
+#endif
 
 #define LOG_LEVEL_OFF 0 // Logging is disabled
 #define LOG_LEVEL_CRITICAL 1 // Indicates the system is unusable, or an error that is unrecoverable
@@ -39,6 +51,11 @@
     }
 #endif
 
+/// @brief Stack buffer for a format string copied from PROGMEM before fctprintf.
+#ifndef LOG_FLASH_FMT_MAX
+#define LOG_FLASH_FMT_MAX 64
+#endif
+
 /// @brief Severity of a log message. Higher values are more verbose.
 enum class LogLevel : uint8_t
 {
@@ -51,19 +68,26 @@ enum class LogLevel : uint8_t
 };
 
 /// @brief Optional source name written as [name] in the log line.
+/// @note Use LogModule(F("name")) so the name stays in flash on AVR.
+///       On AVR, F()/PSTR() is a statement-expression: construct the module
+///       inside a function (setup, or a function-local static), not at global scope.
 struct LogModule
 {
     const char *name;
+    bool inFlash;
+
+    constexpr LogModule()
+        : name(nullptr), inFlash(false) {};
+
+    constexpr LogModule(const char *t_name)
+        : name(t_name), inFlash(false) {};
+
+    LogModule(const __FlashStringHelper *t_name)
+        : name(reinterpret_cast<const char *>(t_name)), inFlash(true) {};
 };
 
-/// Whether the logging module is enabled automatically on boot.
-#define LOG_ENABLED_DEFAULT true
 #define LOG_LEVEL_REQUESTED_DEFAULT LogLevel::Debug
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-/// @brief Namespace for printf functions.
 namespace sout {
     #include "printf.h"
 }
@@ -71,34 +95,39 @@ namespace sout {
 /// @brief Application-provided minimum log level. Read once in the Log constructor.
 LogLevel gLogLevel();
 
-#ifdef __cplusplus
-}
-#endif
-
 /// @brief Formats and persists log lines through an ILogPersister.
 /// @note Log does not own the persister or the datetime provider.
+/// @note Prefer F("...") for format strings and LogModule(F("...")). On AVR those
+///       stay in flash; tiny printf cannot read PROGMEM, so formats are copied
+///       to a LOG_FLASH_FMT_MAX stack buffer.
 class Log
 {
     private:
-        static constexpr LogModule EMPTY_LOG_MODULE = { nullptr };
+        static constexpr LogModule EMPTY_LOG_MODULE {};
 
         ILogPersister *m_logPersister;
         IDateTimeProvider *m_dateTimeProvider;
-        const LogLevel m_logLevelRequested = LOG_LEVEL_REQUESTED_DEFAULT;
-        bool m_enabled = LOG_ENABLED_DEFAULT;
+        const LogLevel m_logLevelRequested;
+        bool m_enabled;
 
-        static constexpr const char* level_short_names[] = LOG_LEVEL_NAMES;
+        /// @brief Copies a PROGMEM (or RAM on host) string into _t_dest_.
+        void copyFromFlash(char *t_dest, const char *t_src, const size_t t_destSize) const;
 
-        static constexpr const char* GetLogLevelName(const LogLevel t_level)
-        {
-            return static_cast<uint8_t>(t_level) <= static_cast<uint8_t>(LogLevel::Debug)
-                ? level_short_names[static_cast<uint8_t>(t_level)]
-                : "?";
-        };
+        /// @brief Writes a PROGMEM (or RAM on host) string without formatting.
+        void writeFlash(const char *t_src);
+
+        /// @brief Writes the timestamp prefix from _t_datetime_.
+        void writeDateTime(const DateTime& t_datetime);
+
+        /// @brief Writes the level name and a trailing space.
+        void writeLevelPrefix(const LogLevel t_level);
+
+        /// @brief Writes [name] and a trailing space.
+        void writeModule(const LogModule& t_module);
     protected:
         template<typename... Args>
         void write(const LogLevel t_level, const LogModule t_module,
-            const char* t_format, const Args&... args) noexcept
+            const char* t_format, const bool t_formatInFlash, const Args&... args) noexcept
         {
             if(!m_enabled || !t_format)
             {
@@ -111,27 +140,27 @@ class Log
 
             if(m_dateTimeProvider)
             {
-                DateTime dt = m_dateTimeProvider->getLocalDatetime();
-                sout::fctprintf(&Log::writeBounce, this,
-                    "%i-%02i-%02i %02i:%02i:%02i ",
-                    dt.year,
-                    dt.month,
-                    dt.day,
-                    dt.hours,
-                    dt.minutes,
-                    dt.seconds);
+                writeDateTime(m_dateTimeProvider->getLocalDatetime());
             }
 
-            const char* prefix = Log::GetLogLevelName(t_level);
-            sout::fctprintf(&Log::writeBounce, this, "%s ", prefix);
+            writeLevelPrefix(t_level);
 
             if(t_module.name)
             {
-                sout::fctprintf(&Log::writeBounce, this, "[%s] ", t_module.name);
+                writeModule(t_module);
             }
 
-            sout::fctprintf(&Log::writeBounce, this, t_format, args...);
-            sout::fctprintf(&Log::writeBounce, this, "\n");
+            if(t_formatInFlash)
+            {
+                char fmt[LOG_FLASH_FMT_MAX];
+                copyFromFlash(fmt, t_format, sizeof(fmt));
+                sout::fctprintf(&Log::writeBounce, this, fmt, args...);
+            }
+            else
+            {
+                sout::fctprintf(&Log::writeBounce, this, t_format, args...);
+            }
+            write('\n');
         };
 
         void write(const char t_character)
@@ -169,9 +198,21 @@ class Log
         };
 
         template<typename... Args>
+        void debug(const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            debug(EMPTY_LOG_MODULE, t_format, args...);
+        };
+
+        template<typename... Args>
         void debug(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevel::Debug, t_module, t_format, args...);
+            write(LogLevel::Debug, t_module, t_format, false, args...);
+        };
+
+        template<typename... Args>
+        void debug(const LogModule t_module, const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            write(LogLevel::Debug, t_module, reinterpret_cast<const char*>(t_format), true, args...);
         };
 
         template<typename... Args>
@@ -181,9 +222,21 @@ class Log
         };
 
         template<typename... Args>
+        void info(const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            info(EMPTY_LOG_MODULE, t_format, args...);
+        };
+
+        template<typename... Args>
         void info(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevel::Info, t_module, t_format, args...);
+            write(LogLevel::Info, t_module, t_format, false, args...);
+        };
+
+        template<typename... Args>
+        void info(const LogModule t_module, const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            write(LogLevel::Info, t_module, reinterpret_cast<const char*>(t_format), true, args...);
         };
 
         template<typename... Args>
@@ -193,9 +246,21 @@ class Log
         };
 
         template<typename... Args>
+        void warn(const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            warn(EMPTY_LOG_MODULE, t_format, args...);
+        };
+
+        template<typename... Args>
         void warn(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevel::Warn, t_module, t_format, args...);
+            write(LogLevel::Warn, t_module, t_format, false, args...);
+        };
+
+        template<typename... Args>
+        void warn(const LogModule t_module, const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            write(LogLevel::Warn, t_module, reinterpret_cast<const char*>(t_format), true, args...);
         };
 
         template<typename... Args>
@@ -205,9 +270,21 @@ class Log
         };
 
         template<typename... Args>
+        void error(const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            error(EMPTY_LOG_MODULE, t_format, args...);
+        };
+
+        template<typename... Args>
         void error(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevel::Error, t_module, t_format, args...);
+            write(LogLevel::Error, t_module, t_format, false, args...);
+        };
+
+        template<typename... Args>
+        void error(const LogModule t_module, const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            write(LogLevel::Error, t_module, reinterpret_cast<const char*>(t_format), true, args...);
         };
 
         template<typename... Args>
@@ -217,9 +294,21 @@ class Log
         };
 
         template<typename... Args>
+        void fatal(const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            fatal(EMPTY_LOG_MODULE, t_format, args...);
+        };
+
+        template<typename... Args>
         void fatal(const LogModule t_module, const char* t_format, const Args&... args) noexcept
         {
-            write(LogLevel::Critical, t_module, t_format, args...);
+            write(LogLevel::Critical, t_module, t_format, false, args...);
+        };
+
+        template<typename... Args>
+        void fatal(const LogModule t_module, const __FlashStringHelper* t_format, const Args&... args) noexcept
+        {
+            write(LogLevel::Critical, t_module, reinterpret_cast<const char*>(t_format), true, args...);
         };
 };
 

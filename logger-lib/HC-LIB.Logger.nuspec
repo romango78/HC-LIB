@@ -9,7 +9,7 @@
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/logger-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Arduino logger: Log, LogLevel, ILogPersister, and IDateTimeProvider.</description>
-    <releaseNotes>1.0.2609: PlatformIO at library root; LogLevel is an enum class; IDateTimeProvider returns DateTime by value.</releaseNotes>
+    <releaseNotes>1.0.2609: PlatformIO at library root; LogLevel enum class; F()/PROGMEM format strings and module names.</releaseNotes>
     <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr logger log</tags>
     <dependencies/>

@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - _LogLevel_ is an _enum class_ (_Off_, _Critical_, _Error_, _Warn_, _Info_, _Debug_).
 - _IDateTimeProvider::getLocalDatetime_ is _const_ and returns _DateTime_ by value.
 - _SerialLogPersister_ is compiled only on Arduino.
+- _Log_ accepts _F()_ / PROGMEM format strings and _LogModule(F("..."))_. On AVR, built-in format and level names stay in flash.
 
 ## [1.0.2110]
 ### Added

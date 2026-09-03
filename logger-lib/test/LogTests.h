@@ -22,16 +22,14 @@
 #include "FakeLogPersister.h"
 #include "log/Log.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include <stdarg.h>
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
 namespace sout {
     #include "printf.h"
     #include "printf.c"
 }
-#ifdef __cplusplus
-}
-#endif
 
 #ifndef SOUT_BUFFER_SIZE
 #define SOUT_BUFFER_SIZE 128U
@@ -242,6 +240,35 @@ void Log_ShouldLog_WithFormatArguments()
     Log logger(&persister, &provider);
 
     logger.info("Value %d.", 42);
+
+    TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
+}
+
+void Log_ShouldLog_WithFlashFormatString()
+{
+    char expectedValue[] = "1900-01-01 00:00:00 INFO Flash 42.\n";
+
+    ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
+
+    logger.info(F("Flash %d."), 42);
+
+    TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
+}
+
+void Log_ShouldLog_WithFlashModuleName()
+{
+    char expectedValue[] = "1900-01-01 00:00:00 INFO [Flash Module] Test message.\n";
+    LogModule flashModule(F("Flash Module"));
+
+    ResetOutputBuffer();
+    FakeDateTimeProvider provider;
+    FakeLogPersister persister;
+    Log logger(&persister, &provider);
+
+    logger.info(flashModule, F("Test message."));
 
     TEST_ASSERT_EQUAL_STRING(expectedValue, ms_outputBuffer);
 }

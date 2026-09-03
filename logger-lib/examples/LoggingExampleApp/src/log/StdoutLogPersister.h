@@ -6,26 +6,29 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _HC_LIB_FAKE_LOG_PERSISTER_H_
-#define _HC_LIB_FAKE_LOG_PERSISTER_H_
+#ifndef _STDOUT_LOG_PERSISTER_H_
+#define _STDOUT_LOG_PERSISTER_H_
 
+#if !defined(ARDUINO)
+
+#include <cstdio>
 #include "log/persisters/ILogPersister.h"
 
-#include <stdarg.h>
-#include <stddef.h>
-namespace sout {
-    #include "printf.h"
-}
-
-class FakeLogPersister : public ILogPersister
+/// @brief Native stand-in for SerialLogPersister: writes to stdout.
+class StdoutLogPersister : public ILogPersister
 {
     public:
-        FakeLogPersister() = default;
+        StdoutLogPersister() = default;
 
         void write(const char t_character) override
         {
-            sout::_putchar(t_character);
+            putchar(t_character);
+            if(t_character == '\n')
+            {
+                fflush(stdout);
+            }
         };
 };
 
+#endif
 #endif
