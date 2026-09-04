@@ -114,4 +114,80 @@ class FakeStream : public AnalogStream
         }
 };
 
+/// @brief Analog stream that always returns the same ADC value.
+class FakeConstantStream : public AnalogStream
+{
+    private:
+        const uint16_t m_value;
+        bool m_isSetToRead;
+        bool m_hasError;
+    public:
+        explicit FakeConstantStream(const uint16_t t_value)
+            : m_value(t_value), m_isSetToRead(false), m_hasError(false)
+        {};
+
+        ~FakeConstantStream() = default;
+
+        void begin(const StreamMode t_mode) override
+        {
+            m_hasError = false;
+            m_isSetToRead = (t_mode == StreamMode::Read);
+        };
+
+        uint16_t read() override
+        {
+            if (canRead())
+            {
+                return m_value;
+            }
+            m_hasError = true;
+            return 0;
+        };
+
+        void write(const uint16_t t_data) override {};
+
+        void end() override
+        {
+            m_isSetToRead = false;
+            m_hasError = false;
+        };
+
+        uint8_t getState() override
+        {
+            return 0;
+        }
+
+        bool canRead() const override
+        {
+            return m_isSetToRead;
+        };
+
+        bool canWrite() const override
+        {
+            return false;
+        };
+
+        bool hasError() const override
+        {
+            return m_hasError;
+        };
+
+        Error getLastError() const override
+        {
+            if(hasError())
+            {
+                return to_error(IoError::StreamClosed);
+            }
+            return to_error(GenericError::NoError);
+        };
+
+        IStream<uint16_t>* clone() const override
+        {
+            auto stream = new FakeConstantStream(m_value);
+            stream->m_isSetToRead = m_isSetToRead;
+            stream->m_hasError = m_hasError;
+            return stream;
+        }
+};
+
 #endif

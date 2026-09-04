@@ -17,12 +17,20 @@
 class FakeTimer : public ITimer
 {
     private:
+        const uint16_t m_tacts;
         uint16_t m_iterationCount;
         uint16_t m_currentIteration;
         bool m_isElapsed;
         bool m_isStarted;
     public:
-        FakeTimer() : m_isElapsed(false), m_isStarted(false)
+        FakeTimer()
+            : FakeTimer(TIMER_TACTS)
+        {}
+
+        /// @brief Uses _t_tacts_ samples per window. 0 means isElapsed() is true immediately.
+        explicit FakeTimer(const uint16_t t_tacts)
+            : m_tacts(t_tacts), m_iterationCount(t_tacts),
+              m_currentIteration(0), m_isElapsed(false), m_isStarted(false)
         {}
 
         uint32_t getInterval() const override
@@ -32,7 +40,7 @@ class FakeTimer : public ITimer
 
         void setInterval(const uint32_t t_interval) override
         {
-            m_iterationCount = TIMER_TACTS;
+            m_iterationCount = m_tacts;
         }
 
         void start() override

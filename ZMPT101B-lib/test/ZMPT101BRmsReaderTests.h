@@ -52,7 +52,91 @@ void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
 
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_EQUAL(VOLTAGE_SENSOR_TYPE, result.getValue().sensor.type);
     TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), "No errors expected.");
+}
+
+void ZMPT101BRmsReader_Read_WhenStreamAlreadyReadable()
+{
+    const float expectedValue = 1357.688158f;
+
+    FakeTimer timer;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
+    sensor.zero = 512;
+    sensor.stream->begin(StreamMode::Read);
+    ZMPT101BRmsReader sut(&timer);
+
+    Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
+
+    TEST_ASSERT_TRUE(result.hasValue());
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_FALSE(sensor.stream->hasError());
+}
+
+void ZMPT101BRmsReader_Read_WhenTimerAlreadyStarted()
+{
+    const float expectedValue = 1357.688158f;
+
+    FakeTimer timer;
+    timer.start();
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
+    sensor.zero = 512;
+    ZMPT101BRmsReader sut(&timer);
+
+    Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
+
+    TEST_ASSERT_TRUE(result.hasValue());
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_FALSE(timer.isStarted());
+}
+
+void ZMPT101BRmsReader_Read_Twice()
+{
+    const float expectedValue = 1357.688158f;
+
+    FakeTimer timer;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
+    sensor.zero = 512;
+    ZMPT101BRmsReader sut(&timer);
+
+    Expected<ZMPT101B_ACVoltage, Error> first = sut.read(sensor);
+    Expected<ZMPT101B_ACVoltage, Error> second = sut.read(sensor);
+
+    TEST_ASSERT_TRUE(first.hasValue());
+    TEST_ASSERT_TRUE(second.hasValue());
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, expectedValue, first.getValue().data);
+    TEST_ASSERT_FALSE(sensor.stream->hasError());
+}
+
+void ZMPT101BRmsReader_Read_WhenTimerElapsedImmediately()
+{
+    const float expectedValue = -353.55339059f;
+
+    FakeTimer timer(0);
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512));
+    sensor.zero = 512;
+    ZMPT101BRmsReader sut(&timer);
+
+    Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
+
+    TEST_ASSERT_TRUE(result.hasValue());
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data,
+        "No samples keep max=0 and min=1000.");
+}
+
+void ZMPT101BRmsReader_Read_ConstantMidScale()
+{
+    FakeTimer timer;
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512));
+    sensor.zero = 512;
+    ZMPT101BRmsReader sut(&timer);
+
+    Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
+
+    TEST_ASSERT_TRUE(result.hasValue());
+    TEST_ASSERT_FALSE(sensor.stream->hasError());
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, 1.13137085f, result.getValue().data,
+        "Constant zero offset: max stays 0, min is PolynomialEquation(0).");
 }
 
 #endif
