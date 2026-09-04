@@ -38,9 +38,21 @@ void testsProcess()
     RUN_TEST(ShouldAssignCopy_SRD05VDCSL);
     RUN_TEST(ShouldSelfAssign_SRD05VDCSL);
     RUN_TEST(ShouldConstruct_SRD05VDCSL_WithNullStream);
+    RUN_TEST(ShouldCopy_SRD05VDCSL_WithNullStream);
+    RUN_TEST(ShouldCopy_SRD05VDCSL_FromMovedSource);
+    RUN_TEST(ShouldAssign_SRD05VDCSL_FromNullStream);
+    RUN_TEST(ShouldAssign_SRD05VDCSL_FromMovedSource);
     RUN_TEST(ShouldClassify_SRD05VDCSLAsRelay);
     RUN_TEST(ShouldSwitch_SRD05VDCSL_OnAndOff);
+    RUN_TEST(ShouldGetState_SRD05VDCSL_WhenInitiallyOn);
+    RUN_TEST(ShouldGetState_SRD05VDCSL_WhenInitiallyOff);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_Repeatedly_WhenStreamAlreadyWritable);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_AfterCopy);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_AfterMove);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_AfterAssign);
+    RUN_TEST(ShouldSwitch_SRD05VDCSL_ViaRelayDevice);
     RUN_TEST(Should_RaiseError_WhenStreamIsNull);
+    RUN_TEST(Should_RaiseError_WhenCopiedFromMovedSource);
 
     UNITY_END();
 };
@@ -49,6 +61,7 @@ void testsProcess()
 
 void setUp(void)
 {
+    g_PortState = 0;
 };
 
 void tearDown(void)

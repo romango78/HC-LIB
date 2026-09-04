@@ -134,22 +134,180 @@ void ShouldClassify_SRD05VDCSLAsRelay()
     TEST_ASSERT_FALSE(device::is_analog(sut));
 }
 
+void ShouldCopy_SRD05VDCSL_WithNullStream()
+{
+    SRD05VDCSLDevice source(7, nullptr);
+
+    SRD05VDCSLDevice sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.category, sut.category);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL(sut.stream);
+}
+
+void ShouldCopy_SRD05VDCSL_FromMovedSource()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    SRD05VDCSLDevice owner(std::move(source));
+
+    SRD05VDCSLDevice sut(source);
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from device should not clone the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
+void ShouldAssign_SRD05VDCSL_FromNullStream()
+{
+    SRD05VDCSLDevice source(7, nullptr);
+    SRD05VDCSLDevice sut = createSRD05VDCSL();
+
+    sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream device should clear the stream.");
+}
+
+void ShouldAssign_SRD05VDCSL_FromMovedSource()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    SRD05VDCSLDevice owner(std::move(source));
+    SRD05VDCSLDevice sut = createSRD05VDCSL2();
+
+    sut = source;
+
+    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.pin, sut.pin);
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a moved-from device should clear the stream.");
+    TEST_ASSERT_NOT_NULL(owner.stream);
+}
+
 void ShouldSwitch_SRD05VDCSL_OnAndOff()
 {
     SRD05VDCSLDevice sut = createSRD05VDCSL();
     RelayDeviceController controller;
+    FakeDigitalStream* stream = static_cast<FakeDigitalStream*>(sut.stream);
 
     Error offError = controller.off(sut);
     TEST_ASSERT_FALSE(offError);
     Expected<RelayState, Error> offState = controller.getState(sut);
     TEST_ASSERT_TRUE(offState.hasValue());
     TEST_ASSERT_TRUE(offState.getValue() == RelayState::Off);
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::Off), stream->getWrittenValue(), "Off writes HIGH.");
+    TEST_ASSERT_FALSE(stream->hasError());
 
     Error onError = controller.on(sut);
     TEST_ASSERT_FALSE(onError);
     Expected<RelayState, Error> onState = controller.getState(sut);
     TEST_ASSERT_TRUE(onState.hasValue());
     TEST_ASSERT_TRUE(onState.getValue() == RelayState::On);
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::On), stream->getWrittenValue(), "On writes LOW.");
+    TEST_ASSERT_FALSE(stream->hasError());
+}
+
+void ShouldGetState_SRD05VDCSL_WhenInitiallyOn()
+{
+    FakeDigitalStream* stream = new FakeDigitalStream(static_cast<uint8_t>(RelayState::On));
+    SRD05VDCSLDevice sut(5, stream);
+    RelayDeviceController controller;
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::On);
+    TEST_ASSERT_FALSE(stream->hasError());
+}
+
+void ShouldGetState_SRD05VDCSL_WhenInitiallyOff()
+{
+    FakeDigitalStream* stream = new FakeDigitalStream(static_cast<uint8_t>(RelayState::Off));
+    SRD05VDCSLDevice sut(5, stream);
+    RelayDeviceController controller;
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::Off);
+    TEST_ASSERT_FALSE(stream->hasError());
+}
+
+void ShouldSwitch_SRD05VDCSL_Repeatedly_WhenStreamAlreadyWritable()
+{
+    SRD05VDCSLDevice sut = createSRD05VDCSL();
+    RelayDeviceController controller;
+    FakeDigitalStream* stream = static_cast<FakeDigitalStream*>(sut.stream);
+
+    TEST_ASSERT_FALSE(controller.on(sut));
+    TEST_ASSERT_FALSE(controller.off(sut));
+    TEST_ASSERT_FALSE(controller.on(sut));
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::On);
+    TEST_ASSERT_EQUAL(static_cast<uint8_t>(RelayState::On), stream->getWrittenValue());
+    TEST_ASSERT_TRUE(stream->canWrite());
+    TEST_ASSERT_FALSE(stream->hasError());
+}
+
+void ShouldSwitch_SRD05VDCSL_AfterCopy()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    SRD05VDCSLDevice sut = source;
+    RelayDeviceController controller;
+
+    TEST_ASSERT_FALSE(controller.on(sut));
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::On);
+    TEST_ASSERT_TRUE(source.stream != sut.stream);
+}
+
+void ShouldSwitch_SRD05VDCSL_AfterMove()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    DigitalStream* const stream = source.stream;
+    SRD05VDCSLDevice sut(std::move(source));
+    RelayDeviceController controller;
+
+    TEST_ASSERT_FALSE(controller.off(sut));
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::Off);
+    TEST_ASSERT_EQUAL(stream, sut.stream);
+}
+
+void ShouldSwitch_SRD05VDCSL_AfterAssign()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    SRD05VDCSLDevice sut = createSRD05VDCSL2();
+    RelayDeviceController controller;
+
+    sut = source;
+    TEST_ASSERT_FALSE(controller.on(sut));
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::On);
+    TEST_ASSERT_TRUE(source.stream != sut.stream);
+}
+
+void ShouldSwitch_SRD05VDCSL_ViaRelayDevice()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    RelayDevice device = source;
+    RelayDeviceController controller;
+
+    TEST_ASSERT_FALSE(controller.on(device));
+    TEST_ASSERT_FALSE(controller.off(device));
+
+    Expected<RelayState, Error> state = controller.getState(device);
+    TEST_ASSERT_TRUE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getValue() == RelayState::Off);
 }
 
 void Should_RaiseError_WhenStreamIsNull()
@@ -163,6 +321,22 @@ void Should_RaiseError_WhenStreamIsNull()
     Expected<RelayState, Error> state = controller.getState(sut);
     TEST_ASSERT_FALSE(state.hasValue());
     TEST_ASSERT_TRUE(state.getError() == IoError::StreamNotCreated);
+}
+
+void Should_RaiseError_WhenCopiedFromMovedSource()
+{
+    SRD05VDCSLDevice source = createSRD05VDCSL();
+    SRD05VDCSLDevice owner(std::move(source));
+    SRD05VDCSLDevice sut(source);
+    RelayDeviceController controller;
+
+    TEST_ASSERT_TRUE(controller.on(sut) == IoError::StreamNotCreated);
+    TEST_ASSERT_TRUE(controller.off(sut) == IoError::StreamNotCreated);
+
+    Expected<RelayState, Error> state = controller.getState(sut);
+    TEST_ASSERT_FALSE(state.hasValue());
+    TEST_ASSERT_TRUE(state.getError() == IoError::StreamNotCreated);
+    TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
 #endif
