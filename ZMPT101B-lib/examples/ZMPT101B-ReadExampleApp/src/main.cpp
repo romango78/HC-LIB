@@ -21,9 +21,11 @@
 #ifndef F
 #define F(string_literal) (string_literal)
 #endif
+
 #ifndef A0
 #define A0 14
 #endif
+
 #endif
 
 #if defined(ARDUINO)
