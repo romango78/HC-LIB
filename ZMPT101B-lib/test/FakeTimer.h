@@ -6,8 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _FAKE_TIMER_H_
-#define _FAKE_TIMER_H_
+#ifndef _HC_LIB_FAKE_TIMER_H_
+#define _HC_LIB_FAKE_TIMER_H_
 
 #include <inttypes.h>
 #include "timers/ITimer.h"
@@ -29,19 +29,19 @@ class FakeTimer : public ITimer
         {
             return m_iterationCount;
         }
-        
-        void setInterval(uint32_t t_interval) override
+
+        void setInterval(const uint32_t t_interval) override
         {
             m_iterationCount = TIMER_TACTS;
         }
-        
+
         void start() override
         {
             m_currentIteration = 1;
             m_isElapsed = false;
             m_isStarted = true;
         }
-        
+
         void stop() override
         {
             m_isElapsed = false;

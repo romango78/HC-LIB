@@ -6,12 +6,13 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _FAKE_STREAM_H_
-#define _FAKE_STREAM_H_
+#ifndef _HC_LIB_FAKE_STREAM_H_
+#define _HC_LIB_FAKE_STREAM_H_
 
 #include <inttypes.h>
 #include <stdlib.h>
 #include "stream/AnalogStream.h"
+#include "errors/IoErrors.h"
 #include "FakeTimer.h"
 
 class FakeStream : public AnalogStream
@@ -25,10 +26,10 @@ class FakeStream : public AnalogStream
         bool m_hasError;
     public:
         FakeStream(const uint16_t t_minValue, const uint16_t t_maxValue)
-            : m_minValue(t_minValue), m_maxValue(t_maxValue), 
+            : m_minValue(t_minValue), m_maxValue(t_maxValue),
               m_isSetToRead(false), m_hasError(false)
         {
-            m_stepValue = static_cast<uint16_t>((abs(t_maxValue) - abs(t_minValue))/TIMER_TACTS) + 1;
+            m_stepValue = static_cast<uint16_t>((abs(t_maxValue) - abs(t_minValue)) / TIMER_TACTS) + 1;
         };
 
         ~FakeStream() = default;
@@ -36,14 +37,7 @@ class FakeStream : public AnalogStream
         void begin(const StreamMode t_mode) override
         {
             m_hasError = false;
-            if(t_mode == StreamMode::Read)
-            {
-                m_isSetToRead = true;
-            }
-            else
-            {
-                m_isSetToRead = false;
-            };
+            m_isSetToRead = (t_mode == StreamMode::Read);
             m_currentValue = m_minValue - m_stepValue;
         };
 
@@ -52,7 +46,7 @@ class FakeStream : public AnalogStream
             if (canRead())
             {
                 m_currentValue += m_stepValue;
-                
+
                 if(m_currentValue > m_maxValue)
                 {
                     m_currentValue = m_maxValue;
@@ -63,15 +57,13 @@ class FakeStream : public AnalogStream
                 {
                     m_currentValue = m_minValue;
                     m_stepValue = -m_stepValue;
-                }                
+                }
 
                 return m_currentValue;
             }
-            else
-            {
-                m_hasError = true;
-                return 0;
-            }
+
+            m_hasError = true;
+            return 0;
         };
 
         void write(const uint16_t t_data) override {};
@@ -87,28 +79,28 @@ class FakeStream : public AnalogStream
             return 0;
         }
 
-        bool canRead() override
+        bool canRead() const override
         {
             return m_isSetToRead;
         };
 
-        bool canWrite() override
+        bool canWrite() const override
         {
             return false;
         };
-        
-        bool hasError() override
+
+        bool hasError() const override
         {
             return m_hasError;
         };
 
-        err_t getLastError() override
+        Error getLastError() const override
         {
             if(hasError())
             {
-                return STREAM_CLOSED_IO_ERROR;
-            };
-            return NO_ERROR;
+                return to_error(IoError::StreamClosed);
+            }
+            return to_error(GenericError::NoError);
         };
 
         IStream<uint16_t>* clone() const override
@@ -117,9 +109,9 @@ class FakeStream : public AnalogStream
             stream->m_isSetToRead = m_isSetToRead;
             stream->m_currentValue = m_currentValue;
             stream->m_hasError = m_hasError;
-
+            stream->m_stepValue = m_stepValue;
             return stream;
-        }        
+        }
 };
 
 #endif

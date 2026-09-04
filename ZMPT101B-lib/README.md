@@ -1,65 +1,153 @@
 # HC-LIB
-## Arduino ZMPT101B Library v1.0.2203
-This __library__ contains ZMPT101B sensor definitions and True RMS/RMS readers.
+## Arduino ZMPT101B Library v1.0.2609
+This __library__ defines __ZMPT101BSensor__ and RMS / True RMS readers for the ZMPT101B AC voltage module.
+
+The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 
 ### Dependencies
-- HC-LIB.System v1.0.2203
-- HC-LIB.IO     v1.0.2203
-- HC-LIB.Device.Abstractions     v1.0.2111
+- HC-LIB.Devices v1.1.2609
 
 ### Features
-- Defines error type and constants for ZMPT101B sensor.
-- Implemented True RMS/RMS readers for reading voltage from the ZMPT101B sensor.
+- Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin, with a calibrated ADC __zero__.
+- __ZMPT101B::calibrate__ averages samples into that zero.
+- __ZMPT101BRmsReader__ and __ZMPT101BTrueRmsReader__ return __Expected{ZMPT101B_ACVoltage, Error}__.
+- Errors are __DeviceError::TimerIsNotInitialized__ and __IoError::StreamNotCreated__.
 
 ### Usage
-1. Connect __ZMPT101B__ sensor to __Arduino__ board according the schema (see below). The ZMPT101B sensor can be connected to any _analog_ port.
-![ZMPT101B & Arduino](./documents/ZMPT101B-Arduino.jpg)
-![ZMPT101B](./documents/ZMPT101B-Pinout.jpg)
-2. Create a sketch and upload it to Arduino. Sketch should contain the following sections:
-    - ZMPT101B sensor initialization code in the `setup()` method.
+1. Connect __ZMPT101B__ to an analog pin (see __How to connect device to Arduino board__).
+2. Create a sketch. It should contain the following sections:
+    - ZMPT101B sensor initialization in `setup()`:
     ```c++
-    IPortAdapter<int> *adapter = (IPortAdapter<int>*)new AnalogPortAdapter(ZMPT101B_PIN);
-    IStream<uint16_t> *stream = (IStream<uint16_t> *)new AnalogStream(adapter);
-
-    sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
+    IPortAdapter<int> *adapter = new AnalogPortAdapter(ZMPT101B_PIN);
+    IStream<uint16_t> *stream = new AnalogStream(adapter);
+    ZMPT101BSensor *sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
+    ZMPT101B::calibrate(sensor);
     ```
-    - Initialize the corresponded reader for reading RMS or True RMS data from sensor:
+    - Initialize the corresponding reader for RMS or True RMS:
         - for RMS:
         ```c++
-        ZMPT101BRmsReader* rmsReader;
-        ITimer *timer = (ITimer *)new ArduinoTimer();
-        rmsReader = new ZMPT101BRmsReader(timer);
+        ITimer *timer = new ArduinoTimer();
+        ZMPT101BRmsReader *rmsReader = new ZMPT101BRmsReader(timer);
         ```
         - or for True RMS:
         ```c++
-        ZMPT101BTrueRmsReader* trueRmsReader;
-        ITimer *timer = (ITimer *)new ArduinoTimer();
-        trueRmsReader = new ZMPT101BTrueRmsReader(timer);
+        ITimer *timer = new ArduinoTimer();
+        ZMPT101BTrueRmsReader *trueRmsReader = new ZMPT101BTrueRmsReader(timer);
         ```
-    - Read data from the sensor by using:
+    - Read data from the sensor:
         - RMS reader
         ```c++
-        ZMPT101B_ACVoltage sensorData1 = rmsReader->read(sensor);
+        Expected<ZMPT101B_ACVoltage, Error> sensorData1 = rmsReader->read(*sensor);
+        if (sensorData1.hasValue())
+        {
+            float volts = sensorData1.getValue().data;
+        }
+        else
+        {
+            Error error = sensorData1.getError();
+        }
         ```
         - or True RMS reader
         ```c++
-        ZMPT101B_ACVoltage sensorData2 = trueRmsReader->read(sensor);
+        Expected<ZMPT101B_ACVoltage, Error> sensorData2 = trueRmsReader->read(*sensor);
+        if (sensorData2.hasValue())
+        {
+            float volts = sensorData2.getValue().data;
+        }
+        else
+        {
+            Error error = sensorData2.getError();
+        }
         ```
 
-### Sample
-The __sample application__ is stored in __sample__ folder. 
-The `pio run -e nanonew -t upload` command is used for compiling and upload the __sample application__.
+### Device purpose
+The __ZMPT101B__ is an isolated single-phase AC voltage sensor. A 2 mA : 2 mA voltage transformer and an onboard op-amp turn mains voltage into a 0–5 V analog waveform centered near mid-scale. The Arduino ADC samples that waveform; this library converts the samples to RMS or True RMS volts.
 
-See the included examples and tests for further usage examples.
+Use it for energy monitors, under/over-voltage detection, and other sketches that need a safe, isolated AC voltage reading.
+
+### Device characteristics
+Values below are typical for the common ZMPT101B breakout (confirm the marking on your board).
+
+| Item | Typical value |
+|---|---|
+| Supply | 5 V DC |
+| Transformer | ZMPT101B, 2 mA : 2 mA |
+| Analog out | ~0–5 V, mid-point ~2.5 V (ADC ~512 at 10-bit) |
+| AC input | screw terminals L / N (mains, isolated from the MCU) |
+| Gain | onboard multi-turn potentiometer |
+| Network frequency | 50 Hz (`AC_NETWORK_FREQUENCY`) |
+| Sample window | two AC periods (40 ms at 50 Hz) |
+
+Calibrate with no AC (or a known idle waveform) so __zero__ tracks the module mid-point. The onboard trimmer sets gain; the example's polynomial maps ADC offset from zero to volts.
+
+### How to connect device to Arduino board
+The example uses a ZMPT101B module on an Arduino Nano (ATmega328, new bootloader). Control-side wiring:
+
+| Module pin | Arduino Nano | Role |
+|---|---|---|
+| 5V / VCC | 5V | Module supply |
+| GND | GND | Common ground |
+| OUT | A0 | Analog sample (`ZMPT101B_PIN` in the example) |
+
+AC side (screw terminals, isolated from the MCU):
+
+| Terminal | Role |
+|---|---|
+| L | Line of the voltage under test |
+| N | Neutral of the voltage under test |
+
+![ZMPT101B & Arduino](./docs/ZMPT101B-Arduino.jpg)
+![ZMPT101B pinout](./docs/ZMPT101B-Pinout.jpg)
+
+Mains on L/N is hazardous. Keep that wiring away from the Nano. Fuse the measured circuit and do not touch the screw terminals while they are live.
+
+1. Wire 5V, GND, and OUT as in the table. Leave L/N disconnected until the analog output looks mid-scale on A0.
+2. Adjust the trimmer so a known AC voltage matches the printed RMS (optional).
+3. Upload __examples/ZMPT101BExampleApp__ (`pio run -e nano-board -t upload`). Serial is `115200` on `COM3`.
+4. The sketch calibrates, then prints `220V`, RMS, and True RMS every 500 ms.
+
+To use another analog pin, change `ZMPT101B_PIN` and move the OUT wire to that pin.
+
+### Environments
+Run commands from this folder (`ZMPT101B-lib`).
+
+| Environment | Platform | Purpose |
+|---|---|---|
+| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware: `setup()` / `loop()` from __test/tests_runner.cpp__ |
+| `desktop` | native | Unity tests |
+| `desktop-debug` | native | Unity tests with debug symbols (`-O0 -ggdb3`). Default. |
+
+__test/tests_runner.cpp__ is the single entry point: a firmware stub when `UNIT_TEST` is off, and the Unity runner when it is on.
+
+### Build
+```powershell
+pio run -e nano-board
+pio run -e nano-board -t upload
+pio run -e desktop-debug
+```
+
+Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`.
 
 ### Unit tests
-The `pio test -e {environment}` command is used for running unit tests on the specified {environment}. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details
+```powershell
+pio test -e desktop-debug
+```
+
+Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
+
+### Sample
+The voltage demo is in the __examples/ZMPT101BExampleApp__ folder. From that folder:
+```powershell
+pio run -e nano-board -t upload
+```
 
 ### Packages
-* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package.
-* The `pio package publish {local_repo_folder}/HC-LIB.ZMPT101B-1.0.2111.tar.gz` command is used for publishing PlatformIO package.
+Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).
 
-* The `nuget.exe pack HC-LIB.ZMPT101B.nuspec -outputdirectory {local_repo}` command is used for creating NuGet package and store it in the {local_repo} folder.
+* The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package `HC-LIB.ZMPT101B-{version}.tar.gz` in the `{local_repo_folder}` folder.
+* The `pio package publish {local_repo_folder}/HC-LIB.ZMPT101B-{version}.tar.gz` command is used for publishing PlatformIO package.
+
+* The `nuget.exe pack HC-LIB.ZMPT101B.nuspec -outputdirectory {local_repo_folder}` command is used for creating NuGet package and store it in the `{local_repo_folder}` folder.
 * The `nuget.exe install HC-LIB.ZMPT101B` command is used for installing NuGet package.
 
 ### Changelog

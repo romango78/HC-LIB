@@ -2,18 +2,22 @@
 <package>
   <metadata>
     <id>HC-LIB.ZMPT101B</id>
-    <version>1.0.2203</version>
+    <version>1.0.2609</version>
     <title>Arduino ZMPT101B Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/ZMPT101B-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This library contains fundamental classes and base classes that define commonly-used data types.</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2021 Roman Gorielov</copyright>
-    <tags>native arduino atmelavr common system</tags>
+    <description>ZMPT101B AC voltage sensor with RMS and True RMS readers using Error/Expected.</description>
+    <releaseNotes>1.0.2609: PlatformIO at library root; readers return Expected. Requires Devices 1.1.2609.</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr sensor voltage ZMPT101B</tags>
     <dependencies>
-      <dependency id="HC-LIB.Devices" version="1.0.2203" />
+      <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
+      <dependency id="HC-LIB.IO-Abstractions" version="1.1.2609" />
+      <dependency id="HC-LIB.IO-Port" version="1.1.2609" />
+      <dependency id="HC-LIB.Device.Abstractions" version="1.1.2609" />
+      <dependency id="HC-LIB.Devices" version="1.1.2609" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -21,9 +25,12 @@
     </packageTypes>
   </metadata>
   <files>
-    <file src="src\sensors\ZMPT101B.h" target="src\sensors\ZMPT101B.h"/>
-    <file src="src\src\sensors\readers\ZMPT101BReaders.h" target="src\src\sensors\readers\ZMPT101BReaders.h" />
-    <file src="src\src\sensors\readers\ZMPT101BReaders.cpp" target="src\src\sensors\readers\ZMPT101BReaders.cpp" />    <file src="library.json" target="library.json" />
+    <file src="src\sensors\ZMPT101B.h" target="src\sensors\ZMPT101B.h" />
+    <file src="src\sensors\readers\ZMPT101BReaders.h" target="src\sensors\readers\ZMPT101BReaders.h" />
+    <file src="src\sensors\readers\ZMPT101BReaders.cpp" target="src\sensors\readers\ZMPT101BReaders.cpp" />
+    <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>
