@@ -25,6 +25,7 @@
 #define F(string_literal) (string_literal)
 #endif
 #endif
+
 #include "devices/controllers/RelayDeviceController.h"
 #include "devices/SRD05VDCSL.h"
 
@@ -34,26 +35,26 @@ SRD05VDCSLDevice *relayDevice;
 RelayDeviceController controller;
 
 #if defined(ARDUINO)
-static void printLine(const __FlashStringHelper *t_text)
-{
-    Serial.println(t_text);
-}
+    static void printLine(const __FlashStringHelper *t_text)
+    {
+        Serial.println(t_text);
+    }
 
-static void printError(const Error& t_error)
-{
-    Serial.print(F("Error: "));
-    Serial.println(t_error.message());
-}
+    static void printError(const Error& t_error)
+    {
+        Serial.print(F("Error: "));
+        Serial.println(t_error.message());
+    }
 #else
-static void printLine(const char *t_text)
-{
-    std::puts(t_text);
-}
+    static void printLine(const char *t_text)
+    {
+        std::puts(t_text);
+    }
 
-static void printError(const Error& t_error)
-{
-    std::printf("Error: %s\n", t_error.message());
-}
+    static void printError(const Error& t_error)
+    {
+        std::printf("Error: %s\n", t_error.message());
+    }
 #endif
 
 void setup()
