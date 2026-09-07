@@ -12,7 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "unity_flash.h"
+#include "unity_extensions.h"
 #include "timers/ArduinoTimer.h"
 
 void ArduinoTimer_Ctor_ShouldBeStopped_WhenDefaultConstructed()

@@ -12,7 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "unity_flash.h"
+#include "unity_extensions.h"
 #include "errors/DeviceErrors.h"
 
 void DeviceError_ToError_ShouldMatchTimerCode()

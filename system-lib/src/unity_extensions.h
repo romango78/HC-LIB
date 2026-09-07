@@ -6,11 +6,11 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-/// @file unity_flash.h
+/// @file unity_extensions.h
 /// @brief Shared Unity adapter: *_MESSAGE macros accept F() / __FlashStringHelper*.
 /// Include after unity.h in any HC-LIB test. Empty unless UNIT_TEST is defined.
-#ifndef _HC_LIB_UNITY_FLASH_H_
-#define _HC_LIB_UNITY_FLASH_H_
+#ifndef _HC_LIB_UNITY_EXTENSIONS_H_
+#define _HC_LIB_UNITY_EXTENSIONS_H_
 
 #ifdef UNIT_TEST
 
@@ -131,7 +131,9 @@ inline const char* unity_flash_name(const __FlashStringHelper* t_text)
 #ifdef UNITY_BEGIN
 #undef UNITY_BEGIN
 #endif
-#define UNITY_BEGIN() UnityBegin("")
+// Short fixed name (not __FILE__) keeps SRAM small but keeps PlatformIO's
+// Unity parser happy — it requires a non-empty "file:" prefix on each result line.
+#define UNITY_BEGIN() UnityBegin("test")
 
 #endif
 

@@ -9,7 +9,7 @@
 #if defined(UNIT_TEST)
 
 #include <unity.h>
-#include "unity_flash.h"
+#include "unity_extensions.h"
 #include "DeviceTests.h"
 #include "DeviceErrorTests.h"
 

@@ -12,7 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "unity_flash.h"
+#include "unity_extensions.h"
 #include "devices/Device.h"
 
 void Device_IsDigital_ShouldBeTrue_WhenCategoryIsDigital()

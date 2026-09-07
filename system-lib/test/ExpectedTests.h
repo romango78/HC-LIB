@@ -12,7 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
-#include "unity_flash.h"
+#include "unity_extensions.h"
 #include "Expected.h"
 #include "errors/GenericErrors.h"
 
