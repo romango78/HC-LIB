@@ -12,29 +12,30 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_flash.h"
 #include "errors/DeviceErrors.h"
 
 void DeviceError_ToError_ShouldMatchTimerCode()
 {
     Error sut = to_error(DeviceError::TimerIsNotInitialized);
-    TEST_ASSERT_TRUE(sut);
-    TEST_ASSERT_TRUE(sut == DeviceError::TimerIsNotInitialized);
-    TEST_ASSERT_TRUE(DeviceError::TimerIsNotInitialized == sut);
-    TEST_ASSERT_FALSE(sut == DeviceError::SensorIsNotInitialized);
+    TEST_ASSERT_TRUE_MESSAGE(sut, F("Timer error should be truthy."));
+    TEST_ASSERT_TRUE_MESSAGE(sut == DeviceError::TimerIsNotInitialized, F("Error should match TimerIsNotInitialized."));
+    TEST_ASSERT_TRUE_MESSAGE(DeviceError::TimerIsNotInitialized == sut, F("TimerIsNotInitialized should match Error."));
+    TEST_ASSERT_FALSE_MESSAGE(sut == DeviceError::SensorIsNotInitialized, F("Timer error should not match SensorIsNotInitialized."));
 }
 
 void DeviceError_ToError_ShouldMatchSensorCode()
 {
     Error sut = to_error(DeviceError::SensorIsNotInitialized);
-    TEST_ASSERT_TRUE(sut);
-    TEST_ASSERT_TRUE(sut == DeviceError::SensorIsNotInitialized);
+    TEST_ASSERT_TRUE_MESSAGE(sut, F("Sensor error should be truthy."));
+    TEST_ASSERT_TRUE_MESSAGE(sut == DeviceError::SensorIsNotInitialized, F("Error should match SensorIsNotInitialized."));
 }
 
 void DeviceError_MakeError_ShouldWrapDeviceError()
 {
     Expected<uint8_t, Error> sut = make_error(DeviceError::TimerIsNotInitialized);
-    TEST_ASSERT_FALSE(sut.hasValue());
-    TEST_ASSERT_TRUE(sut.getError() == DeviceError::TimerIsNotInitialized);
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasValue(), F("make_error should produce an error Expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == DeviceError::TimerIsNotInitialized, F("Expected should hold TimerIsNotInitialized."));
 }
 
 #endif
