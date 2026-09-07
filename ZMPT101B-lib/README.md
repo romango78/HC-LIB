@@ -135,6 +135,31 @@ pio test -e desktop-debug
 
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
 
+### Inspect memory usage
+A Nano has 32 KB flash and 2 KB SRAM. **Program** is flash; **Data** is SRAM (`.data` + `.bss`). Native builds have no 2 KB limit.
+
+Firmware (`pio run -e nano-board`):
+```powershell
+pio run -e nano-board
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -C --mcu=atmega328p .pio\build\nano-board\firmware.elf
+```
+
+The test image uses the same ELF path (`pio test` overwrites it):
+```powershell
+pio test -e nano-board --without-uploading --without-testing
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -C --mcu=atmega328p .pio\build\nano-board\firmware.elf
+```
+
+Largest symbols (`d` / `b` / `B` are RAM; `T` is flash):
+```powershell
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-nm.exe" --size-sort --print-size -t d .pio\build\nano-board\firmware.elf
+```
+
+Per-section breakdown:
+```powershell
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -A .pio\build\nano-board\firmware.elf
+```
+
 ### Sample
 The voltage demo is in the __examples/ZMPT101BExampleApp__ folder. From that folder:
 ```powershell

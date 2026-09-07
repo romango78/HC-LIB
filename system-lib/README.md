@@ -79,6 +79,31 @@ Assertion messages may use __F()__ so the text stays in flash on AVR. Include __
 
 Nano test SRAM must stay under 2 KB. `[env:nano-board]` shrinks Serial buffers (`16` / `32`) and sets `UNITY_EXCLUDE_DETAILS`, `UNITY_EXCLUDE_FLOAT`, and `UNITY_EXCLUDE_FLOAT_PRINT`.
 
+### Inspect memory usage
+A Nano has 32 KB flash and 2 KB SRAM. **Program** is flash; **Data** is SRAM (`.data` + `.bss`). Native builds have no 2 KB limit.
+
+Firmware (`pio run -e nano-board`):
+```powershell
+pio run -e nano-board
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -C --mcu=atmega328p .pio\build\nano-board\firmware.elf
+```
+
+The test image uses the same ELF path (`pio test` overwrites it):
+```powershell
+pio test -e nano-board --without-uploading --without-testing
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -C --mcu=atmega328p .pio\build\nano-board\firmware.elf
+```
+
+Largest symbols (`d` / `b` / `B` are RAM; `T` is flash):
+```powershell
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-nm.exe" --size-sort --print-size -t d .pio\build\nano-board\firmware.elf
+```
+
+Per-section breakdown:
+```powershell
+& "$env:USERPROFILE\.platformio\packages\toolchain-atmelavr\bin\avr-size.exe" -A .pio\build\nano-board\firmware.elf
+```
+
 ### Packages
 Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).
 
