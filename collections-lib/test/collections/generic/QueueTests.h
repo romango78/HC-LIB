@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_flash.h"
 #include "collections/generic/Queue.h"
 #include "errors/GenericErrors.h"
 
@@ -32,8 +33,8 @@ void Queue_ShouldCreateDefaultQueue_And_EnqueueTenItems()
     }
 
     // Asserts
-    TEST_ASSERT_TRUE_MESSAGE(status == GenericError::NoError, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(10, sut->count(), "Expected ten items in a queue.");
+    TEST_ASSERT_TRUE_MESSAGE(status == GenericError::NoError, F("No errors expected."));
+    TEST_ASSERT_EQUAL_MESSAGE(10, sut->count(), F("Expected ten items in a queue."));
 
     delete sut;
 }
@@ -67,9 +68,9 @@ void Queue_ShouldCreateDefaultQueue_And_DequeueAllItems()
     } while(!isEmpty);
     
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), "Expected all items are dequeue.");
-    TEST_ASSERT_EQUAL_MESSAGE(10, count, "Expected dequeue ten items.");
-    TEST_ASSERT_EQUAL_MESSAGE(55, sum, "Expected correct sum of dequeued items.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), F("Expected all items are dequeue."));
+    TEST_ASSERT_EQUAL_MESSAGE(10, count, F("Expected dequeue ten items."));
+    TEST_ASSERT_EQUAL_MESSAGE(55, sum, F("Expected correct sum of dequeued items."));
     
     delete sut;
 }
@@ -83,9 +84,9 @@ void Queue_ShouldReturnError_WhenDequeueFromEmptyQueue()
     Expected<uint8_t, Error> result = sut->dequeue();
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), "Expected empty queue.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "Expected no dequeued value.");
-    TEST_ASSERT_TRUE_MESSAGE(result.getError() == GenericError::InvalidOperation, "Expected 'invalid operation' error.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), F("Expected empty queue."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), F("Expected no dequeued value."));
+    TEST_ASSERT_TRUE_MESSAGE(result.getError() == GenericError::InvalidOperation, F("Expected 'invalid operation' error."));
 
     delete sut;
 }
@@ -103,8 +104,8 @@ void Queue_ShouldReturnError_WhenEnqueue_And_InsufficientMemory()
     } while(!result);
 
     // Asserts
-    TEST_ASSERT_LESS_OR_EQUAL_MESSAGE(UINT16_MAX, sut->count(), "Expected queue size less or equal of UINT16_MAX.");
-    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::OutOfMemory, "Expected 'out of memory' error.");
+    TEST_ASSERT_LESS_OR_EQUAL_MESSAGE(UINT16_MAX, sut->count(), F("Expected queue size less or equal of UINT16_MAX."));
+    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::OutOfMemory, F("Expected 'out of memory' error."));
 
     delete sut;
 }
@@ -122,7 +123,7 @@ void Queue_ShouldClearQueue()
     sut->clear();
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), "Expected empty queue.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), F("Expected empty queue."));
 
     delete sut;
 }
@@ -136,7 +137,7 @@ void Queue_ShouldClearEmptyQueue()
     sut->clear();
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), "Expected empty queue.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), F("Expected empty queue."));
 
     delete sut;
 }
@@ -155,10 +156,10 @@ void Queue_ShouldPeekElementFromQueue()
     Expected<uint8_t, Error> result2 = sut->peek();
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(10, sut->count(), "Expected that elements will be not removed.");
-    TEST_ASSERT_TRUE_MESSAGE(result1.hasValue(), "Expected peeked value first time.");
-    TEST_ASSERT_TRUE_MESSAGE(result2.hasValue(), "Expected peeked value second time.");
-    TEST_ASSERT_EQUAL_MESSAGE(result1.getValue(), result2.getValue(), "Expected that peeked values are same.");
+    TEST_ASSERT_EQUAL_MESSAGE(10, sut->count(), F("Expected that elements will be not removed."));
+    TEST_ASSERT_TRUE_MESSAGE(result1.hasValue(), F("Expected peeked value first time."));
+    TEST_ASSERT_TRUE_MESSAGE(result2.hasValue(), F("Expected peeked value second time."));
+    TEST_ASSERT_EQUAL_MESSAGE(result1.getValue(), result2.getValue(), F("Expected that peeked values are same."));
 
     delete sut;
 }
@@ -172,9 +173,9 @@ void Queue_ShouldReturnError_WhenPeekFromEmptyQueue()
     Expected<uint8_t, Error> result = sut->peek();
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), "Expected empty queue.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), "Expected no dequeued value.");
-    TEST_ASSERT_TRUE_MESSAGE(result.getError() == GenericError::InvalidOperation, "Expected 'invalid operation' error.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut->count(), F("Expected empty queue."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, result.hasValue(), F("Expected no dequeued value."));
+    TEST_ASSERT_TRUE_MESSAGE(result.getError() == GenericError::InvalidOperation, F("Expected 'invalid operation' error."));
 
     delete sut;
 }
@@ -187,19 +188,19 @@ void Queue_ShouldPreserveOrder_WhenElementSizeIsLargerThanByte()
     for(uint8_t i = 0; i < 5; i++)
     {
         Error status = sut.enqueue(values[i]);
-        TEST_ASSERT_TRUE_MESSAGE(status == GenericError::NoError, "Enqueue should succeed.");
+        TEST_ASSERT_TRUE_MESSAGE(status == GenericError::NoError, F("Enqueue should succeed."));
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(5, sut.count(), "Expected five items after grow.");
+    TEST_ASSERT_EQUAL_MESSAGE(5, sut.count(), F("Expected five items after grow."));
 
     for(uint8_t i = 0; i < 5; i++)
     {
         Expected<uint16_t, Error> result = sut.dequeue();
-        TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), "Dequeue should return a value.");
-        TEST_ASSERT_EQUAL_MESSAGE(values[i], result.getValue(), "FIFO order and multi-byte values should be preserved.");
+        TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), F("Dequeue should return a value."));
+        TEST_ASSERT_EQUAL_MESSAGE(values[i], result.getValue(), F("FIFO order and multi-byte values should be preserved."));
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut.count(), "Expected empty queue after dequeue.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut.count(), F("Expected empty queue after dequeue."));
 }
 
 #endif

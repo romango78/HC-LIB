@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Unit tests for _Expected_, _lib-utility.h_ (_std::move_, _std::forward_, _std::decay_), and _ArduinoTimer_.
 - _flash_c_str_ copies _F()_ / __FlashStringHelper*_ into RAM. Unity *_MESSAGE_ macros accept flash strings.
 - AVR Unity _RUN_TEST_ names stay in PROGMEM (copied into a 96-byte buffer). Nano test builds shrink Serial buffers and drop Unity float/details to stay under 2 KB SRAM.
+- _unity_flash.h_ lives in _src/_ (gated by _UNIT_TEST_) so other HC-LIB packages can include it from HC-LIB.System.
 
 ### Changed
 - Renamed _move.h_ to _lib-utility.h_. Native builds include _\<utility\>_ and _\<type_traits\>_.

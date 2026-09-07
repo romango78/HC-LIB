@@ -7,7 +7,8 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 /// @file unity_flash.h
-/// @brief Lets Unity *_MESSAGE macros accept F() / __FlashStringHelper*.
+/// @brief Shared Unity adapter: *_MESSAGE macros accept F() / __FlashStringHelper*.
+/// Include after unity.h in any HC-LIB test. Empty unless UNIT_TEST is defined.
 #ifndef _HC_LIB_UNITY_FLASH_H_
 #define _HC_LIB_UNITY_FLASH_H_
 
@@ -94,6 +95,11 @@
 #ifdef TEST_ASSERT_NOT_EQUAL_MESSAGE
 #undef TEST_ASSERT_NOT_EQUAL_MESSAGE
 #define TEST_ASSERT_NOT_EQUAL_MESSAGE(expected, actual, message) UNITY_TEST_ASSERT(((expected) != (actual)), __LINE__, (flash_c_str(message)))
+#endif
+
+#ifdef TEST_ASSERT_LESS_OR_EQUAL_MESSAGE
+#undef TEST_ASSERT_LESS_OR_EQUAL_MESSAGE
+#define TEST_ASSERT_LESS_OR_EQUAL_MESSAGE(threshold, actual, message) UNITY_TEST_ASSERT_SMALLER_OR_EQUAL_INT((threshold), (actual), __LINE__, (flash_c_str(message)))
 #endif
 
 #if defined(ARDUINO)

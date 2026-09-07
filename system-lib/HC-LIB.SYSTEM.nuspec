@@ -22,6 +22,8 @@
     <file src="src\Expected.h" target="src\Expected.h" />
     <file src="src\ICloneable.h" target="src\ICloneable.h" />
     <file src="src\lib-utility.h" target="src\lib-utility.h" />
+    <file src="src\flash.h" target="src\flash.h" />
+    <file src="src\unity_flash.h" target="src\unity_flash.h" />
     <file src="src\errors\errors.h" target="src\errors\errors.h" />
     <file src="src\errors\GenericErrors.h" target="src\errors\GenericErrors.h" />
     <file src="src\errors\GenericError.cpp" target="src\errors\GenericError.cpp" />

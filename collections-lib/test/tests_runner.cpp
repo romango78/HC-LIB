@@ -24,6 +24,7 @@ void loop()
 #if defined(UNIT_TEST)
 
 #include <unity.h>
+#include "unity_flash.h"
 
 #include "collections/generic/KeyValuePairTests.h"
 #include "collections/generic/EnumeratorBaseTests.h"
