@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_flash.h"
 #include "lib-utility.h"
 
 template<typename T, typename U>
@@ -81,9 +82,9 @@ void Move_ShouldNotMutateSource_WhenResultIsNotConsumed()
 
     int &&alias = std::move(value);
 
-    TEST_ASSERT_EQUAL_MESSAGE(42, value, "std::move should not change the source by itself.");
-    TEST_ASSERT_EQUAL_MESSAGE(42, alias, "std::move should refer to the same value.");
-    TEST_ASSERT_EQUAL_PTR_MESSAGE(&value, &alias, "std::move should be a cast to an rvalue reference.");
+    TEST_ASSERT_EQUAL_MESSAGE(42, value, F("std::move should not change the source by itself."));
+    TEST_ASSERT_EQUAL_MESSAGE(42, alias, F("std::move should refer to the same value."));
+    TEST_ASSERT_EQUAL_PTR_MESSAGE(&value, &alias, F("std::move should be a cast to an rvalue reference."));
 };
 
 void Move_ShouldSelectMoveConstructor_WhenInitializingFromMovedLvalue()
@@ -94,10 +95,10 @@ void Move_ShouldSelectMoveConstructor_WhenInitializingFromMovedLvalue()
 
     MoveProbe sut(std::move(source));
 
-    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, "std::move should not select the copy constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, "std::move should select the move constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(7, sut.id, "Moved value should be preserved.");
-    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, "Source should be left in a moved-from state.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, F("std::move should not select the copy constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, F("std::move should select the move constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(7, sut.id, F("Moved value should be preserved."));
+    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, F("Source should be left in a moved-from state."));
 };
 
 void Move_ShouldSelectMoveAssignment_WhenAssigningFromMovedLvalue()
@@ -109,10 +110,10 @@ void Move_ShouldSelectMoveAssignment_WhenAssigningFromMovedLvalue()
 
     sut = std::move(source);
 
-    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, "std::move should not select copy assignment.");
-    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, "std::move should select move assignment.");
-    TEST_ASSERT_EQUAL_MESSAGE(3, sut.id, "Move assignment should transfer the value.");
-    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, "Source should be left in a moved-from state.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, F("std::move should not select copy assignment."));
+    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, F("std::move should select move assignment."));
+    TEST_ASSERT_EQUAL_MESSAGE(3, sut.id, F("Move assignment should transfer the value."));
+    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, F("Source should be left in a moved-from state."));
 };
 
 void Move_ShouldSelectCopyConstructor_WhenSourceIsConst()
@@ -123,10 +124,10 @@ void Move_ShouldSelectCopyConstructor_WhenSourceIsConst()
 
     MoveProbe sut(std::move(source));
 
-    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::copied, "std::move of a const lvalue should select the copy constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::moved, "std::move of a const lvalue should not select the move constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(9, sut.id, "Copied value should be preserved.");
-    TEST_ASSERT_EQUAL_MESSAGE(9, source.id, "Const source should be unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::copied, F("std::move of a const lvalue should select the copy constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::moved, F("std::move of a const lvalue should not select the move constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(9, sut.id, F("Copied value should be preserved."));
+    TEST_ASSERT_EQUAL_MESSAGE(9, source.id, F("Const source should be unchanged."));
 };
 
 void Forward_ShouldSelectCopyConstructor_WhenForwardingLvalue()
@@ -137,10 +138,10 @@ void Forward_ShouldSelectCopyConstructor_WhenForwardingLvalue()
 
     MoveProbe sut = forwardIntoProbe(source);
 
-    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::copied, "std::forward of an lvalue should select the copy constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::moved, "std::forward of an lvalue should not select the move constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(4, sut.id, "Forwarded lvalue should be copied.");
-    TEST_ASSERT_EQUAL_MESSAGE(4, source.id, "Forwarded lvalue source should be unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::copied, F("std::forward of an lvalue should select the copy constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::moved, F("std::forward of an lvalue should not select the move constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(4, sut.id, F("Forwarded lvalue should be copied."));
+    TEST_ASSERT_EQUAL_MESSAGE(4, source.id, F("Forwarded lvalue source should be unchanged."));
 };
 
 void Forward_ShouldSelectMoveConstructor_WhenForwardingRvalue()
@@ -151,10 +152,10 @@ void Forward_ShouldSelectMoveConstructor_WhenForwardingRvalue()
 
     MoveProbe sut = forwardIntoProbe(std::move(source));
 
-    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, "std::forward of an rvalue should not select the copy constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, "std::forward of an rvalue should select the move constructor.");
-    TEST_ASSERT_EQUAL_MESSAGE(5, sut.id, "Forwarded rvalue should be moved.");
-    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, "Forwarded rvalue source should be left in a moved-from state.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, MoveProbe::copied, F("std::forward of an rvalue should not select the copy constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(1, MoveProbe::moved, F("std::forward of an rvalue should select the move constructor."));
+    TEST_ASSERT_EQUAL_MESSAGE(5, sut.id, F("Forwarded rvalue should be moved."));
+    TEST_ASSERT_EQUAL_MESSAGE(-1, source.id, F("Forwarded rvalue source should be left in a moved-from state."));
 };
 
 void Forward_ShouldPreserveAddress_WhenForwardingLvalueReference()
@@ -163,43 +164,43 @@ void Forward_ShouldPreserveAddress_WhenForwardingLvalueReference()
 
     int &forwarded = std::forward<int&>(value);
 
-    TEST_ASSERT_EQUAL_PTR_MESSAGE(&value, &forwarded, "std::forward of an lvalue should refer to the same object.");
-    TEST_ASSERT_EQUAL_MESSAGE(11, forwarded, "std::forward of an lvalue should keep the value.");
+    TEST_ASSERT_EQUAL_PTR_MESSAGE(&value, &forwarded, F("std::forward of an lvalue should refer to the same object."));
+    TEST_ASSERT_EQUAL_MESSAGE(11, forwarded, F("std::forward of an lvalue should keep the value."));
 };
 
 void RemoveReference_ShouldYieldValueType_WhenGivenValueOrReference()
 {
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::remove_reference<int>::type, int>::value),
-        "remove_reference<int> should be int.");
+        F("remove_reference<int> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::remove_reference<int&>::type, int>::value),
-        "remove_reference<int&> should be int.");
+        F("remove_reference<int&> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::remove_reference<int&&>::type, int>::value),
-        "remove_reference<int&&> should be int.");
+        F("remove_reference<int&&> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::remove_reference<const int&>::type, const int>::value),
-        "remove_reference<const int&> should keep const.");
+        F("remove_reference<const int&> should keep const."));
 };
 
 void Decay_ShouldStripReferenceAndCv_WhenGivenQualifiedType()
 {
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::decay<int>::type, int>::value),
-        "decay<int> should be int.");
+        F("decay<int> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::decay<int&>::type, int>::value),
-        "decay<int&> should be int.");
+        F("decay<int&> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::decay<int&&>::type, int>::value),
-        "decay<int&&> should be int.");
+        F("decay<int&&> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::decay<const int&>::type, int>::value),
-        "decay<const int&> should be int.");
+        F("decay<const int&> should be int."));
     TEST_ASSERT_TRUE_MESSAGE(
         (MoveTestSame<std::decay<const volatile int&&>::type, int>::value),
-        "decay<const volatile int&&> should be int.");
+        F("decay<const volatile int&&> should be int."));
 };
 
 #endif

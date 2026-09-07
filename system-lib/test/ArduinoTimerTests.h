@@ -12,15 +12,16 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_flash.h"
 #include "timers/ArduinoTimer.h"
 
 void ArduinoTimer_Ctor_ShouldBeStopped_WhenDefaultConstructed()
 {
     ArduinoTimer sut;
 
-    TEST_ASSERT_EQUAL_MESSAGE(0, sut.getInterval(), "Default interval should be 0.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isStarted(), "Timer should not be started.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), "Timer should not elapse before start.");
+    TEST_ASSERT_EQUAL_MESSAGE(0, sut.getInterval(), F("Default interval should be 0."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isStarted(), F("Timer should not be started."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), F("Timer should not elapse before start."));
 }
 
 void ArduinoTimer_ConstAccessors_ShouldReadState_WhenNotStarted()
@@ -29,8 +30,8 @@ void ArduinoTimer_ConstAccessors_ShouldReadState_WhenNotStarted()
     sut.setInterval(15);
     const ArduinoTimer &ref = sut;
 
-    TEST_ASSERT_EQUAL_MESSAGE(15, ref.getInterval(), "const getInterval() should return the interval.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, ref.isStarted(), "const isStarted() should return false.");
+    TEST_ASSERT_EQUAL_MESSAGE(15, ref.getInterval(), F("const getInterval() should return the interval."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, ref.isStarted(), F("const isStarted() should return false."));
 }
 
 void ArduinoTimer_SetInterval_ShouldUpdateInterval_WhenNotStarted()
@@ -39,7 +40,7 @@ void ArduinoTimer_SetInterval_ShouldUpdateInterval_WhenNotStarted()
 
     sut.setInterval(50);
 
-    TEST_ASSERT_EQUAL_MESSAGE(50, sut.getInterval(), "setInterval should store the interval when stopped.");
+    TEST_ASSERT_EQUAL_MESSAGE(50, sut.getInterval(), F("setInterval should store the interval when stopped."));
 }
 
 void ArduinoTimer_SetInterval_ShouldKeepInterval_WhenStarted()
@@ -50,7 +51,7 @@ void ArduinoTimer_SetInterval_ShouldKeepInterval_WhenStarted()
 
     sut.setInterval(9999);
 
-    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getInterval(), "setInterval should be ignored while the timer is started.");
+    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getInterval(), F("setInterval should be ignored while the timer is started."));
 }
 
 void ArduinoTimer_IsElapsed_ShouldBeTrueImmediately_WhenIntervalIsZero()
@@ -58,7 +59,7 @@ void ArduinoTimer_IsElapsed_ShouldBeTrueImmediately_WhenIntervalIsZero()
     ArduinoTimer sut;
     sut.start();
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), "A zero interval should elapse immediately after start.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), F("A zero interval should elapse immediately after start."));
 }
 
 void ArduinoTimer_IsElapsed_ShouldBecomeTrue_AfterInterval()
@@ -67,14 +68,14 @@ void ArduinoTimer_IsElapsed_ShouldBecomeTrue_AfterInterval()
     sut.setInterval(20);
     sut.start();
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), "Timer should be started.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), "Timer should not elapse immediately.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), F("Timer should be started."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), F("Timer should not elapse immediately."));
 
     while(!sut.isElapsed())
     {
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), "Timer should elapse after the interval.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), F("Timer should elapse after the interval."));
 }
 
 void ArduinoTimer_IsElapsed_ShouldStayTrue_UntilStopped()
@@ -86,8 +87,8 @@ void ArduinoTimer_IsElapsed_ShouldStayTrue_UntilStopped()
     {
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), "Elapsed state should latch.");
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), "Elapsed timer should still be started.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isElapsed(), F("Elapsed state should latch."));
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), F("Elapsed timer should still be started."));
 }
 
 void ArduinoTimer_Stop_ShouldClearStartedAndElapsed_WhenStopped()
@@ -101,9 +102,9 @@ void ArduinoTimer_Stop_ShouldClearStartedAndElapsed_WhenStopped()
 
     sut.stop();
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isStarted(), "stop() should clear started.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), "stop() should clear elapsed.");
-    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getInterval(), "stop() should keep the interval.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isStarted(), F("stop() should clear started."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), F("stop() should clear elapsed."));
+    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getInterval(), F("stop() should keep the interval."));
 }
 
 void ArduinoTimer_Start_ShouldRestartCountdown_WhenAlreadyElapsed()
@@ -117,8 +118,8 @@ void ArduinoTimer_Start_ShouldRestartCountdown_WhenAlreadyElapsed()
 
     sut.start();
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), "start() should keep the timer started.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), "start() should restart the countdown.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), F("start() should keep the timer started."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), F("start() should restart the countdown."));
 }
 
 void ArduinoTimer_Start_ShouldRunNewInterval_WhenRestartedAfterStop()
@@ -133,8 +134,8 @@ void ArduinoTimer_Start_ShouldRunNewInterval_WhenRestartedAfterStop()
 
     sut.start();
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), "start() after stop() should start again.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), "A new countdown should not be elapsed immediately.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.isStarted(), F("start() after stop() should start again."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.isElapsed(), F("A new countdown should not be elapsed immediately."));
 }
 
 #endif

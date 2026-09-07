@@ -44,7 +44,7 @@ Run commands from this folder (`system-lib`).
 
 | Environment | Platform | Purpose |
 |---|---|---|
-| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware: `setup()` / `loop()` from __test/tests_runner.cpp__ |
+| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware stub: __firmware/firmware_stub.cpp__. Tests: __test/tests_runner.cpp__ |
 | `desktop` | native | Unity tests |
 | `desktop-debug` | native | Unity tests with debug symbols (`-O0 -ggdb3`). Default. |
 
@@ -65,6 +65,8 @@ pio test -e desktop-debug
 ```
 
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
+
+Assertion messages may use __F()__ so the text stays in flash on AVR. Include __test/unity_flash.h__ after __unity.h__; it converts __FlashStringHelper*_ via __flash_c_str__. On AVR it also copies each __RUN_TEST__ name from flash into a small RAM buffer so the Nano test image stays under 2 KB SRAM.
 
 ### Packages
 Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).

@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_flash.h"
 #include "Expected.h"
 #include "errors/GenericErrors.h"
 
@@ -69,8 +70,8 @@ void ExpectedValueType_ShouldNotContainError_WhenSomeErrorNotOccurred()
     Expected<uint8_t, Error> sut = getValueTypeTestMethod(10);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should not contain an error.");
-    TEST_ASSERT_EQUAL_MESSAGE(10, sut.getValue(),"Expected<T> contains value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should not contain an error."));
+    TEST_ASSERT_EQUAL_MESSAGE(10, sut.getValue(),F("Expected<T> contains value."));
 };
 
 void ExpectedValueType_ShouldContainError_WhenSomeErrorOccurred()
@@ -79,8 +80,8 @@ void ExpectedValueType_ShouldContainError_WhenSomeErrorOccurred()
     Expected<uint8_t, Error> sut = getValueTypeTestMethod(-10);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, "Expected<T> should contain OutOfRange error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, F("Expected<T> should contain OutOfRange error."));
 };
 
 void ExpectedPointer_ShouldNotContainError_WhenSomeErrorNotOccurred()
@@ -95,9 +96,9 @@ void ExpectedPointer_ShouldNotContainError_WhenSomeErrorNotOccurred()
     p->data = 50;
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should not contain an error.");
-    TEST_ASSERT_EQUAL_MESSAGE(p->data, sut.getValue()->data,"Expected<T> contains value.");
-    TEST_ASSERT_EQUAL_MESSAGE(p->string, sut.getValue()->string,"Expected<T> contains value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should not contain an error."));
+    TEST_ASSERT_EQUAL_MESSAGE(p->data, sut.getValue()->data,F("Expected<T> contains value."));
+    TEST_ASSERT_EQUAL_MESSAGE(p->string, sut.getValue()->string,F("Expected<T> contains value."));
     delete p;
 };
 
@@ -107,8 +108,8 @@ void ExpectedPointer_ShouldContainError_WhenSomeErrorOccurred()
     auto sut = getPointerTestMethod(nullptr);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, "Expected<T> should contain ArgumentIsNull error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, F("Expected<T> should contain ArgumentIsNull error."));
 };
 
 void ExpectedReferenceValue_ShouldNotContainError_WhenSomeErrorNotOccurred()
@@ -123,9 +124,9 @@ void ExpectedReferenceValue_ShouldNotContainError_WhenSomeErrorNotOccurred()
     p.data = 50;
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should not contain an error.");
-    TEST_ASSERT_EQUAL_MESSAGE(125, sut.getValue().data,"Expected<T> contains value.");
-    TEST_ASSERT_EQUAL_MESSAGE(p.string, sut.getValue().string,"Expected<T> contains value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should not contain an error."));
+    TEST_ASSERT_EQUAL_MESSAGE(125, sut.getValue().data,F("Expected<T> contains value."));
+    TEST_ASSERT_EQUAL_MESSAGE(p.string, sut.getValue().string,F("Expected<T> contains value."));
 };
 
 void ExpectedReferenceValue_ShouldContainError_WhenSomeErrorOccurred()
@@ -137,8 +138,8 @@ void ExpectedReferenceValue_ShouldContainError_WhenSomeErrorOccurred()
     auto sut = getReferenceTypeTestMethod(*p);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, "Expected<T> should contain ArgumentIsNull error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, F("Expected<T> should contain ArgumentIsNull error."));
 };
 
 void ExpectedVoid_ShouldNotContainError_WhenSomeErrorNotOccurred()
@@ -147,8 +148,8 @@ void ExpectedVoid_ShouldNotContainError_WhenSomeErrorNotOccurred()
     auto sut = getVoidTestMethod(10);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should not contain an error.");
-    TEST_ASSERT_NULL_MESSAGE(sut.getValue(),"Expected<T> contains value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should not contain an error."));
+    TEST_ASSERT_NULL_MESSAGE(sut.getValue(),F("Expected<T> contains value."));
 };
 
 void ExpectedVoid_ShouldContainError_WhenSomeErrorOccurred()
@@ -157,8 +158,8 @@ void ExpectedVoid_ShouldContainError_WhenSomeErrorOccurred()
     auto sut = getVoidTestMethod(300);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, "Expected<T> should contain OutOfRange error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, F("Expected<T> should contain OutOfRange error."));
 };
 
 void ExpectedExpectedType_ShouldNotContainError_WhenSomeErrorNotOccurred()
@@ -167,8 +168,8 @@ void ExpectedExpectedType_ShouldNotContainError_WhenSomeErrorNotOccurred()
     Expected<uint8_t, Error> sut = getExpectedTestMethod(10);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should not contain an error.");
-    TEST_ASSERT_EQUAL_MESSAGE(10, sut.getValue(),"Expected<T> contains value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should not contain an error."));
+    TEST_ASSERT_EQUAL_MESSAGE(10, sut.getValue(),F("Expected<T> contains value."));
 };
 
 void ExpectedExpected_ShouldContainError_WhenSomeErrorOccurred()
@@ -177,8 +178,8 @@ void ExpectedExpected_ShouldContainError_WhenSomeErrorOccurred()
     Expected<uint8_t, Error> sut = getValueTypeTestMethod(-10);
 
     // Assert
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, "Expected<T> should contain OutOfRange error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, F("Expected<T> should contain OutOfRange error."));
 };
 
 struct DtorCounter
@@ -246,9 +247,9 @@ void Expected_ValueCtor_ShouldStoreValue_WhenConstructedFromConstLvalue()
 
     Expected<DtorCounter, Error> sut(value);
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(4, sut.getValue().id, "Expected<T> should copy the lvalue.");
-    TEST_ASSERT_EQUAL_MESSAGE(4, value.id, "Source lvalue should be unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(4, sut.getValue().id, F("Expected<T> should copy the lvalue."));
+    TEST_ASSERT_EQUAL_MESSAGE(4, value.id, F("Source lvalue should be unchanged."));
 };
 
 void Expected_ValueCtor_ShouldMoveValue_WhenConstructedFromRvalue()
@@ -259,9 +260,9 @@ void Expected_ValueCtor_ShouldMoveValue_WhenConstructedFromRvalue()
     DtorCounter value(4);
     Expected<DtorCounter, Error> sut(std::move(value));
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Expected<T> should hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(4, sut.getValue().id, "Expected<T> should move the rvalue.");
-    TEST_ASSERT_EQUAL_MESSAGE(-1, value.id, "Source rvalue should be moved-from.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Expected<T> should hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(4, sut.getValue().id, F("Expected<T> should move the rvalue."));
+    TEST_ASSERT_EQUAL_MESSAGE(-1, value.id, F("Source rvalue should be moved-from."));
 };
 
 void Expected_ErrorCtor_ShouldStoreError_WhenConstructedFromUnexpectedLvalue()
@@ -270,16 +271,16 @@ void Expected_ErrorCtor_ShouldStoreError_WhenConstructedFromUnexpectedLvalue()
 
     Expected<uint8_t, Error> sut(unexpected);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should hold an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, "Expected<T> should copy the unexpected error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should hold an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, F("Expected<T> should copy the unexpected error."));
 };
 
 void Expected_ErrorCtor_ShouldStoreError_WhenConstructedFromUnexpectedRvalue()
 {
     Expected<uint8_t, Error> sut(make_error(GenericError::ArgumentIsNull));
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should hold an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, "Expected<T> should move the unexpected error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should hold an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::ArgumentIsNull, F("Expected<T> should move the unexpected error."));
 };
 
 void Expected_ErrorCtor_ShouldConvertError_WhenUnexpectedTypeDiffers()
@@ -288,8 +289,8 @@ void Expected_ErrorCtor_ShouldConvertError_WhenUnexpectedTypeDiffers()
 
     Expected<uint8_t, int> sut(unexpected);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Expected<T> should hold a converted error.");
-    TEST_ASSERT_EQUAL_MESSAGE(42, sut.getError(), "Expected<T> should construct E from Unexpected<U>.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Expected<T> should hold a converted error."));
+    TEST_ASSERT_EQUAL_MESSAGE(42, sut.getError(), F("Expected<T> should construct E from Unexpected<U>."));
 };
 
 void Expected_CopyCtor_ShouldCopyValue_WhenSourceHasValue()
@@ -298,10 +299,10 @@ void Expected_CopyCtor_ShouldCopyValue_WhenSourceHasValue()
 
     Expected<DtorCounter, Error> sut(original);
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, original.hasValue(), "Copy source should still hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Copy destination should hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(7, original.getValue().id, "Copy source value should be unchanged.");
-    TEST_ASSERT_EQUAL_MESSAGE(7, sut.getValue().id, "Copy destination should contain the same value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, original.hasValue(), F("Copy source should still hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Copy destination should hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(7, original.getValue().id, F("Copy source value should be unchanged."));
+    TEST_ASSERT_EQUAL_MESSAGE(7, sut.getValue().id, F("Copy destination should contain the same value."));
 };
 
 void Expected_CopyCtor_ShouldCopyError_WhenSourceHasError()
@@ -310,9 +311,9 @@ void Expected_CopyCtor_ShouldCopyError_WhenSourceHasError()
 
     Expected<uint8_t, Error> sut(original);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, original.hasValue(), "Copy source should still hold an error.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), "Copy destination should hold an error.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, "Copy destination should contain the same error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, original.hasValue(), F("Copy source should still hold an error."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, sut.hasValue(), F("Copy destination should hold an error."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getError() == GenericError::OutOfRange, F("Copy destination should contain the same error."));
 };
 
 void Expected_CopyAssign_ShouldCopyValue_WhenBothHaveValue()
@@ -322,10 +323,10 @@ void Expected_CopyAssign_ShouldCopyValue_WhenBothHaveValue()
 
     target = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), "Copy assignment destination should hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, "Copy assignment should replace the value.");
-    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), "Copy assignment source should still hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(2, source.getValue().id, "Copy assignment source should be unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), F("Copy assignment destination should hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, F("Copy assignment should replace the value."));
+    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), F("Copy assignment source should still hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(2, source.getValue().id, F("Copy assignment source should be unchanged."));
 };
 
 void Expected_CopyAssign_ShouldCopyError_WhenBothHaveError()
@@ -335,9 +336,9 @@ void Expected_CopyAssign_ShouldCopyError_WhenBothHaveError()
 
     target = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), "Copy assignment destination should hold an error.");
-    TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, "Copy assignment should replace the error.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, source.hasValue(), "Copy assignment source should still hold an error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), F("Copy assignment destination should hold an error."));
+    TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, F("Copy assignment should replace the error."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, source.hasValue(), F("Copy assignment source should still hold an error."));
 };
 
 void Expected_CopyAssign_ShouldReplaceValueWithError_WhenSourceHasError()
@@ -351,9 +352,9 @@ void Expected_CopyAssign_ShouldReplaceValueWithError_WhenSourceHasError()
 
         target = source;
 
-        TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), "Copy assignment should replace a value with an error.");
-        TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, "Copy assignment destination should contain the source error.");
-        TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "Replacing a value with an error should destroy T.");
+        TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), F("Copy assignment should replace a value with an error."));
+        TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, F("Copy assignment destination should contain the source error."));
+        TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("Replacing a value with an error should destroy T."));
     }
 };
 
@@ -364,10 +365,10 @@ void Expected_CopyAssign_ShouldReplaceErrorWithValue_WhenSourceHasValue()
 
     target = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), "Copy assignment should replace an error with a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, "Copy assignment destination should contain the source value.");
-    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), "Copy assignment source should still hold a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(2, source.getValue().id, "Copy assignment source should be unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), F("Copy assignment should replace an error with a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, F("Copy assignment destination should contain the source value."));
+    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), F("Copy assignment source should still hold a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(2, source.getValue().id, F("Copy assignment source should be unchanged."));
 };
 
 void Expected_CopyAssign_ShouldKeepValue_WhenSelfAssigned()
@@ -377,8 +378,8 @@ void Expected_CopyAssign_ShouldKeepValue_WhenSelfAssigned()
 
     same = sut;
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Self copy-assignment should keep the value.");
-    TEST_ASSERT_EQUAL_MESSAGE(5, sut.getValue(), "Self copy-assignment should not change the value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Self copy-assignment should keep the value."));
+    TEST_ASSERT_EQUAL_MESSAGE(5, sut.getValue(), F("Self copy-assignment should not change the value."));
 };
 
 void Expected_MoveCtor_ShouldPreserveValue_WhenSourceHasValue()
@@ -390,13 +391,13 @@ void Expected_MoveCtor_ShouldPreserveValue_WhenSourceHasValue()
         Expected<DtorCounter, Error> original = DtorCounter(7);
         Expected<DtorCounter, Error> moved = std::move(original);
 
-        TEST_ASSERT_EQUAL_MESSAGE(true, moved.hasValue(), "Move destination should contain a value.");
-        TEST_ASSERT_EQUAL_MESSAGE(7, moved.getValue().id, "Moved value should be preserved.");
-        TEST_ASSERT_EQUAL_MESSAGE(true, original.hasValue(), "Moved-from Expected should stay engaged.");
-        TEST_ASSERT_EQUAL_MESSAGE(-1, original.getValue().id, "Moved-from T should be in a moved-from state.");
+        TEST_ASSERT_EQUAL_MESSAGE(true, moved.hasValue(), F("Move destination should contain a value."));
+        TEST_ASSERT_EQUAL_MESSAGE(7, moved.getValue().id, F("Moved value should be preserved."));
+        TEST_ASSERT_EQUAL_MESSAGE(true, original.hasValue(), F("Moved-from Expected should stay engaged."));
+        TEST_ASSERT_EQUAL_MESSAGE(-1, original.getValue().id, F("Moved-from T should be in a moved-from state."));
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "T destructor should run once per constructor.");
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("T destructor should run once per constructor."));
 };
 
 void Expected_MoveCtor_ShouldMoveError_WhenSourceHasError()
@@ -405,9 +406,9 @@ void Expected_MoveCtor_ShouldMoveError_WhenSourceHasError()
 
     Expected<uint8_t, Error> moved = std::move(original);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, moved.hasValue(), "Move destination should contain an error.");
-    TEST_ASSERT_TRUE_MESSAGE(moved.getError() == GenericError::ArgumentIsNull, "Moved error should be preserved.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, original.hasValue(), "Moved-from Expected should still hold an error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, moved.hasValue(), F("Move destination should contain an error."));
+    TEST_ASSERT_TRUE_MESSAGE(moved.getError() == GenericError::ArgumentIsNull, F("Moved error should be preserved."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, original.hasValue(), F("Moved-from Expected should still hold an error."));
 };
 
 void Expected_MoveAssign_ShouldReplaceValue_WhenBothHaveValue()
@@ -420,13 +421,13 @@ void Expected_MoveAssign_ShouldReplaceValue_WhenBothHaveValue()
         Expected<DtorCounter, Error> source = DtorCounter(2);
         target = std::move(source);
 
-        TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), "Move assignment destination should contain a value.");
-        TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, "Move assignment should replace the value.");
-        TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), "Moved-from Expected should stay engaged.");
-        TEST_ASSERT_EQUAL_MESSAGE(-1, source.getValue().id, "Moved-from T should be in a moved-from state.");
+        TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), F("Move assignment destination should contain a value."));
+        TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, F("Move assignment should replace the value."));
+        TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), F("Moved-from Expected should stay engaged."));
+        TEST_ASSERT_EQUAL_MESSAGE(-1, source.getValue().id, F("Moved-from T should be in a moved-from state."));
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "T destructor should run once per constructor.");
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("T destructor should run once per constructor."));
 };
 
 void Expected_MoveAssign_ShouldMoveError_WhenBothHaveError()
@@ -436,9 +437,9 @@ void Expected_MoveAssign_ShouldMoveError_WhenBothHaveError()
 
     target = std::move(source);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), "Move assignment destination should hold an error.");
-    TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, "Move assignment should replace the error.");
-    TEST_ASSERT_EQUAL_MESSAGE(false, source.hasValue(), "Moved-from Expected should still hold an error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), F("Move assignment destination should hold an error."));
+    TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, F("Move assignment should replace the error."));
+    TEST_ASSERT_EQUAL_MESSAGE(false, source.hasValue(), F("Moved-from Expected should still hold an error."));
 };
 
 void Expected_MoveAssign_ShouldReplaceValueWithError_WhenSourceHasError()
@@ -452,9 +453,9 @@ void Expected_MoveAssign_ShouldReplaceValueWithError_WhenSourceHasError()
 
         target = std::move(source);
 
-        TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), "Move assignment should replace a value with an error.");
-        TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, "Move assignment destination should contain the source error.");
-        TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "Replacing a value with an error should destroy T.");
+        TEST_ASSERT_EQUAL_MESSAGE(false, target.hasValue(), F("Move assignment should replace a value with an error."));
+        TEST_ASSERT_TRUE_MESSAGE(target.getError() == GenericError::OutOfRange, F("Move assignment destination should contain the source error."));
+        TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("Replacing a value with an error should destroy T."));
     }
 };
 
@@ -465,10 +466,10 @@ void Expected_MoveAssign_ShouldReplaceErrorWithValue_WhenSourceHasValue()
 
     target = std::move(source);
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), "Move assignment should replace an error with a value.");
-    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, "Move assignment destination should contain the moved value.");
-    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), "Moved-from Expected should stay engaged.");
-    TEST_ASSERT_EQUAL_MESSAGE(-1, source.getValue().id, "Moved-from T should be in a moved-from state.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, target.hasValue(), F("Move assignment should replace an error with a value."));
+    TEST_ASSERT_EQUAL_MESSAGE(2, target.getValue().id, F("Move assignment destination should contain the moved value."));
+    TEST_ASSERT_EQUAL_MESSAGE(true, source.hasValue(), F("Moved-from Expected should stay engaged."));
+    TEST_ASSERT_EQUAL_MESSAGE(-1, source.getValue().id, F("Moved-from T should be in a moved-from state."));
 };
 
 void Expected_MoveAssign_ShouldKeepValue_WhenSelfAssigned()
@@ -477,22 +478,22 @@ void Expected_MoveAssign_ShouldKeepValue_WhenSelfAssigned()
 
     sut = std::move(sut);
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), "Self move-assignment should keep the value.");
-    TEST_ASSERT_EQUAL_MESSAGE(5, sut.getValue(), "Self move-assignment should not change the value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, sut.hasValue(), F("Self move-assignment should keep the value."));
+    TEST_ASSERT_EQUAL_MESSAGE(5, sut.getValue(), F("Self move-assignment should not change the value."));
 };
 
 void Expected_BoolConversion_ShouldBeTrue_WhenHasValue()
 {
     Expected<uint8_t, Error> sut((uint8_t)10);
 
-    TEST_ASSERT_EQUAL_MESSAGE(true, static_cast<bool>(sut), "Expected<T> should convert to true when it holds a value.");
+    TEST_ASSERT_EQUAL_MESSAGE(true, static_cast<bool>(sut), F("Expected<T> should convert to true when it holds a value."));
 };
 
 void Expected_BoolConversion_ShouldBeFalse_WhenHasError()
 {
     Expected<uint8_t, Error> sut = make_error(GenericError::OutOfRange);
 
-    TEST_ASSERT_EQUAL_MESSAGE(false, static_cast<bool>(sut), "Expected<T> should convert to false when it holds an error.");
+    TEST_ASSERT_EQUAL_MESSAGE(false, static_cast<bool>(sut), F("Expected<T> should convert to false when it holds an error."));
 };
 
 void Expected_Dereference_ShouldReturnValue_WhenHasValue()
@@ -501,8 +502,8 @@ void Expected_Dereference_ShouldReturnValue_WhenHasValue()
 
     *sut = 20;
 
-    TEST_ASSERT_EQUAL_MESSAGE(20, *sut, "operator* should return a mutable reference to the value.");
-    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getValue(), "getValue() should observe the mutation through operator*.");
+    TEST_ASSERT_EQUAL_MESSAGE(20, *sut, F("operator* should return a mutable reference to the value."));
+    TEST_ASSERT_EQUAL_MESSAGE(20, sut.getValue(), F("getValue() should observe the mutation through operator*."));
 };
 
 void Expected_ConstAccessors_ShouldReturnValueAndError()
@@ -510,9 +511,9 @@ void Expected_ConstAccessors_ShouldReturnValueAndError()
     const Expected<uint8_t, Error> value((uint8_t)10);
     const Expected<uint8_t, Error> error = make_error(GenericError::OutOfRange);
 
-    TEST_ASSERT_EQUAL_MESSAGE(10, value.getValue(), "const getValue() should return the stored value.");
-    TEST_ASSERT_EQUAL_MESSAGE(10, *value, "const operator* should return the stored value.");
-    TEST_ASSERT_TRUE_MESSAGE(error.getError() == GenericError::OutOfRange, "const getError() should return the stored error.");
+    TEST_ASSERT_EQUAL_MESSAGE(10, value.getValue(), F("const getValue() should return the stored value."));
+    TEST_ASSERT_EQUAL_MESSAGE(10, *value, F("const operator* should return the stored value."));
+    TEST_ASSERT_TRUE_MESSAGE(error.getError() == GenericError::OutOfRange, F("const getError() should return the stored error."));
 };
 
 void Expected_Destroy_ShouldDestroyValue_WhenScopeEnds()
@@ -524,7 +525,7 @@ void Expected_Destroy_ShouldDestroyValue_WhenScopeEnds()
         Expected<DtorCounter, Error> sut = DtorCounter(1);
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "Destroying Expected<T> should destroy the stored T.");
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("Destroying Expected<T> should destroy the stored T."));
 };
 
 void Expected_Copy_ShouldDestroyEachCopy_WhenScopeEnds()
@@ -535,10 +536,10 @@ void Expected_Copy_ShouldDestroyEachCopy_WhenScopeEnds()
     {
         Expected<DtorCounter, Error> original = DtorCounter(7);
         Expected<DtorCounter, Error> copy(original);
-        TEST_ASSERT_EQUAL_MESSAGE(7, copy.getValue().id, "Copy should contain the same value.");
+        TEST_ASSERT_EQUAL_MESSAGE(7, copy.getValue().id, F("Copy should contain the same value."));
     }
 
-    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, "Each copied T should be destroyed.");
+    TEST_ASSERT_EQUAL_MESSAGE(DtorCounter::constructed, DtorCounter::destroyed, F("Each copied T should be destroyed."));
 };
 
 #endif
