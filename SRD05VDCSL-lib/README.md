@@ -2,7 +2,7 @@
 ## Arduino SRD05VDCSL Library v1.0.2609
 This __library__ defines __SRD05VDCSLDevice__ for the Songle SRD-05VDC-SL-C relay.
 
-The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
+The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 
 ### Dependencies
 - HC-LIB.Devices v1.1.2609
@@ -62,11 +62,11 @@ Run commands from this folder (`SRD05VDCSL-lib`).
 
 | Environment | Platform | Purpose |
 |---|---|---|
-| `nano-board` | Arduino Nano (ATmega328, new bootloader) | Firmware: `setup()` / `loop()` from __test/tests_runner.cpp__ |
+| `nano-board` | Arduino Nano (ATmega328, new bootloader) | `pio run`: __firmware/firmware_stub.cpp__. `pio test`: __test/tests_runner.cpp__ |
 | `desktop` | native | Unity tests |
 | `desktop-debug` | native | Unity tests with debug symbols (`-O0 -ggdb3`). Default. |
 
-__test/tests_runner.cpp__ is the single entry point: a firmware stub when `UNIT_TEST` is off, and the Unity runner when it is on.
+`pio run -e nano-board` links the firmware stub (`setup()` / `loop()`). `pio test` links the Unity runner. Do not put `setup()` / `loop()` in packaged `src/` — that would break consumer sketches. `extra_src_filter.py` adds the stub for `pio run` only.
 
 ### Build
 ```powershell
@@ -75,7 +75,9 @@ pio run -e nano-board -t upload
 pio run -e desktop-debug
 ```
 
-Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`.
+Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`. `pio run -e desktop-debug` builds the Unity test binary (`build_type = test`), not a board image.
+
+Do not run `pio run` and `pio test` in parallel against the same environment; they share `.pio/build` and can corrupt the SCons cache.
 
 ### Unit tests
 ```powershell
@@ -83,6 +85,16 @@ pio test -e desktop-debug
 ```
 
 Use `-e desktop` for a non-debug native run, or `-e nano-board` to run tests on the board. See https://docs.platformio.org/en/latest/plus/unit-testing.html for more details.
+
+`pio test` compiles `test/` only. Project `src/*.cpp` is omitted unless `test_build_src = yes`. `build_src_filter` does not change that for a test build.
+
+This library is header-only (`src/devices/SRD05VDCSL.h`). Tests do not need `test_build_src` on `nano-board`. Dependency `.cpp` files arrive through `lib_deps`, which PlatformIO always compiles. Native envs keep `test_build_src = yes` so the project include path stays consistent.
+
+Do not add `+<../test/tests_runner.cpp>` to `build_src_filter`. `pio test` already compiles the runner; combining that with `test_build_src = yes` defines `setup` / `loop` twice.
+
+Assertion messages may use __F()__ so the text stays in flash on AVR. Include __unity_extensions.h__ after __unity.h__ (from HC-LIB.System, empty unless `UNIT_TEST` is set). On AVR it also copies each __RUN_TEST__ name from flash into a 96-byte RAM buffer.
+
+Nano test SRAM must stay under 2 KB. `[env:nano-board]` shrinks Serial buffers (`16` / `32`) and sets `UNITY_EXCLUDE_DETAILS`, `UNITY_EXCLUDE_FLOAT`, and `UNITY_EXCLUDE_FLOAT_PRINT`. After packing a new System tarball, delete `.pio/libdeps` so PlatformIO unpacks `unity_extensions.h`.
 
 ### Inspect memory usage
 A Nano has 32 KB flash and 2 KB SRAM. **Program** is flash; **Data** is SRAM (`.data` + `.bss`). Native builds have no 2 KB limit.
@@ -110,7 +122,7 @@ Per-section breakdown:
 ```
 
 ### Sample
-The relay demo is in the __examples/SRD05VDCSLExampleApp__ folder. From that folder:
+The relay demo is [examples/SRD05VDCSLExampleApp](examples/SRD05VDCSLExampleApp/README.md). From that folder:
 ```powershell
 pio run -e nano-board -t upload
 ```

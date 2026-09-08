@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "lib-utility.h"
 #include "FakeStream.h"
 #include "devices/SRD05VDCSL.h"
@@ -35,11 +36,11 @@ void ShouldConvert_SRD05VDCSLToSRD05VDCSL()
 
     SRD05VDCSLDevice sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
-    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The cloned stream should be a new instance.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, F("The 'stream' should be cloned."));
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, F("The cloned stream should be a new instance."));
 }
 
 void ShouldConvert_SRD05VDCSLToRelayDevice()
@@ -48,10 +49,10 @@ void ShouldConvert_SRD05VDCSLToRelayDevice()
 
     RelayDevice sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, F("The 'stream' should be cloned."));
 }
 
 void ShouldConvert_SRD05VDCSLToDigitalDevice()
@@ -60,10 +61,10 @@ void ShouldConvert_SRD05VDCSLToDigitalDevice()
 
     DigitalDevice sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, F("The 'stream' should be cloned."));
 }
 
 void ShouldConvert_SRD05VDCSLToIDevice()
@@ -72,8 +73,8 @@ void ShouldConvert_SRD05VDCSLToIDevice()
 
     IDevice sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
 }
 
 void ShouldMove_SRD05VDCSLToSRD05VDCSL()
@@ -83,10 +84,10 @@ void ShouldMove_SRD05VDCSLToSRD05VDCSL()
 
     SRD05VDCSLDevice sut(std::move(source));
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, reinterpret_cast<uintptr_t>(sut.stream), "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, reinterpret_cast<uintptr_t>(sut.stream), F("The 'stream' should be same as in origin object."));
 }
 
 void ShouldAssignCopy_SRD05VDCSL()
@@ -96,10 +97,10 @@ void ShouldAssignCopy_SRD05VDCSL()
 
     sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, F("The 'stream' should be cloned."));
 }
 
 void ShouldSelfAssign_SRD05VDCSL()
@@ -110,8 +111,8 @@ void ShouldSelfAssign_SRD05VDCSL()
 
     sut = sut;
 
-    TEST_ASSERT_EQUAL_MESSAGE(pin, sut.pin, "Self-assignment should keep the pin.");
-    TEST_ASSERT_EQUAL_MESSAGE(stream, sut.stream, "Self-assignment should keep the stream.");
+    TEST_ASSERT_EQUAL_MESSAGE(pin, sut.pin, F("Self-assignment should keep the pin."));
+    TEST_ASSERT_EQUAL_MESSAGE(stream, sut.stream, F("Self-assignment should keep the stream."));
 }
 
 void ShouldConstruct_SRD05VDCSL_WithNullStream()
@@ -155,7 +156,7 @@ void ShouldCopy_SRD05VDCSL_FromMovedSource()
 
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from device should not clone the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Copy of a moved-from device should not clone the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
@@ -168,7 +169,7 @@ void ShouldAssign_SRD05VDCSL_FromNullStream()
 
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream device should clear the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Assignment from a null-stream device should clear the stream."));
 }
 
 void ShouldAssign_SRD05VDCSL_FromMovedSource()
@@ -181,7 +182,7 @@ void ShouldAssign_SRD05VDCSL_FromMovedSource()
 
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a moved-from device should clear the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Assignment from a moved-from device should clear the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
@@ -196,7 +197,7 @@ void ShouldSwitch_SRD05VDCSL_OnAndOff()
     Expected<RelayState, Error> offState = controller.getState(sut);
     TEST_ASSERT_TRUE(offState.hasValue());
     TEST_ASSERT_TRUE(offState.getValue() == RelayState::Off);
-    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::Off), stream->getWrittenValue(), "Off writes HIGH.");
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::Off), stream->getWrittenValue(), F("Off writes HIGH."));
     TEST_ASSERT_FALSE(stream->hasError());
 
     Error onError = controller.on(sut);
@@ -204,7 +205,7 @@ void ShouldSwitch_SRD05VDCSL_OnAndOff()
     Expected<RelayState, Error> onState = controller.getState(sut);
     TEST_ASSERT_TRUE(onState.hasValue());
     TEST_ASSERT_TRUE(onState.getValue() == RelayState::On);
-    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::On), stream->getWrittenValue(), "On writes LOW.");
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::On), stream->getWrittenValue(), F("On writes LOW."));
     TEST_ASSERT_FALSE(stream->hasError());
 }
 
