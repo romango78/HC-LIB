@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "sensors/readers/ZMPT101BReaders.h"
 #include "FakeTimer.h"
 #include "FakeStream.h"
@@ -51,9 +52,9 @@ void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The True RMS calculation is falied.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
     TEST_ASSERT_EQUAL(VOLTAGE_SENSOR_TYPE, result.getValue().sensor.type);
-    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), "No errors expected.");
+    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), F("No errors expected."));
 }
 
 void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
@@ -69,7 +70,7 @@ void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The True RMS calculation is falied.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
@@ -86,7 +87,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerAlreadyStarted()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The True RMS calculation is falied.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
     TEST_ASSERT_FALSE(timer.isStarted());
 }
 
@@ -118,7 +119,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, 0.0f, result.getValue().data, "No samples must yield 0 V True RMS.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, 0.0f, result.getValue().data, F("No samples must yield 0 V True RMS."));
 }
 
 void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
@@ -135,7 +136,7 @@ void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FALSE(sensor.stream->hasError());
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data,
-        "True RMS of PolynomialEquation(0) is |offset|.");
+        F("True RMS of PolynomialEquation(0) is |offset|."));
 }
 
 #endif

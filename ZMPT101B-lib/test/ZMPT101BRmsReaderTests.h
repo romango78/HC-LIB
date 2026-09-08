@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "sensors/readers/ZMPT101BReaders.h"
 #include "FakeTimer.h"
 #include "FakeStream.h"
@@ -51,9 +52,9 @@ void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_EQUAL(VOLTAGE_SENSOR_TYPE, result.getValue().sensor.type);
-    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), "No errors expected.");
+    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), F("No errors expected."));
 }
 
 void ZMPT101BRmsReader_Read_WhenStreamAlreadyReadable()
@@ -69,7 +70,7 @@ void ZMPT101BRmsReader_Read_WhenStreamAlreadyReadable()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
@@ -86,7 +87,7 @@ void ZMPT101BRmsReader_Read_WhenTimerAlreadyStarted()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, "The RMS calculation is failed.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_FALSE(timer.isStarted());
 }
 
@@ -121,7 +122,7 @@ void ZMPT101BRmsReader_Read_WhenTimerElapsedImmediately()
 
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data,
-        "No samples keep max=0 and min=1000.");
+        F("No samples keep max=0 and min=1000."));
 }
 
 void ZMPT101BRmsReader_Read_ConstantMidScale()
@@ -136,7 +137,7 @@ void ZMPT101BRmsReader_Read_ConstantMidScale()
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FALSE(sensor.stream->hasError());
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, 1.13137085f, result.getValue().data,
-        "Constant zero offset: max stays 0, min is PolynomialEquation(0).");
+        F("Constant zero offset: max stays 0, min is PolynomialEquation(0)."));
 }
 
 #endif

@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "lib-utility.h"
 #include "sensors/ZMPT101B.h"
 #include "FakeStream.h"
@@ -91,7 +92,7 @@ void ZMPT101BSensor_ShouldCopy_FromMovedSource()
 
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
     TEST_ASSERT_EQUAL(400, sut.zero);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from sensor should not clone the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Copy of a moved-from sensor should not clone the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
@@ -129,7 +130,7 @@ void ZMPT101BSensor_ShouldAssign_FromNullStream()
     sut = source;
 
     TEST_ASSERT_EQUAL(7, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream sensor should clear the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Assignment from a null-stream sensor should clear the stream."));
 }
 
 void ZMPT101BSensor_ShouldSelfAssign()
@@ -156,7 +157,7 @@ void ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull()
 
     ZMPT101B::calibrate(&sensor);
 
-    TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero, "Null stream must leave zero unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero, F("Null stream must leave zero unchanged."));
 }
 
 void ZMPT101B_Calibrate_AveragesAdcIntoZero()
@@ -167,7 +168,7 @@ void ZMPT101B_Calibrate_AveragesAdcIntoZero()
     ZMPT101B::calibrate(&sensor);
 
     TEST_ASSERT_EQUAL(512, sensor.zero);
-    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), "calibrate() must call end().");
+    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end()."));
     TEST_ASSERT_FALSE(stream->hasError());
 }
 
@@ -180,7 +181,7 @@ void ZMPT101B_Calibrate_WhenStreamAlreadyReadable()
     ZMPT101B::calibrate(&sensor);
 
     TEST_ASSERT_EQUAL(400, sensor.zero);
-    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), "calibrate() must call end() even if the stream was already readable.");
+    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end() even if the stream was already readable."));
     TEST_ASSERT_FALSE(stream->hasError());
 }
 
