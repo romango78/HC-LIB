@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.1.2609]
+### Added
+- Firmware stub and _extra_src_filter.py_ so `pio run` has `setup()` / `loop()` without packing them in `src/`.
+- Unity tests use _unity_extensions.h_ / _F()_ from HC-LIB.System. Nano test builds shrink Serial buffers and drop Unity details to stay under 2 KB SRAM.
+
 ### Changed
-- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
+- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 - Requires __HC-LIB.System__ 1.1.2609 and __HC-LIB.IO-Abstraction__ 1.1.2609.
 - Streams store last error as __Error__ / __IoError__ (_StreamNotCreated_, _StreamClosed_).
 - _DigitalPortAdapter_ and _AnalogPortAdapter_ inherit _IPortAdapter_ publicly.

@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "FakePortAdapter.h"
 #include "stream/VoltageStream.h"
 
@@ -26,7 +27,7 @@ void VoltageStream_ShouldReadVoltage()
     float actualValue = sut->getVoltage();
     sut->end();
 
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue, "The read voltage is not equal the expected value.");
+    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.01, expectedValue, actualValue,  F("The read voltage is not equal the expected value."));
 
     delete sut;
 }
@@ -41,8 +42,8 @@ void VoltageStream_ShouldSetPWM()
     sut->setPwm(expectedValue);
     sut->end();
 
-    TEST_ASSERT_EQUAL_INT_MESSAGE(static_cast<int>(expectedValue * PWM_MAX / 100), adapter->getData(),
-        "The write PWM is not equal the expected value.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(static_cast<int>(expectedValue * PWM_MAX / 100), adapter->getData(), 
+        F("The write PWM is not equal the expected value."));
 
     delete sut;
 }
@@ -56,8 +57,8 @@ void VoltageStream_ShouldClampPwm_WhenPercentageIsBelowZero()
     sut.setPwm(-10);
     sut.end();
 
-    TEST_ASSERT_EQUAL_INT_MESSAGE(0, adapter->getData(), "Negative PWM should clamp to 0.");
-    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(0, adapter->getData(),  F("Negative PWM should clamp to 0."));
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(),  F("No errors expected."));
 }
 
 void VoltageStream_ShouldClampPwm_WhenPercentageIsAbove100()
@@ -69,8 +70,8 @@ void VoltageStream_ShouldClampPwm_WhenPercentageIsAbove100()
     sut.setPwm(150);
     sut.end();
 
-    TEST_ASSERT_EQUAL_INT_MESSAGE(PWM_MAX, adapter->getData(), "PWM above 100 should clamp to PWM_MAX.");
-    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+    TEST_ASSERT_EQUAL_INT_MESSAGE(PWM_MAX, adapter->getData(),  F("PWM above 100 should clamp to PWM_MAX."));
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(),  F("No errors expected."));
 }
 
 void VoltageStream_ShouldClone()
@@ -82,9 +83,9 @@ void VoltageStream_ShouldClone()
 
     IStream<uint16_t>* clone = sut.clone();
 
-    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(), "The clone should keep the source mode.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(adapter->getData(), clone->read(), "The clone should read the cloned adapter data.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone,  F("A clone is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(),  F("The clone should keep the source mode."));
+    TEST_ASSERT_EQUAL_INT_MESSAGE(adapter->getData(), clone->read(),  F("The clone should read the cloned adapter data."));
 
     delete clone;
 }

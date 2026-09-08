@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "FakePortAdapter.h"
 #include "stream/DigitalStream.h"
 
@@ -26,8 +27,8 @@ void DigitalStream_ShouldReadData_WhenStreamIsOpenForRead()
     uint8_t actualValue = sut->read();
     sut->end();
 
-    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(), "The port is not set in INPUT mode.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, actualValue, "The read value is not equal the expected value.");
+    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(),  F("The port is not set in INPUT mode."));
+    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, actualValue,  F("The read value is not equal the expected value."));
 
     delete sut;
 }
@@ -42,9 +43,9 @@ void DigitalStream_ShouldBeInReadMode_WhenStreamIsOpenForRead()
     bool canWrite = sut->canWrite();
     sut->end();
 
-    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(), "The port is not set in INPUT mode.");
-    TEST_ASSERT_TRUE_MESSAGE(canRead, "The stream is not set in read mode.");
-    TEST_ASSERT_FALSE_MESSAGE(canWrite, "The stream is not set in read mode.");
+    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(),  F("The port is not set in INPUT mode."));
+    TEST_ASSERT_TRUE_MESSAGE(canRead,  F("The stream is not set in read mode."));
+    TEST_ASSERT_FALSE_MESSAGE(canWrite,  F("The stream is not set in read mode."));
 
     delete sut;
 }
@@ -58,7 +59,7 @@ void DigitalStream_ShouldBeInUndefinedMode_WhenStreamIsClosed()
     sut->end();
     bool actualValue = sut->canRead() | sut->canWrite();
 
-    TEST_ASSERT_FALSE_MESSAGE(actualValue, "The closed stream is set in incorrect mode.");
+    TEST_ASSERT_FALSE_MESSAGE(actualValue,  F("The closed stream is set in incorrect mode."));
 
     delete sut;
 }
@@ -71,10 +72,10 @@ void DigitalStream_ShouldRaiseError_WhenTryRead_And_StreamIsNotOpenForRead()
 
     uint8_t actualValue = sut->read();
 
-    TEST_ASSERT_EQUAL_MESSAGE(NO_MODE, adapter->getMode(), "The port is set to some mode.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(NO_DATA, actualValue, "Some data is read.");
-    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed, "The wrong error is set.");
+    TEST_ASSERT_EQUAL_MESSAGE(NO_MODE, adapter->getMode(),  F("The port is set to some mode."));
+    TEST_ASSERT_EQUAL_INT_MESSAGE(NO_DATA, actualValue,  F("Some data is read."));
+    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed,  F("The wrong error is set."));
 
     delete sut;
 }
@@ -89,8 +90,8 @@ void DigitalStream_ShouldWriteData_WhenStreamIsOpenForWrite()
     sut->write(expectedValue);
     sut->end();
 
-    TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, adapter->getMode(), "The port is not set in OUTPUT mode.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, adapter->getData(), "The write value is not equal the expected value.");
+    TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, adapter->getMode(),  F("The port is not set in OUTPUT mode."));
+    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, adapter->getData(),  F("The write value is not equal the expected value."));
 
     delete sut;
 }
@@ -105,9 +106,9 @@ void DigitalStream_ShouldBeInWriteMode_WhenStreamIsOpenForWrite()
     bool canWrite = sut->canWrite();
     sut->end();
 
-    TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, adapter->getMode(), "The port is not set in OUTPUT mode.");
-    TEST_ASSERT_TRUE_MESSAGE(canWrite, "The stream is not set in write mode.");
-    TEST_ASSERT_FALSE_MESSAGE(canRead, "The stream is not set in write mode.");
+    TEST_ASSERT_EQUAL_MESSAGE(OUTPUT_MODE, adapter->getMode(),  F("The port is not set in OUTPUT mode."));
+    TEST_ASSERT_TRUE_MESSAGE(canWrite,  F("The stream is not set in write mode."));
+    TEST_ASSERT_FALSE_MESSAGE(canRead,  F("The stream is not set in write mode."));
 
     delete sut;
 }
@@ -126,9 +127,9 @@ void DigitalStream_ShouldBeInSpecificMode_WhenStreamIsOpenedSeveralTimes()
     bool canWrite = sut->canWrite();
     sut->end();
 
-    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(), "The port is not set in INPUT mode.");
-    TEST_ASSERT_FALSE_MESSAGE(canWrite, "The stream is not set in specific mode.");
-    TEST_ASSERT_TRUE_MESSAGE(canRead, "The stream is not set in specific mode.");
+    TEST_ASSERT_EQUAL_MESSAGE(INPUT_MODE, adapter->getMode(),  F("The port is not set in INPUT mode."));
+    TEST_ASSERT_FALSE_MESSAGE(canWrite,  F("The stream is not set in specific mode."));
+    TEST_ASSERT_TRUE_MESSAGE(canRead,  F("The stream is not set in specific mode."));
 
     delete sut;
 }
@@ -141,8 +142,8 @@ void DigitalStream_ShouldRaiseError_WhenTryWrite_And_StreamIsNotOpenForWrite()
     sut->begin(StreamMode::Read);
     sut->write(125);
 
-    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed, "The wrong error is set.");
+    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed,  F("The wrong error is set."));
 
     delete sut;
 }
@@ -154,8 +155,8 @@ void DigitalStream_ShouldRaiseError_WhenAdaptorIsNotSet()
     sut->begin(StreamMode::Read);
     sut->write(125);
 
-    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed, "The wrong error is set.");
+    TEST_ASSERT_TRUE_MESSAGE(sut->hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut->getLastError() == IoError::StreamClosed,  F("The wrong error is set."));
 
     delete sut;
 }
@@ -166,9 +167,9 @@ void DigitalStream_ShouldRaiseError_WhenBegin_AndAdaptorIsNotSet()
 
     sut.begin(StreamMode::Read);
 
-    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
-    TEST_ASSERT_FALSE_MESSAGE(sut.canRead(), "The stream should stay closed when the adapter is missing.");
+    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
+    TEST_ASSERT_FALSE_MESSAGE(sut.canRead(),  F("The stream should stay closed when the adapter is missing."));
 }
 
 void DigitalStream_ShouldGetState_WhenAdaptorIsSet()
@@ -179,8 +180,8 @@ void DigitalStream_ShouldGetState_WhenAdaptorIsSet()
 
     uint8_t actualValue = sut.getState();
 
-    TEST_ASSERT_EQUAL_MESSAGE(1, actualValue, "The adapter state is expected.");
-    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(), "No errors expected.");
+    TEST_ASSERT_EQUAL_MESSAGE(1, actualValue,  F("The adapter state is expected."));
+    TEST_ASSERT_FALSE_MESSAGE(sut.hasError(),  F("No errors expected."));
 }
 
 void DigitalStream_ShouldRaiseError_WhenGetState_AndAdaptorIsNotSet()
@@ -189,9 +190,9 @@ void DigitalStream_ShouldRaiseError_WhenGetState_AndAdaptorIsNotSet()
 
     uint8_t actualValue = sut.getState();
 
-    TEST_ASSERT_EQUAL_MESSAGE(NO_DATA, actualValue, "NO_DATA is expected when the adapter is missing.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_EQUAL_MESSAGE(NO_DATA, actualValue,  F("NO_DATA is expected when the adapter is missing."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(sut.getLastError() == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
 }
 
 void DigitalStream_ShouldClone_WhenAdaptorIsSet()
@@ -204,10 +205,10 @@ void DigitalStream_ShouldClone_WhenAdaptorIsSet()
 
     IStream<uint8_t>* clone = sut.clone();
 
-    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(), "The clone should keep the source mode.");
-    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, clone->read(), "The clone should read the cloned adapter data.");
-    TEST_ASSERT_FALSE_MESSAGE(clone->hasError(), "No errors expected on the clone.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone,  F("A clone is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(clone->canRead(),  F("The clone should keep the source mode."));
+    TEST_ASSERT_EQUAL_INT_MESSAGE(expectedValue, clone->read(),  F("The clone should read the cloned adapter data."));
+    TEST_ASSERT_FALSE_MESSAGE(clone->hasError(),  F("No errors expected on the clone."));
 
     delete clone;
 }
@@ -218,10 +219,10 @@ void DigitalStream_ShouldClone_WhenAdaptorIsNotSet()
 
     IStream<uint8_t>* clone = sut.clone();
 
-    TEST_ASSERT_NOT_NULL_MESSAGE(clone, "A clone is expected.");
+    TEST_ASSERT_NOT_NULL_MESSAGE(clone,  F("A clone is expected."));
     clone->begin(StreamMode::Read);
-    TEST_ASSERT_TRUE_MESSAGE(clone->hasError(), "Some error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(clone->getLastError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(clone->hasError(),  F("Some error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(clone->getLastError() == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
 
     delete clone;
 }
