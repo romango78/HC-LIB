@@ -439,3 +439,5 @@ Full Flash / SRAM / EEPROM numbers for more boards are in the [Arduino Memory Gu
 - [PROGMEM (Language Reference)](https://www.arduino.cc/reference/en/language/variables/utilities/progmem/)
 - [String.reserve()](https://www.arduino.cc/reference/en/language/variables/data-types/string/functions/reserve/)
 - [avr-libc `<avr/pgmspace.h>`](https://www.nongnu.org/avr-libc/user-manual/group__avr__pgmspace.html)
+- [FLASH.md](FLASH.md) — `.text`, bootloader limit, `PROGMEM` / `F()`, flash measurement.
+- [EEPROM.md](EEPROM.md) — 1 KB settings store, `update` / `put`, wear.
