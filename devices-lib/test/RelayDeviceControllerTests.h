@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "FakeStream.h"
 #include "devices/controllers/RelayDeviceController.h"
 
@@ -23,9 +24,9 @@ void ShouldSwitchRepayInOnStatus()
 
     Error result = sut.on(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::NoError, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::On), ((FakeDigitalStream*)stream)->getWrittenValue(), "The relay should be ON.");
-    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::NoError,  F("No errors expected."));
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::On), ((FakeDigitalStream*)stream)->getWrittenValue(),  F("The relay should be ON."));
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(),  F("No errors expected in Stream."));
 }
 
 void Should_RaiseError_WhenTryOnRelay_AndStreamIsNotSet()
@@ -35,7 +36,7 @@ void Should_RaiseError_WhenTryOnRelay_AndStreamIsNotSet()
 
     Error result = sut.on(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
 }
 
 void ShouldSwitchRepayInOffStatus()
@@ -46,9 +47,9 @@ void ShouldSwitchRepayInOffStatus()
 
     Error result = sut.off(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::NoError, "No errors expected.");
-    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::Off), ((FakeDigitalStream*)stream)->getWrittenValue(), "The relay should be OFF.");
-    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_TRUE_MESSAGE(result == GenericError::NoError,  F("No errors expected."));
+    TEST_ASSERT_EQUAL_MESSAGE(static_cast<uint8_t>(RelayState::Off), ((FakeDigitalStream*)stream)->getWrittenValue(),  F("The relay should be OFF."));
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(),  F("No errors expected in Stream."));
 }
 
 void Should_RaiseError_WhenTryOffRelay_AndStreamIsNotSet()
@@ -58,7 +59,7 @@ void Should_RaiseError_WhenTryOffRelay_AndStreamIsNotSet()
 
     Error result = sut.off(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_TRUE_MESSAGE(result == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
 }
 
 void ShouldGetRelayState()
@@ -69,9 +70,9 @@ void ShouldGetRelayState()
 
     Expected<RelayState, Error> result = sut.getState(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), "No errors expected.");
-    TEST_ASSERT_TRUE_MESSAGE(result.getValue() == RelayState::Off, "The relay should be OFF.");
-    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(),  F("No errors expected."));
+    TEST_ASSERT_TRUE_MESSAGE(result.getValue() == RelayState::Off,  F("The relay should be OFF."));
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(),  F("No errors expected in Stream."));
 }
 
 void Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet()
@@ -81,8 +82,8 @@ void Should_RaiseError_WhenTryGetRelayState_AndStreamIsNotSet()
 
     Expected<RelayState, Error> result = sut.getState(device);
 
-    TEST_ASSERT_FALSE_MESSAGE(result.hasValue(), "The error is expected.");
-    TEST_ASSERT_TRUE_MESSAGE(result.getError() == IoError::StreamNotCreated, "IoError::StreamNotCreated is expected.");
+    TEST_ASSERT_FALSE_MESSAGE(result.hasValue(),  F("The error is expected."));
+    TEST_ASSERT_TRUE_MESSAGE(result.getError() == IoError::StreamNotCreated,  F("IoError::StreamNotCreated is expected."));
 }
 
 void ShouldGetRelayState_WhenRelayIsOn()
@@ -93,9 +94,9 @@ void ShouldGetRelayState_WhenRelayIsOn()
 
     Expected<RelayState, Error> result = sut.getState(device);
 
-    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(), "No errors expected.");
-    TEST_ASSERT_TRUE_MESSAGE(result.getValue() == RelayState::On, "The relay should be ON.");
-    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(), "No errors expected in Stream.");
+    TEST_ASSERT_TRUE_MESSAGE(result.hasValue(),  F("No errors expected."));
+    TEST_ASSERT_TRUE_MESSAGE(result.getValue() == RelayState::On,  F("The relay should be ON."));
+    TEST_ASSERT_FALSE_MESSAGE(stream->hasError(),  F("No errors expected in Stream."));
 }
 
 #endif

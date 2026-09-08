@@ -12,6 +12,7 @@
 #ifdef UNIT_TEST
 
 #include <unity.h>
+#include "unity_extensions.h"
 #include "sensors/AnalogSensor.h"
 #include "FakeStream.h"
 #include "lib-utility.h"
@@ -37,10 +38,10 @@ void ShouldConvert_AnalogSensorToAnalogSensor()
     AnalogSensor sut = source;
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream, "The 'stream' should be cloned.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream,  F("The 'stream' should be cloned."));
 }
 
 void ShouldConvert_AnalogSensorToISensor()
@@ -52,8 +53,8 @@ void ShouldConvert_AnalogSensorToISensor()
     ISensor sut = (ISensor)source;
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
 }
 
 void ShouldMove_AnalogSensorToAnalogSensor()
@@ -66,10 +67,10 @@ void ShouldMove_AnalogSensorToAnalogSensor()
     AnalogSensor sut(std::move(source));
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream, "The 'stream' should be same as in origin object.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream,  F("The 'stream' should be same as in origin object."));
 }
 
 void ShouldAssignCopy_AnalogSensor()
@@ -81,19 +82,19 @@ void ShouldAssignCopy_AnalogSensor()
     // Act
     sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type, "The 'type' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category, "The 'category' should be same as in origin object.");
-    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin, "The 'pin' should be same as in origin object.");
-    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream, "The 'stream' should be cloned.");
+    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
+    TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream,  F("The 'stream' should be cloned."));
 }
 
 void ShouldClassify_AnalogSensorAsAnalog()
 {
     AnalogSensor sut = createAnalogSensor();
 
-    TEST_ASSERT_TRUE_MESSAGE(device::is_analog(sut), "AnalogSensor should be analog.");
-    TEST_ASSERT_FALSE_MESSAGE(device::is_digital(sut), "AnalogSensor should not be digital.");
-    TEST_ASSERT_FALSE_MESSAGE(device::is_relay(sut), "AnalogSensor should not be a relay.");
+    TEST_ASSERT_TRUE_MESSAGE(device::is_analog(sut),  F("AnalogSensor should be analog."));
+    TEST_ASSERT_FALSE_MESSAGE(device::is_digital(sut),  F("AnalogSensor should not be digital."));
+    TEST_ASSERT_FALSE_MESSAGE(device::is_relay(sut),  F("AnalogSensor should not be a relay."));
 }
 
 void ShouldConstruct_AnalogSensor_WithNullStream()
@@ -126,7 +127,7 @@ void ShouldCopy_AnalogSensor_FromMovedSource()
 
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Copy of a moved-from sensor should not clone the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream,  F("Copy of a moved-from sensor should not clone the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
@@ -139,7 +140,7 @@ void ShouldAssign_AnalogSensor_FromNullStream()
 
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_NULL_MESSAGE(sut.stream, "Assignment from a null-stream sensor should clear the stream.");
+    TEST_ASSERT_NULL_MESSAGE(sut.stream,  F("Assignment from a null-stream sensor should clear the stream."));
 }
 
 void ShouldSelfAssign_AnalogSensor()
@@ -149,7 +150,7 @@ void ShouldSelfAssign_AnalogSensor()
 
     sut = sut;
 
-    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream, "Self-assignment must leave the stream pointer unchanged.");
+    TEST_ASSERT_EQUAL_MESSAGE(streamBefore, sut.stream,  F("Self-assignment must leave the stream pointer unchanged."));
     TEST_ASSERT_NOT_NULL(sut.stream);
 }
 

@@ -5,8 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.1.2609]
+### Added
+- Firmware stub and _extra_src_filter.py_ so `pio run` has `setup()` / `loop()` without packing them in `src/`.
+- Unity tests use _unity_extensions.h_ / _F()_ from HC-LIB.System. Nano test builds shrink Serial buffers and drop Unity float/details to stay under 2 KB SRAM.
+
 ### Changed
-- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
+- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 - Requires __HC-LIB.System__, __HC-LIB.Device.Abstractions__, and __HC-LIB.IO-Port__ 1.1.2609.
 - _DigitalDeviceController_ and _RelayDeviceController_ use _Error_ / _Expected{T, Error}_ and _IoError::StreamNotCreated_.
 - _RelayState_ is an _enum class_ (_On_, _Off_).
