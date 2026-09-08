@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [1.1.2609]
 ### Added
 - _IoError_ / _IoErrors.h_ (_StreamNotCreated_, _StreamClosed_).
-- PlatformIO project at the library root (`platformio.ini`, `src/`, `test/`).
+- PlatformIO project at the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
+- Firmware stub and _extra_src_filter.py_ so `pio run` has `setup()` / `loop()` without packing them in `src/`.
+- Unity tests use _unity_flash.h_ / _F()_ from HC-LIB.System. Nano test builds shrink Serial buffers and drop Unity float/details to stay under 2 KB SRAM.
 
 ### Changed
 - Requires __HC-LIB.System__ 1.1.2609.
