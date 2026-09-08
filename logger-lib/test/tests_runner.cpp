@@ -6,25 +6,11 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#if defined(ARDUINO) && !defined(UNIT_TEST)
-
-#include <Arduino.h>
-
-void setup()
-{
-}
-
-void loop()
-{
-    delay(100);
-}
-
-#endif
-
 #if defined(UNIT_TEST)
 
 #include <unity.h>
 #include "LogTests.h"
+#include "unity_extensions.h"
 
 void testsProcess()
 {

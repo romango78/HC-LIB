@@ -19,16 +19,7 @@
 #include <stddef.h>
 #include "persisters/ILogPersister.h"
 #include "providers/IDateTimeProvider.h"
-
-#if defined(ARDUINO)
-#include <Arduino.h>
-#else
-/// @brief Host stand-in so F() / flash overloads compile in native tests.
-class __FlashStringHelper;
-#ifndef F
-#define F(string_literal) (reinterpret_cast<const __FlashStringHelper *>(string_literal))
-#endif
-#endif
+#include "flash.h"
 
 #define LOG_LEVEL_OFF 0 // Logging is disabled
 #define LOG_LEVEL_CRITICAL 1 // Indicates the system is unusable, or an error that is unrecoverable

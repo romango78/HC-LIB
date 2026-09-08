@@ -36,6 +36,13 @@ inline const char* flash_c_str(const __FlashStringHelper* t_text)
 
 #else
 
+/// @brief Host stand-in for __FlashStringHelper so F() / flash overloads compile in native builds.
+/// @note This is a workaround for the fact that F() is not defined in native builds.
+class __FlashStringHelper;
+
+/// @brief Define F() as a macro that returns a C string literal.
+/// @param string_literal The string literal to return.
+/// @return The string literal.
 #ifndef F
 #define F(string_literal) (string_literal)
 #endif
