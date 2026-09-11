@@ -9,6 +9,9 @@
 #ifndef _KEY_VALUE_PAIR_H_
 #define _KEY_VALUE_PAIR_H_
 
+/// @brief A key and a value. Does not own pointed-to data.
+/// @tparam TKey Key type. Copied into the pair.
+/// @tparam TValue Value type. Copied into the pair.
 template<typename TKey, typename TValue>
 class KeyValuePair
 {
@@ -16,20 +19,23 @@ class KeyValuePair
         TKey m_key;
         TValue m_value;
     public:        
-        KeyValuePair(const TKey t_key, const TValue t_value)
-        {
-            m_key = t_key;
-            m_value = t_value;
-        };
+        /// @brief Constructs a key-value pair.
+        /// @param t_key The key.
+        /// @param t_value The value.
+        KeyValuePair(const TKey &t_key, const TValue &t_value)
+            : m_key(t_key), m_value(t_value)
+        {}
 
-        ~KeyValuePair() = default;
-
-        TKey& getKey()
+        /// @brief Returns the key.
+        /// @return The key.
+        const TKey& getKey() const
         {
             return m_key;
-        };
+        }
 
-        TValue& getValue()
+        /// @brief Returns the value.
+        /// @return The value.
+        const TValue& getValue() const
         {
             return m_value;
         };

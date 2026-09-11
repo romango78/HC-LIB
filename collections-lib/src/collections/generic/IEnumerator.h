@@ -9,6 +9,9 @@
 #ifndef _HC_LIB_I_ENUMERATOR_H_
 #define _HC_LIB_I_ENUMERATOR_H_
 
+#include "errors/GenericErrors.h"
+#include "Expected.h"
+
 /// @brief Supports a simple iteration over a generic collection.
 template <typename T>
 class IEnumerator
@@ -45,31 +48,37 @@ class IEnumerator
         ///   - The last call to MoveNext returned false, which indicates the end of the collection.
         ///   - The enumerator is invalidated due to changes made in the collection, 
         ///     such as adding, modifying, or deleting elements.
-        virtual T getCurrent() = 0;
+        virtual Expected<T, Error> getCurrent() const = 0;
 };
 
-template <class T>
-struct EnumeratedItem
-{
-    T item;
-    EnumeratedItem<T> *next = nullptr;
-};
-
-/// @brief Abstract enumerator that walks a singly linked list of EnumeratedItem{T}.
-/// @note Owns the list. Copy and move are disabled.
-template <class T>
+/// @brief Abstract enumerator that walks a collection by key.
+/// @tparam T Item type. Must be trivially copyable.
+/// @tparam TKey Key type. Must be default-constructible and trivially copyable.
+/// @note Copy and move are disabled. Storage stays in the derived collection.
+template <typename T, typename TKey>
 class EnumeratorBase : public IEnumerator<T>
 {
     protected:
-        EnumeratedItem<T> *m_head;
-        EnumeratedItem<T> *m_current;
+        TKey m_current;
         bool m_isReseted;
+        bool m_isEnded;
+
+        /// @brief Returns the key of the first item.
+        /// @return The first key, or an error when the collection is empty.
+        virtual Expected<TKey, Error> getHead() const = 0;
+
+        /// @brief Returns the key after _t_key_.
+        /// @param t_key Current key.
+        /// @return The next key, or an error when _t_key_ has no successor.
+        virtual Expected<TKey, Error> getNext(TKey t_key) const = 0;
+
+        /// @brief Returns the item for a valid key.
+        /// @param t_key Key from getHead() or getNext(). Called only when the cursor is on an item.
+        virtual T getByKey(TKey t_key) const = 0;
 
     public:
-        const T NULLITEM = {};
-
         EnumeratorBase()
-            : m_head(nullptr), m_current(nullptr), m_isReseted(true)
+            : m_current(), m_isReseted(true), m_isEnded(false)
         {}
 
         EnumeratorBase(const EnumeratorBase&) = delete;
@@ -77,57 +86,40 @@ class EnumeratorBase : public IEnumerator<T>
         EnumeratorBase(EnumeratorBase&&) = delete;
         EnumeratorBase& operator=(EnumeratorBase&&) = delete;
 
-        ~EnumeratorBase() override
-        {
-            m_current = m_head;
-            while(m_current)
-            {
-                EnumeratedItem<T> *item = m_current->next;
-                delete m_current;
-                m_current = item;
-            }
-            m_head = nullptr;
-        }
-
         void reset() override
         {
             m_isReseted = true;
-            m_current = nullptr;
-        };
+            m_isEnded = false;
+        }
 
         bool moveNext() override
         {
-            if (!m_head)
+            if (m_isEnded)
             {
                 return false;
             }
 
-            if(m_isReseted)
+            Expected<TKey, Error> key = m_isReseted ? getHead() : getNext(m_current);
+            if (!key.hasValue())
             {
-                m_current = m_head;
+                m_isEnded = true;
                 m_isReseted = false;
-            }
-            else if (m_current && m_current->next)
-            {
-                m_current = m_current->next;
-            }
-            else
-            {
-                m_current = nullptr;
                 return false;
             }
 
+            m_current = key.getValue();
+            m_isReseted = false;
             return true;
-        };
+        }
 
-        T getCurrent() override
+        Expected<T, Error> getCurrent() const override
         {
-            if(!m_current)
+            if (m_isReseted || m_isEnded)
             {
-                return T();
+                return make_error(GenericError::InvalidOperation);
             }
-            return m_current->item;            
-        };
+            return getByKey(m_current);
+        }
 };
 
 #endif

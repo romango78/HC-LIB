@@ -5,17 +5,23 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
+
 #ifndef _HC_LIB_I_ENUMERABLE_H_
 #define _HC_LIB_I_ENUMERABLE_H_
 
 #include "IEnumerator.h"
+#include <memory>
 
-// Exposes an enumerator, which supports a simple iteration over a generic collection.
+/// @brief Exposes an enumerator, which supports a simple iteration over a generic collection.
+/// @tparam T Item type stored in the collection.
 template <typename T>
 class IEnumerable
 {
 public:
-    virtual IEnumerator<T> *getEnumerator() = 0;
+    /// @brief Returns an enumerator that iterates through the collection.
+    /// @return An enumerator that can be used to iterate through the collection.
+    /// @note The caller is responsible for deleting the enumerator.
+    virtual std::unique_ptr<IEnumerator<T>> getEnumerator() const = 0;
 };
 
 #endif

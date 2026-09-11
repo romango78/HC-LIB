@@ -22,7 +22,7 @@ private:
     Queue<uint8_t>* const m_outboxBuffer;
 
     TwiBufferInternal() :
-        m_inboxBuffer(new Queue<uint8_t>()), m_outboxBuffer(new Queue<uint8_t>())
+        m_inboxBuffer(new Queue<uint8_t, 16>()), m_outboxBuffer(new Queue<uint8_t, 16>())
     {};
     ~TwiBufferInternal() 
     {

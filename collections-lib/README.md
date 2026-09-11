@@ -8,18 +8,19 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 - HC-LIB.System v1.1.2609
 
 ### Features
-- Defines __Queue{T}__, a first-in, first-out buffer of trivially copyable elements. Copy and move are disabled. __dequeue__ / __peek__ return __Expected{T, Error}__; __enqueue__ returns __Error__.
-- Defines __IEnumerable{T}__ and __IEnumerator{T}__. __EnumeratorBase{T}__ walks an owned linked list; the first __moveNext()__ after create or __reset()__ advances to the first element.
-- Defines __KeyValuePair{TKey, TValue}__.
+- Defines __Queue{T, CAPACITY}__, a fixed-size FIFO ring of trivially copyable elements (default __CAPACITY__ 16). Copy and move are disabled. Storage is a compile-time array (no malloc). __dequeue__ / __peek__ return __Expected{T, Error}__; __enqueue__ returns __bool__.
+- Defines __IEnumerator{T}__. __getCurrent()__ is const and returns __Expected{T, Error}__ (__GenericError::InvalidOperation__ before the first item or after the last).
+- Defines __EnumeratorBase{T, TKey}__, a key-based walker. The collection keeps storage; the derived type implements __getHead()__, __getNext()__, and __getByKey()__. Copy and move are disabled. After create or __reset()__, the first __moveNext()__ advances to the first element. After __moveNext()__ returns false, later calls stay false until __reset()__.
+- Defines __IEnumerable{T}__. __getEnumerator()__ is const and returns __std::unique_ptr{IEnumerator{T}}__ (heap enumerator; the unique_ptr releases it).
+- Defines __KeyValuePair{TKey, TValue}__. Constructed from const refs. __getKey()__ / __getValue()__ are const. The pair copies the key and value; it does not own pointed-to data.
 
 ### Usage
-Enqueue and dequeue with __Queue{T}__:
+Enqueue and dequeue with __Queue{T, CAPACITY}__:
 ```c++
-Queue<uint8_t> queue;
-Error status = queue.enqueue(10);
-if (status)
+Queue<uint8_t, 16> queue;
+if (!queue.enqueue(10))
 {
-    // GenericError::OutOfMemory
+    // queue is full
 }
 
 Expected<uint8_t, Error> front = queue.peek();
@@ -34,14 +35,24 @@ else if (item.getError() == GenericError::InvalidOperation)
 }
 ```
 
-Iterate with __IEnumerator{T}__:
+Iterate with __IEnumerable{T}__ / __IEnumerator{T}__:
 ```c++
-IEnumerator<int> *enumerator = collection.getEnumerator();
+std::unique_ptr<IEnumerator<int>> enumerator = collection.getEnumerator();
 while (enumerator->moveNext())
 {
-    int value = enumerator->getCurrent();
+    Expected<int, Error> current = enumerator->getCurrent();
+    if (current.hasValue())
+    {
+        int value = current.getValue();
+    }
 }
-delete enumerator;
+```
+
+Store a key and a value with __KeyValuePair{TKey, TValue}__:
+```c++
+KeyValuePair<const char*, int> pair("temp", 21);
+const char* key = pair.getKey();
+int value = pair.getValue();
 ```
 
 ### Environments

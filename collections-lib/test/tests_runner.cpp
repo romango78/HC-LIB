@@ -56,25 +56,26 @@ void testsProcess()
     RUN_TEST(EnumeratorBase_ShouldGetFirstItem_AfterReset_AndOneCallMoveNext);
     RUN_TEST(EnumeratorBase_ShouldNotGetLastItem_WhenMoveNextReturnFalse);
     RUN_TEST(EnumeratorBase_ShouldGetFirstItem_AfterFirstMoveNext_WithoutReset);
-    RUN_TEST(EnumeratorBase_ShouldDestroy_WhenSingleItem);
+    RUN_TEST(EnumeratorBase_ShouldEnumerate_WhenSingleItem);
     RUN_TEST(EnumeratorBase_ShouldNotGetItem_AfterInitializing_WithoutReset);
     RUN_TEST(EnumeratorBase_ShouldReset_WhenNoItemsToEnumerate);
     RUN_TEST(EnumeratorBase_ShouldMoveNext_WhenNoItemsToEnumerate);
     RUN_TEST(EnumeratorBase_ShouldEnumerate_ValueTypes);
-    RUN_TEST(EnumeratorBase_ShouldEnumerate_RefTypes); 
+    RUN_TEST(EnumeratorBase_ShouldEnumerate_RefTypes);
 
     /*****************************************
-     * Collections\Generic\Queue<T>
+     * Collections\Generic\Queue<T, CAPACITY>
      *****************************************/
     RUN_TEST(Queue_ShouldCreateDefaultQueue_And_EnqueueTenItems);
     RUN_TEST(Queue_ShouldCreateDefaultQueue_And_DequeueAllItems);
     RUN_TEST(Queue_ShouldReturnError_WhenDequeueFromEmptyQueue);
-    RUN_TEST(Queue_ShouldReturnError_WhenEnqueue_And_InsufficientMemory);
+    RUN_TEST(Queue_ShouldReturnFalse_WhenEnqueue_And_QueueIsFull);
     RUN_TEST(Queue_ShouldClearQueue);
     RUN_TEST(Queue_ShouldClearEmptyQueue);
     RUN_TEST(Queue_ShouldPeekElementFromQueue);
     RUN_TEST(Queue_ShouldReturnError_WhenPeekFromEmptyQueue);
     RUN_TEST(Queue_ShouldPreserveOrder_WhenElementSizeIsLargerThanByte);
+    RUN_TEST(Queue_ShouldPreserveOrder_WhenIndicesWrap);
 
     UNITY_END();
 };

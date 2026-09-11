@@ -119,43 +119,30 @@ pio test -e nanonew
 Tests live under `sample/test`. See [PlatformIO unit testing](https://docs.platformio.org/en/latest/plus/unit-testing.html).
 
 ## Debug
-Native unit-test debugging is the supported path. On-device debugging of `nanonew` needs a hardware probe and is not configured.
+Native unit-test debugging is the supported path. On-device debugging of `nano-board` needs a hardware probe and is not configured.
 
-### From the editor (recommended)
-1. Open the library `sample` folder as the PlatformIO project (or use `HC-LIB.code-workspace`).
-2. Set breakpoints in `sample/test` or in the library headers under `src`.
-3. Run and Debug (`Ctrl+Shift+D`) → **PIO Debug** → F5.
+Each library is its own PlatformIO project. The Unity debug binary is:
 
-**PIO Debug** rebuilds the `desktop-debug` binary, then starts GDB. Use **PIO Debug (skip Pre-Debug)** if the binary is already built.
+`{library}/.pio/build/desktop-debug/program.exe`
 
-The workspace launch config `native-debug` starts GDB on:
+Build it before GDB (`pio run -e desktop-debug` or `pio test -e desktop-debug` from that library folder).
 
-`sample/.pio/build/desktop-debug/program.exe`
+### From the editor
+1. Open `HC-LIB.code-workspace`.
+2. Set breakpoints in that library’s `test/` or `src/`.
+3. Open a source file in that library (for example `collections-lib/src/...` or `test/...`).
+4. Run and Debug (`Ctrl+Shift+D`) → **native-debug** → F5.
+
+**native-debug** uses the Native Debug (`gdb`) adapter and MinGW `gdb.exe`. `${workspaceFolder}` in this multi-root workspace is `root`, so the config uses `${fileWorkspaceFolder}` (the library that owns the active file). GDB path: `C:/repos/tools/mingw64/bin/gdb.exe`.
+
+**PIO Debug** (PlatformIO) also works when that library folder is the active project. It rebuilds `desktop-debug`, then starts GDB. Use **PIO Debug (skip Pre-Debug)** if the binary is already built.
 
 ### From the terminal
 ```powershell
 pio debug -e desktop-debug
 ```
 
-### launch.json
-PlatformIO regenerates `sample/.vscode/launch.json` on each debug session. Do not rely on hand-edits there. Put a stable GDB configuration in `HC-LIB.code-workspace` instead:
-
-```json
-{
-    "type": "cppdbg",
-    "request": "launch",
-    "name": "native-debug",
-    "program": "${workspaceFolder}/sample/.pio/build/desktop-debug/program.exe",
-    "args": [],
-    "stopAtEntry": false,
-    "cwd": "${workspaceFolder}/sample",
-    "environment": [],
-    "externalConsole": false,
-    "MIMode": "gdb"
-}
-```
-
-`${workspaceFolder}` is the library folder when that folder is the workspace root (as in `HC-LIB.code-workspace`).
+Run this from the library folder (for example `collections-lib`), not from the repo root.
 
 ## Packages
 Packaging and publish commands are documented in each library README (`pio package pack` / `nuget.exe pack`).
