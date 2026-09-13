@@ -5,12 +5,13 @@
 // with the terms of such license.
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
-//
-// This file is part of the Logger Library v1.0.1
 
-#ifndef _I_DATETIME_PROVIDER_H_
-#define _I_DATETIME_PROVIDER_H_
+/// @file IDateTimeProvider.h
+/// @brief Local date/time source for log timestamps.
+#ifndef _HC_LIB_I_DATETIME_PROVIDER_H_
+#define _HC_LIB_I_DATETIME_PROVIDER_H_
 
+/// @brief Calendar date and time used in log prefixes.
 struct DateTime
 {
     int year;
@@ -21,11 +22,14 @@ struct DateTime
     int seconds;
 };
 
-class IDateTimeProvider 
+/// @brief Supplies the current local date and time.
+class IDateTimeProvider
 {
-    public:        
+    public:
         virtual ~IDateTimeProvider() = default;
-        virtual DateTime* getLocalDatetime() = 0;
+
+        /// @brief Returns the current local date and time.
+        virtual DateTime getLocalDatetime() const = 0;
 };
 
 #endif

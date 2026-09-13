@@ -8,51 +8,61 @@
 //
 // Why the code cannot be moved to cpp file: https://isocpp.org/wiki/faq/templates#templates-defn-vs-decl
 
-#ifndef _BASE_STREAM_H_
-#define _BASE_STREAM_H_
+/// @file BaseStream.h
+/// @brief Default IStream implementation: mode flags and last-error storage.
+#ifndef _HC_LIB_BASE_STREAM_H_
+#define _HC_LIB_BASE_STREAM_H_
 
 #include "IStream.h"
 
+/// @brief IStream with last-error and open-mode tracking.
+/// @tparam T The value type transferred by the stream.
 template<typename T>
 class BaseStream : public IStream<T>
 {
     protected:
-        err_t m_lastError;
+        Error m_lastError;
         uint8_t m_mode;
-        
-        BaseStream() 
-            : m_lastError(NO_ERROR), m_mode(UNDEF_MODE) {};
 
+        /// @brief Initializes a closed stream with no error.
+        BaseStream()
+            : m_lastError(to_error(GenericError::NoError)), m_mode(STREAM_MODE_UNDEF) {};
+
+        /// @brief Clears the last error to GenericError::NoError.
         void resetLastError();
-        void setLastError(const err_t lastError);
 
+        /// @brief Stores _t_error_ as the last error.
+        void setLastError(const Error& t_error);
+
+        /// @brief Copies mode and last error into _t_clone_.
+        /// @return _t_clone_.
         IStream<T>* clone(BaseStream<T> *t_clone) const;
     public:
         virtual ~BaseStream() = default;
 
-        virtual void begin(const StreamMode t_mode) override;
+        void begin(const StreamMode t_mode) override;
 
         T read() override;
         void write(const T t_data) override;
         void end() override;
 
-        bool canRead() override;
-        bool canWrite() override;
+        bool canRead() const override;
+        bool canWrite() const override;
 
-        bool hasError() override;
-        err_t getLastError() override;        
+        bool hasError() const override;
+        Error getLastError() const override;
 };
 
 template<typename T>
 void BaseStream<T>::begin(const StreamMode t_mode)
 {
     resetLastError();
-    m_mode = t_mode;
+    m_mode = static_cast<uint8_t>(t_mode);
 };
 
 template<typename T>
 T BaseStream<T>::read()
-{ 
+{
     resetLastError();
     return T();
 };
@@ -67,29 +77,29 @@ template<typename T>
 void BaseStream<T>::end()
 {
     resetLastError();
-    m_mode = UNDEF_MODE;
+    m_mode = STREAM_MODE_UNDEF;
 };
 
 template<typename T>
-bool BaseStream<T>::canRead()
+bool BaseStream<T>::canRead() const
 {
-    return !(m_mode & UNDEF_MODE) && !(m_mode & WRITE_MODE);
+    return !(m_mode & STREAM_MODE_UNDEF) && !(m_mode & STREAM_MODE_WRITE);
 };
 
 template<typename T>
-bool BaseStream<T>::canWrite()
+bool BaseStream<T>::canWrite() const
 {
-    return !(m_mode & UNDEF_MODE) && (m_mode & WRITE_MODE);
+    return !(m_mode & STREAM_MODE_UNDEF) && (m_mode & STREAM_MODE_WRITE);
 };
 
 template<typename T>
-bool BaseStream<T>::hasError()
+bool BaseStream<T>::hasError() const
 {
-    return m_lastError != NO_ERROR;
+    return static_cast<bool>(m_lastError);
 };
 
 template<typename T>
-err_t BaseStream<T>::getLastError()
+Error BaseStream<T>::getLastError() const
 {
     return m_lastError;
 };
@@ -97,13 +107,13 @@ err_t BaseStream<T>::getLastError()
 template<typename T>
 void BaseStream<T>::resetLastError()
 {
-    m_lastError = NO_ERROR;
+    m_lastError = to_error(GenericError::NoError);
 };
 
 template<typename T>
-void BaseStream<T>::setLastError(const err_t lastError)
+void BaseStream<T>::setLastError(const Error& t_error)
 {
-    m_lastError = lastError;
+    m_lastError = t_error;
 };
 
 template<typename T>

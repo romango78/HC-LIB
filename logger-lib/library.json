@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.Logger",
-    "version": "1.0.2110",
-    "description": "This library is a tool to help the programmer output log statements to a variety of output targets.",
-    "keywords": "logger, arduino, atmelavr",
+    "version": "1.0.2609",
+    "description": "Arduino logger: Log, LogLevel, ILogPersister, and IDateTimeProvider.",
+    "keywords": "logger, log, arduino, atmelavr, native",
     "repository":
     {
       "type": "git",
@@ -20,12 +20,16 @@
       "include":
       [
           "src/*",
+          "src/log/*",
+          "src/log/persisters/*",
+          "src/providers/*",
           "include/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
-    },    
-    "license": "MIT",    
+    },
+    "license": "MIT",
     "frameworks": "*",
     "platforms": ["atmelavr", "native"]
   }

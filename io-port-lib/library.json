@@ -1,8 +1,8 @@
 {
     "name": "HC-LIB.IO-Port",
-    "version": "1.0.2203",
-    "description": "This library is a tool to help the programmer to work with I/O Ports on the Arduino Board.",
-    "keywords": "io, arduino, atmelavr",
+    "version": "1.1.2609",
+    "description": "Arduino port streams: DigitalStream, AnalogStream, VoltageStream, and pin adapters. Uses Error/IoError from HC-LIB.IO-Abstraction.",
+    "keywords": "io, port, stream, digital, analog, arduino, atmelavr, native",
     "repository":
     {
       "type": "git",
@@ -20,22 +20,25 @@
     [
       {
         "name": "HC-LIB.System",
-        "version": ">=1.0.2203"
-      },      
+        "version": ">=1.1.2609"
+      },
       {
         "name": "HC-LIB.IO-Abstraction",
-        "version": ">=1.0.2203"
-      }     
+        "version": ">=1.1.2609"
+      }
     ],
     "export": {
       "include":
       [
           "src/*",
+          "src/adapter/*",
+          "src/stream/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
     },
-    "license": "MIT",    
+    "license": "MIT",
     "frameworks": "*",
     "platforms": ["atmelavr", "native"]
   }

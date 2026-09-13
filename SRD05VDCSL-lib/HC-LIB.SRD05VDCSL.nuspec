@@ -2,18 +2,22 @@
 <package>
   <metadata>
     <id>HC-LIB.SRD05VDCSL</id>
-    <version>1.0.2203</version>
+    <version>1.0.2609</version>
     <title>Arduino SRD05VDCSL Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/SRD05VDCSL-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Defines classes for SRD05VDCSL relay device that can be connected to Arduino Boards..</description>
-    <releaseNotes>Initial 1.0 release</releaseNotes>
-    <copyright>Copyright 2022 Roman Gorielov</copyright>
-    <tags>native arduino atmelavr device SRD05VDCSL</tags>
+    <description>Songle SRD-05VDC-SL-C relay device for Arduino, driven by RelayDeviceController.</description>
+    <releaseNotes>1.0.2609: PlatformIO at library root; requires Devices 1.1.2609 (Error/Expected, RelayState enum class).</releaseNotes>
+    <copyright>Copyright 2026 Roman Gorielov</copyright>
+    <tags>native arduino atmelavr device relay SRD05VDCSL</tags>
     <dependencies>
-      <dependency id="HC-LIB.Devices" version="1.0.2203" />
+      <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
+      <dependency id="HC-LIB.IO-Abstractions" version="1.1.2609" />
+      <dependency id="HC-LIB.IO-Port" version="1.1.2609" />
+      <dependency id="HC-LIB.Device.Abstractions" version="1.1.2609" />
+      <dependency id="HC-LIB.Devices" version="1.1.2609" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>
@@ -23,6 +27,8 @@
   <files>
     <file src="src\devices\SRD05VDCSL.h" target="src\devices\SRD05VDCSL.h" />
     <file src="library.json" target="library.json" />
+    <file src="library.properties" target="library.properties" />
     <file src="LICENSE.md" target="LICENSE.md" />
+    <file src="README.md" target="README.md" />
   </files>
 </package>

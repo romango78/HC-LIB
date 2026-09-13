@@ -1,7 +1,7 @@
 {
     "name": "HC-LIB.Device.Abstractions",
-    "version": "1.0.2201",
-    "description": "Defines abstractions for devices that can be connected to Arduino Boards.",
+    "version": "1.1.2609",
+    "description": "Device and sensor abstractions: IDevice, IDeviceController, ISensor, ISensorReader, DeviceError. Uses Expected and Error from HC-LIB.System.",
     "keywords": "device, abstractions, arduino, atmelavr",
     "repository":
     {
@@ -20,14 +20,20 @@
     [
       {
         "name": "HC-LIB.System",
-        "version": ">=1.0.2201"
+        "version": ">=1.1.2609"
       }
     ],
     "export": {
       "include":
       [
           "src/*",
+          "src/errors/*",
+          "src/devices/*",
+          "src/devices/controllers/*",
+          "src/sensors/*",
+          "src/sensors/readers/*",
           "library.json",
+          "library.properties",
           "*.md"
       ]
     },    

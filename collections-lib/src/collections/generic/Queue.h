@@ -6,213 +6,132 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _QUEUE_
-#define _QUEUE_
+#ifndef _HC_LIB_QUEUE_H_
+#define _HC_LIB_QUEUE_H_
 
 #include <inttypes.h>
-#include <string.h>
-#include <stdlib.h>
+#include <stddef.h>
 #include "Expected.h"
+#include "errors/GenericErrors.h"
 
-#define GROWTH_FACTOR 2
-#define DEFAULT_CAPACITY 4
-
-template<typename T>
+/// @brief First-in, first-out ring of trivial (POD) elements.
+/// @tparam T Element type. Must be trivially copyable.
+/// @tparam CAPACITY Number of slots (1..65535). All slots are usable. Default 16.
+/// @note Copy and move are disabled. Storage is a fixed array (no malloc).
+template<typename T, uint16_t CAPACITY = 16>
 class Queue
 {
+    static_assert(CAPACITY >= 1, "Queue CAPACITY must be at least 1.");
+
 private:
+    /// @brief Index of the front element.
+    uint16_t m_head;
+    /// @brief Number of stored elements (0..CAPACITY).
     uint16_t m_count;
-    uint16_t m_capacity;
-    T* m_data;
+    /// @brief Data storage.
+    T m_data[CAPACITY];
 
-    void shift();
-    bool tryAllocate(uint16_t t_size);
-    bool tryResize();   
-    bool tryTrim();     
+    uint16_t indexAt(uint16_t t_offset) const;
+
 public:
-    // Initializes a new instance of the Queue class that 
-    // is empty, has the default initial capacity
+    /// @brief Initializes an empty queue. Capacity is CAPACITY.
     Queue()
-        : Queue(DEFAULT_CAPACITY) {};
-    // Initializes a new instance of the Queue class that 
-    // is empty, has the specified initial capacity
-    Queue(uint16_t t_capacity);
-    ~Queue();
+        : m_head(0), m_count(0) {};
 
-    // Removes all objects from the Queue
+    /// @brief Prevents copying and moving of the Queue.
+    /// @note Copy and move are disabled.
+    Queue(const Queue&) = delete;
+
+    /// @brief Prevents copying and moving of the Queue.
+    /// @note Copy and move are disabled.
+    Queue& operator=(const Queue&) = delete;
+
+    /// @brief Prevents copying and moving of the Queue.
+    /// @note Copy and move are disabled.
+    Queue(Queue&&) = delete;
+
+    /// @brief Prevents copying and moving of the Queue.
+    /// @note Copy and move are disabled.
+    Queue& operator=(Queue&&) = delete;
+
+    /// @brief Removes all elements from the Queue.
+    /// @note The capacity of the Queue is unchanged.
     void clear();
-    // Gets the number of elemets contained in the Queue
-    uint16_t count();
-    // Removes and returns the element at the beginning 
-    // of the Queue.
-    // Returns INVALID_OPERATION_ERROR if the Queue is empty.
-    Expected<T> dequeue();
-    // Adds an element to the end of the Queue.
-    // Returns INVALID_OPERATION_ERROR if the Queue is full 
-    // and cannot be extended
-    err_t enqueue(const T t_item);
-    // Returns the object at the beginning of the Queue
-    // without removing it
-    // Returns INVALID_OPERATION_ERROR if the Queue is empty.
-    Expected<T> peek();
+
+    /// @brief Number of elements currently stored.
+    uint16_t count() const;
+
+    /// @brief Removes and returns the front element.
+    /// @return The element, or GenericError::InvalidOperation if empty.
+    Expected<T, Error> dequeue();
+
+    /// @brief Appends an element.
+    /// @return True if the element is added, false if the buffer is full.    
+    /// @note The element is added to the end of the Queue.
+    bool enqueue(const T &t_item);
+
+    /// @brief Returns the front element without removing it.
+    /// @return The element, or GenericError::InvalidOperation if empty.
+    Expected<T, Error> peek() const;
 };
 
-template<typename T>
-Queue<T>::Queue(uint16_t t_capacity)
+template<typename T, uint16_t CAPACITY>
+uint16_t Queue<T, CAPACITY>::indexAt(uint16_t t_offset) const
 {
-    m_count = 0;
-    m_capacity = 0;
-    if(tryAllocate(t_capacity))
+    uint32_t index = static_cast<uint32_t>(m_head) + t_offset;
+    if(index >= CAPACITY)
     {
-        m_capacity = t_capacity;
+        index -= CAPACITY;
     }
-};
-
-template<typename T>
-Queue<T>::~Queue()
-{
-    if(m_data)
-    {
-        free(m_data);
-    }
-    m_data = nullptr;
-};
-
-template<typename T>
-void Queue<T>::clear()
-{
-    if(m_count == 0)
-    {
-        return;        
-    }
-
-    if(m_data)
-    {
-        free(m_data);
-    }
-    m_count = 0;
-    m_capacity = 0;
-    if(tryAllocate(DEFAULT_CAPACITY))
-    {
-        m_capacity = DEFAULT_CAPACITY;
-    }
-};
-
-template<typename T>
-uint16_t Queue<T>::count()
-{
-    return m_count;
-};
-
-template<typename T>
-Expected<T> Queue<T>::dequeue()
-{
-    if(m_count != 0)
-    {
-        T item = (*m_data);
-        m_count--;
-
-        shift();
-
-        return item;
-    }
-    return Expected<T>::fromError(INVALID_OPERATION_ERROR);
-};
-
-template<typename T>
-Expected<T> Queue<T>::peek()
-{
-    if(m_count != 0)
-    {
-        T item = (*m_data);
-        return item;
-    }
-    return Expected<T>::fromError(INVALID_OPERATION_ERROR);
-};
-
-template<typename T>
-err_t Queue<T>::enqueue(const T t_item)
-{
-    if(tryResize())
-    {
-        *(m_data + m_count) = t_item;
-        m_count++;
-        return NO_ERROR;
-    }
-    return INVALID_OPERATION_ERROR;
-};
-
-template<typename T>
-void Queue<T>::shift()
-{
-    if(m_count == 0)
-    {
-        return;
-    }
-    memmove(m_data, m_data + 1, m_count);
-    tryTrim();
-};
-
-template<typename T>
-bool Queue<T>::tryAllocate(uint16_t t_size)
-{
-    m_data = (T*) malloc(sizeof(T) * t_size);
-    return m_data != NULL;
+    return static_cast<uint16_t>(index);
 }
 
-template<typename T>
-bool Queue<T>::tryResize()
+template<typename T, uint16_t CAPACITY>
+void Queue<T, CAPACITY>::clear()
 {
-    if(m_count < m_capacity)
-    {
-        return true;
-    }
-    
-    if(m_capacity == 0)
-    {
-        if(tryAllocate(DEFAULT_CAPACITY))
-        {
-            m_capacity = DEFAULT_CAPACITY;
-            return true;
-        }
-    }
-    else if(m_capacity < UINT16_MAX)
-    {
-        uint16_t newCapacity = m_capacity < UINT16_MAX/GROWTH_FACTOR ? m_capacity * GROWTH_FACTOR : UINT16_MAX;
-        
-        auto newMemBlock = realloc(m_data, sizeof(T) * newCapacity);
-        if(newMemBlock != NULL)
-        {
-            m_data = (T*) newMemBlock;
-            m_capacity = newCapacity;
-            return true;
-        }
-    }
+    m_head = 0;
+    m_count = 0;
+}
 
-    return false;
-};
-
-template<typename T>
-bool Queue<T>::tryTrim()
+template<typename T, uint16_t CAPACITY>
+uint16_t Queue<T, CAPACITY>::count() const
 {
-    if(m_capacity <= DEFAULT_CAPACITY)
-    {
-        return true;
-    }
+    return m_count;
+}
 
-    if(m_count <= m_capacity / (2*GROWTH_FACTOR))
+template<typename T, uint16_t CAPACITY>
+Expected<T, Error> Queue<T, CAPACITY>::dequeue()
+{
+    if(m_count == 0)
     {
-        auto newMemBlock = realloc(m_data, sizeof(T) * (m_capacity / GROWTH_FACTOR));
-        if(newMemBlock != NULL)
-        {
-            m_data = (T*) newMemBlock;
-            m_capacity = m_capacity / GROWTH_FACTOR;
-            return true;
-        }
+        return make_error(GenericError::InvalidOperation);
+    }
+    T item = m_data[m_head];
+    m_head = indexAt(1);
+    --m_count;
+    return item;
+}
+
+template<typename T, uint16_t CAPACITY>
+bool Queue<T, CAPACITY>::enqueue(const T &t_item)
+{
+    if(m_count == CAPACITY)
+    {
         return false;
     }
+    m_data[indexAt(m_count)] = t_item;
+    ++m_count;
     return true;
 }
 
+template<typename T, uint16_t CAPACITY>
+Expected<T, Error> Queue<T, CAPACITY>::peek() const
+{
+    if(m_count == 0)
+    {
+        return make_error(GenericError::InvalidOperation);
+    }
+    return m_data[m_head];
+}
 
 #endif

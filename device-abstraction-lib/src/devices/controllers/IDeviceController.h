@@ -6,21 +6,31 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_DEVICE_CONTROLLER_H_
-#define _I_DEVICE_CONTROLLER_H_
+/// @file IDeviceController.h
+/// @brief Abstraction for reading and writing device state.
+#ifndef _HC_LIB_I_DEVICE_CONTROLLER_H_
+#define _HC_LIB_I_DEVICE_CONTROLLER_H_
 
-#include "errdef.h"
 #include "Expected.h"
+#include "errors/DeviceErrors.h"
 
+/// @brief Reads and writes _State_ on a _Device_.
+/// @tparam State The device state type.
+/// @tparam Device The concrete device type. Passed by const reference.
 template<typename State, typename Device>
 class IDeviceController
 {
     public:
-        IDeviceController() {};
+        IDeviceController() = default;
         virtual ~IDeviceController() = default;
 
-        virtual err_t setState(Device t_device, const State t_state) = 0;    
-        virtual Expected<State> getState(Device t_device) = 0;
+        /// @brief Applies _t_state_ to _t_device_.
+        /// @return _GenericError::NoError_ on success, otherwise an _Error_.
+        virtual Error setState(const Device& t_device, const State& t_state) = 0;
+
+        /// @brief Reads the current state of _t_device_.
+        /// @return The state, or an _Error_ when the device cannot be read.
+        virtual Expected<State, Error> getState(const Device& t_device) const = 0;
 };
 
 #endif

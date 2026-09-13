@@ -4,6 +4,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.2609]
+### Added
+- Unit tests for multi-byte __Queue{T}__ FIFO order and ring wrap-around.
+- Unit tests for key-based __EnumeratorBase{T, TKey}__ (empty, reset, end of sequence, value types, __const char*__).
+- Stack-based __KeyValuePair__ tests with __unity_extensions.h__ / __F()__.
+
+### Changed
+- PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`). __test/tests_runner.cpp__ is the firmware stub and Unity runner.
+- Requires __HC-LIB.System__ 1.1.2609.
+- __Queue{T, CAPACITY}__ is a fixed ring (default 16). All slots are usable. No malloc / realloc.
+- __Queue{T}::dequeue__ and __peek__ return __Expected{T, Error}__ via __make_error(GenericError::InvalidOperation)__.
+- __Queue{T}::enqueue__ returns __bool__ (false when full).
+- __Queue{T}__ and __EnumeratorBase{T, TKey}__ disable copy and move.
+- __EnumeratorBase{T, TKey}__ walks by key (__getHead__ / __getNext__ / __getByKey__). Storage stays in the collection. No per-item malloc.
+- __EnumeratorBase{T, TKey}__ starts reset so the first __moveNext()__ after create advances to the first element. After the end, later __moveNext()__ calls stay false until __reset()__.
+- __IEnumerator{T}::getCurrent__ is const and returns __Expected{T, Error}__ (__GenericError::InvalidOperation__ before the first item or after the last).
+- __IEnumerable{T}::getEnumerator__ is const and returns __std::unique_ptr{IEnumerator{T}}__.
+- __KeyValuePair{TKey, TValue}__ takes const refs, initializes members in the ctor list, and exposes const __getKey()__ / __getValue()__.
+
+### Removed
+- Linked-list __EnumeratedItem{T}__ and heap node walk in __EnumeratorBase__.
+
+### Fixed
+- __Queue{T}::shift__ copied __m_count__ bytes instead of __m_count * sizeof(T)__.
+
 ## [1.0.2203]
 ### Added
 - Added __Queue{T}__ class. Defines a first-in, first-out collection of objects.

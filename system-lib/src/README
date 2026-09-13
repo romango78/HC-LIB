@@ -1,0 +1,22 @@
+
+This directory is intended for common specific library.
+PlatformIO has a built-in Library Management where developers can declare project dependencies and PlatformIO will automatically manage them (install, build, update). It doesn’t have any requirements for a library source code structure. The only requirement is a library manifest file - library.json, library.properties, or module.json. It must be located in the root of a library.
+
+We recommend to use `src` folder for your C/C++ source files and `include` folder for your headers. You can also have nested sub-folders in `src` or `include`.
+
+For example, see a structure of the following library `Foo`:
+
+|--examples
+|  |
+|  |- sample.c
+|--include
+|  |
+|  |- header.h
+|--src
+|  |
+|  |- Foo.c
+|  |- Foo.h
+|- library.json (https://docs.platformio.org/page/librarymanager/config.html)
+
+More information about PlatformIO Creating Library
+- https://docs.platformio.org/en/latest/librarymanager/creating.html

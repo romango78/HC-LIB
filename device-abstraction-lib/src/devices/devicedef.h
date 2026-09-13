@@ -6,8 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _DEVICE_DEF_H_
-#define _DEVICE_DEF_H_
+#ifndef _HC_LIB_DEVICE_DEF_H_
+#define _HC_LIB_DEVICE_DEF_H_
 
 // Device Categories
 #define DEVICE_CATEGORY_ANALOG 0

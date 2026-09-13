@@ -1,0 +1,69 @@
+{
+	"folders": [
+		{
+			"name": "root",
+			"path": "."
+		},
+		{
+			"name": "system-lib",
+			"path": "system-lib"
+		},
+		{
+			"name": "collections-lib",
+			"path": "collections-lib"
+		},
+		{
+			"name": "device-abstraction-lib",
+			"path": "device-abstraction-lib"
+		},
+		{
+			"name": "devices-lib",
+			"path": "devices-lib"
+		},
+		{
+			"name": "io-abstraction-lib",
+			"path": "io-abstraction-lib"
+		},
+		{
+			"name": "io-port-lib",
+			"path": "io-port-lib"
+		},
+		{
+			"name": "logger-lib",
+			"path": "logger-lib"
+		},
+		{
+			"name": "SRD05VDCSL-lib",
+			"path": "SRD05VDCSL-lib"
+		},
+		{
+			"name": "ZMPT101B-lib",
+			"path": "ZMPT101B-lib"
+		}
+	],
+	"settings": {},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"type": "cppdbg",
+				"request": "launch",
+				"name": "native-debug",
+				"program": "${fileWorkspaceFolder}/.pio/build/desktop-debug/program.exe",
+				"args": [],
+				"stopAtEntry": false,
+				"cwd": "${fileWorkspaceFolder}",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb",
+				"setupCommands": [
+					{
+						"description": "Enable pretty-printing for gdb",
+						"text": "-enable-pretty-printing",
+						"ignoreFailures": true
+					}
+				]
+			}
+		]
+	}
+}

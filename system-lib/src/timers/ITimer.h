@@ -6,36 +6,44 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _I_TIMER_H_
-#define _I_TIMER_H_
+/// @file ITimer.h
+/// @brief Interval countdown abstraction used by ArduinoTimer and device code.
+#ifndef _HC_LIB_I_TIMER_H_
+#define _HC_LIB_I_TIMER_H_
 
 #include <stdint.h>
 
 #define MILLISECONDS_IN_SECOND 1000
 
+/// @brief Counts down a millisecond interval and reports when it has elapsed.
+/// @note isElapsed() may latch and is therefore non-const. start() restarts an
+/// already running timer. stop() clears started/elapsed and keeps the interval.
 class ITimer
 {
     public:
-        ITimer() {};
+        ITimer() = default;
         virtual ~ITimer() = default;
 
-        // Gets the interval, expressed in milliseconds, at which the IsElapsed flag is set in true.
-        virtual uint32_t getInterval() = 0;
+        /// @brief Returns the interval in milliseconds.
+        virtual uint32_t getInterval() const = 0;
 
-        // Sets the interval, expressed in milliseconds, at which the IsElapsed flag is set in true.
+        /// @brief Sets the interval in milliseconds.
+        /// @param t_interval The countdown length.
+        /// @note ArduinoTimer ignores this while the timer is started.
         virtual void setInterval(const uint32_t t_interval) = 0;
 
-        // Starts counting interval.
+        /// @brief Starts or restarts the countdown from now.
         virtual void start() = 0;
 
-        // Stops counting interval and resets the timer in the initial state.
+        /// @brief Stops the countdown and clears the elapsed flag. The interval is kept.
         virtual void stop() = 0;
 
-        // Checks if the interval elapses.
+        /// @brief true after the interval has expired since the last start().
+        /// @note Once true, stays true until stop() or start().
         virtual bool isElapsed() = 0;
 
-        // Checks if counting interval is started.
-        virtual bool isStarted() = 0;
+        /// @brief true after start() and before stop().
+        virtual bool isStarted() const = 0;
 };
 
 #endif

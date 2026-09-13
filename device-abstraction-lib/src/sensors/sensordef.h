@@ -6,8 +6,8 @@
 // This software is subject to change without notice and no information
 // contained in it should be construed as commitment by Roman Gorielov.
 
-#ifndef _SENSOR_DEF_H_
-#define _SENSOR_DEF_H_
+#ifndef _HC_LIB_SENSOR_DEF_H_
+#define _HC_LIB_SENSOR_DEF_H_
 
 // Sensor Types
 #define VOLTAGE_SENSOR_TYPE 0xff
