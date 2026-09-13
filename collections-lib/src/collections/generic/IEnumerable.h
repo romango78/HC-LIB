@@ -22,6 +22,11 @@ public:
     /// @return An enumerator that can be used to iterate through the collection.
     /// @note The caller is responsible for deleting the enumerator.
     virtual std::unique_ptr<IEnumerator<T>> getEnumerator() const = 0;
+
+    /// @brief Returns an enumerator that iterates through the collection.
+    /// @return An enumerator that can be used to iterate through the collection.
+    /// @note The caller is responsible for deleting the enumerator.
+    virtual IEnumerator<T> getEnumerator() const = 0;
 };
 
 #endif
