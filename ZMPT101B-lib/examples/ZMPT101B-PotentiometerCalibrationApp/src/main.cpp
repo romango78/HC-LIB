@@ -53,5 +53,5 @@ void loop()
     Serial.print(F(", MIN:"));    
     Serial.print(_min_value);
     Serial.print(F(", ADC:"));
-    Serial.print(value);
+    Serial.println(adcValue);
 }
