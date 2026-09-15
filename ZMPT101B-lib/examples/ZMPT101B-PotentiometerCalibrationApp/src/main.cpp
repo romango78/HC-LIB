@@ -21,37 +21,49 @@
 /// Once adjusted, the hardware is optimally scaled, and you can proceed with software True RMS calculations.
 #include <Arduino.h>
 
+#define ADC_BITS    10
+#define ADC_COUNTS  (1<<ADC_BITS)
 #define ZMPT101B_PIN A0
 
-uint16_t _max_value;
-uint16_t _min_value;
+
+uint16_t _maxValue;
+uint16_t _minValue;
+float _zero;
 
 void setup()
 {
     Serial.begin(115200);
+    _maxValue = 0;
+    _minValue = 1023;
+    _zero = ADC_COUNTS>>1;
 
     delay(2000);
-    _max_value = 0;
-    _min_value = 1023;
 }
 
 void loop()
 {
-    uint16_t adcValue = analogRead(ZMPT101B_PIN);
+    uint16_t rawValue = analogRead(ZMPT101B_PIN);
+    
+    _zero += (rawValue - _zero) / ADC_COUNTS;
+    float adjValue = rawValue - _zero;
 
-    if(_max_value < adcValue)
+    if(_maxValue < rawValue)
     {
-        _max_value = adcValue;
+        _maxValue = rawValue;
     }
-    if(_min_value > adcValue)
+    if(_minValue > rawValue)
     {
-        _min_value = adcValue;
+        _minValue = rawValue;
     }
 
     Serial.print(F("MAX:"));
-    Serial.print(_max_value);
+    Serial.print(_maxValue);
     Serial.print(F(", MIN:"));    
-    Serial.print(_min_value);
+    Serial.print(_minValue);
     Serial.print(F(", ADC:"));
-    Serial.println(adcValue);
+    Serial.print(rawValue);
+    Serial.print(F(", ZERO:"));
+    Serial.print(_zero);
+    Serial.print(F(", ADJ_ADC:"));
+    Serial.println(adjValue);
 }

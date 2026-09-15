@@ -23,7 +23,7 @@
 /// @brief ZMPT101B analog voltage sensor. _zero_ is the ADC mid-point after calibrate().
 struct ZMPT101BSensor : AnalogSensor
 {
-    uint16_t zero;
+    float zero;
 
     ZMPT101BSensor() = delete;
 
@@ -32,6 +32,11 @@ struct ZMPT101BSensor : AnalogSensor
     /// @param t_stream Analog stream for that pin. The sensor takes ownership.
     ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_stream)
         : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_stream), zero(0) {};
+
+    bool isCloseToZero(const uint16_t t_value) const
+    {
+        return t_value > zero*0.90f && t_value < zero*1.10f;
+    }
 };
 
 /// @brief AC RMS voltage reading in volts from a ZMPT101BSensor.

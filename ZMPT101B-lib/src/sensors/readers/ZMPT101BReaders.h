@@ -16,21 +16,53 @@
 #include "timers/ITimer.h"
 #include "errors/IoErrors.h"
 
-#ifndef AC_NETWORK_FREQUENCY
+/// @brief Analog-to-Digital Converter resolution in bits.
+#define ADC_BITS  10
+/// @brief Analog-to-Digital Converter counts (2^ADC_BITS).
+#define ADC_COUNTS (1<<ADC_BITS)
+/// @brief AC network frequency in Hertz.
 #define AC_NETWORK_FREQUENCY 50
-#endif
+/// @brief Measurement resolution in wave counts.
+#define MESURE_RESOLUTION_IN_WAVE_COUNT 4
+/// @brief Measurement time in milliseconds.
+#define MESURE_TIME_IN_MILLISECONDS (MESURE_RESOLUTION_IN_WAVE_COUNT * static_cast<uint32_t>(MILLISECONDS_IN_SECOND/ AC_NETWORK_FREQUENCY))
 
-/// @brief Peak-to-peak RMS over two AC periods.
-class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+
+class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
-    private:
+    protected:
         ITimer* const m_timer;
+
+        void waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const;
+        uint16_t readAdcRawValue(const ZMPT101BSensor& t_sensor) const;
+        float toVolts(const float t_adcValue) const;
+    public:
+        ZMPT101BAcReaderBase() = delete;
+
+        explicit ZMPT101BAcReaderBase(ITimer* const t_timer)
+            : m_timer(t_timer) {
+                if(m_timer)
+                {
+                    if(m_timer->isStarted())
+                    {
+                        m_timer->stop();
+                    }
+                    m_timer->setInterval(MESURE_TIME_IN_MILLISECONDS);
+                }
+            };
+
+        virtual ~ZMPT101BAcReaderBase() = default;        
+};
+
+/// @brief Peak-to-peak RMS over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 3).
+class ZMPT101BRmsReader : public ZMPT101BAcReaderBase
+{
     public:
         ZMPT101BRmsReader() = delete;
 
         /// @brief Initializes the reader with _t_timer_. Does not take ownership.
         explicit ZMPT101BRmsReader(ITimer* const t_timer)
-            : m_timer(t_timer) {};
+            : ZMPT101BAcReaderBase(t_timer) {};         
 
         virtual ~ZMPT101BRmsReader() = default;
 
@@ -38,7 +70,7 @@ class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSenso
         Expected<ZMPT101B_ACVoltage, Error> read(const ZMPT101BSensor& t_sensor) const override;
 };
 
-/// @brief True RMS (sqrt of mean square) over two AC periods.
+/// @brief True RMS (sqrt of mean square) over two AC periods (40 ms at 50 Hz).
 class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
     private:

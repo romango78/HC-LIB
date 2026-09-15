@@ -5,62 +5,53 @@ This __library__ defines __ZMPT101BSensor__ and RMS / True RMS readers for the Z
 The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 
 ### Dependencies
+- HC-LIB.System v1.1.2609
+- HC-LIB.IO-Abstraction v1.1.2609
+- HC-LIB.IO-Port v1.1.2609
+- HC-LIB.Device.Abstractions v1.1.2609
 - HC-LIB.Devices v1.1.2609
 
 ---
 ### Features
-- Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin, with a calibrated ADC __zero__.
-- __ZMPT101B::calibrate__ averages samples into that zero.
-- __ZMPT101BRmsReader__ and __ZMPT101BTrueRmsReader__ return __Expected{ZMPT101B_ACVoltage, Error}__.
+- Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin, with a calibrated ADC __zero__. The sensor owns the analog stream.
+- __ZMPT101B::calibrate__ averages __ZMPT101B_READ_ITERATIONS__ (default 1000) samples into that zero.
+- __ZMPT101BRmsReader__ (via __ZMPT101BAcReaderBase__) waits until the waveform is close to __zero__ (±10%, __isCloseToZero__), then measures peak-to-peak over __MESURE_RESOLUTION_IN_WAVE_COUNT__ periods (default 3 → 60 ms at 50 Hz).
+- __ZMPT101BTrueRmsReader__ computes True RMS over two AC periods (40 ms at 50 Hz). It does not use the zero-cross wait.
+- Both readers return __Expected{ZMPT101B_ACVoltage, Error}__. They do not own the __ITimer__.
 - Errors are __DeviceError::TimerIsNotInitialized__ and __IoError::StreamNotCreated__.
+- ADC offset from __zero__ is mapped to volts with the cubic polynomial in __ZMPT101BReaders.cpp__ (not a single linear \(K_{calib}\)).
 
 ---
 ### Usage
 1. Connect __ZMPT101B__ to an analog pin (see __How to connect device to Arduino board__).
-2. Create a sketch. It should contain the following sections:
-    - ZMPT101B sensor initialization in `setup()`:
+2. In `setup()`, create a stream and sensor. The sensor takes ownership of the stream:
     ```c++
-    IPortAdapter<int> *adapter = new AnalogPortAdapter(ZMPT101B_PIN);
-    IStream<uint16_t> *stream = new AnalogStream(adapter);
-    ZMPT101BSensor *sensor = new ZMPT101BSensor(ZMPT101B_PIN, stream);
-    ZMPT101B::calibrate(sensor);
+    AnalogStream *stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
+    static ZMPT101BSensor sensor(ZMPT101B_PIN, stream);
+    ZMPT101B::calibrate(&sensor);
     ```
-    - Initialize the corresponding reader for RMS or True RMS:
-        - for RMS:
-        ```c++
-        ITimer *timer = new ArduinoTimer();
-        ZMPT101BRmsReader *rmsReader = new ZMPT101BRmsReader(timer);
-        ```
-        - or for True RMS:
-        ```c++
-        ITimer *timer = new ArduinoTimer();
-        ZMPT101BTrueRmsReader *trueRmsReader = new ZMPT101BTrueRmsReader(timer);
-        ```
-    - Read data from the sensor:
-        - RMS reader
-        ```c++
-        Expected<ZMPT101B_ACVoltage, Error> sensorData1 = rmsReader->read(*sensor);
-        if (sensorData1.hasValue())
-        {
-            float volts = sensorData1.getValue().data;
-        }
-        else
-        {
-            Error error = sensorData1.getError();
-        }
-        ```
-        - or True RMS reader
-        ```c++
-        Expected<ZMPT101B_ACVoltage, Error> sensorData2 = trueRmsReader->read(*sensor);
-        if (sensorData2.hasValue())
-        {
-            float volts = sensorData2.getValue().data;
-        }
-        else
-        {
-            Error error = sensorData2.getError();
-        }
-        ```
+3. Give each reader its own timer. Do not share one __ArduinoTimer__ between RMS and True RMS (they set different intervals):
+    ```c++
+    static ArduinoTimer rmsTimer;
+    static ZMPT101BRmsReader rmsReader(&rmsTimer);
+
+    static ArduinoTimer trueRmsTimer;
+    static ZMPT101BTrueRmsReader trueRmsReader(&trueRmsTimer);
+    ```
+4. Read:
+    ```c++
+    Expected<ZMPT101B_ACVoltage, Error> reading = rmsReader.read(sensor);
+    if (reading.hasValue())
+    {
+        float volts = reading.getValue().data;
+    }
+    else
+    {
+        Error error = reading.getError();
+    }
+    ```
+
+See __examples/ZMPT101B-ReadExampleApp__ for a full sketch (that sample currently shares one timer; prefer one timer per reader as above).
 
 ---
 ### Device purpose
@@ -157,8 +148,8 @@ AC side (screw terminals, isolated from the MCU):
 Mains on L/N is hazardous. Keep that wiring away from the Nano. Fuse the measured circuit and do not touch the screw terminals while they are live.
 
 1. Wire 5V, GND, and OUT as in the table. Leave L/N disconnected until the analog output looks mid-scale on A0.
-2. Adjust the trimmer so a known AC voltage matches the printed RMS (optional).
-3. Upload __examples/ZMPT101B-ReadExampleApp__ (`pio run -e nano-board -t upload`). Serial is `115200` on `COM3`.
+2. Adjust the trimmer with __examples/ZMPT101B-PotentiometerCalibrationApp__ (optional).
+3. Upload __examples/ZMPT101B-ReadExampleApp__ (`pio run -e nano-board -t upload`). Serial is `115200`. `platformio.ini` defaults to `/dev/ttyUSB0`; on Windows use `COM3` (or the port Device Manager shows).
 4. The sketch calibrates, then prints `220V`, RMS, and True RMS every 500 ms.
 
 To use another analog pin, change `ZMPT101B_PIN` and move the OUT wire to that pin.
@@ -252,7 +243,7 @@ pio run -e nano-board -t upload
 pio run -e desktop-debug
 ```
 
-Firmware is written to `.pio/build/nano-board/firmware.hex`. Default serial settings are `115200` baud on `COM3`. `pio run -e desktop-debug` builds the Unity test binary (`build_type = test`), not a board image.
+Firmware is written to `.pio/build/nano-board/firmware.hex`. Serial is `115200` baud (`/dev/ttyUSB0` in `platformio.ini`; `COM3` on many Windows boards). `pio run -e desktop-debug` builds the Unity test binary (`build_type = test`), not a board image.
 
 Do not run `pio run` and `pio test` in parallel against the same environment; they share `.pio/build` and can corrupt the SCons cache.
 
@@ -309,7 +300,7 @@ pio run -e nano-board -t upload
 
 ---
 ### Packages
-Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json).
+Arduino Library Manager metadata is in [library.properties](library.properties). PlatformIO metadata is in [library.json](library.json). Wiring photos in `docs/` are included in the PlatformIO tarball; the calibration PDFs are not.
 
 * The `pio package pack -o {local_repo_folder}` command is used for creating PlatformIO package `HC-LIB.ZMPT101B-{version}.tar.gz` in the `{local_repo_folder}` folder.
 * The `pio package publish {local_repo_folder}/HC-LIB.ZMPT101B-{version}.tar.gz` command is used for publishing PlatformIO package.
