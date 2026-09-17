@@ -33,9 +33,23 @@ class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSe
     protected:
         ITimer* const m_timer;
 
+        /// @brief Ensures the timer is initialized and the stream is created.
+        /// @param t_sensor The sensor to check.
+        /// @return True if the timer is initialized and the stream is created, false otherwise.
+        Expected<bool, Error> ensureValidInput(const ZMPT101BSensor& t_sensor) const;
+        /// @brief Waits until the wave is close to zero.
+        /// @param t_sensor The sensor to wait for.
+        /// @note The wave is close to zero if the ADC value is close to the mid-point.
         void waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const;
+        /// @brief Reads the ADC raw value.
+        /// @param t_sensor The sensor to read the value from.
+        /// @return The ADC raw value.
         uint16_t readAdcRawValue(const ZMPT101BSensor& t_sensor) const;
-        float toVolts(const float t_adcValue) const;
+        /// @brief Converts the ADC value to voltage.
+        /// @param t_adcValue The ADC value to convert.
+        /// @param t_calibration_factor The calibration factor.
+        /// @return The voltage.
+        float toVoltage(const float t_adcValue, const float t_calibration_factor) const;
     public:
         ZMPT101BAcReaderBase() = delete;
 
@@ -71,16 +85,14 @@ class ZMPT101BRmsReader : public ZMPT101BAcReaderBase
 };
 
 /// @brief True RMS (sqrt of mean square) over two AC periods (40 ms at 50 Hz).
-class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+class ZMPT101BTrueRmsReader : public ZMPT101BAcReaderBase
 {
-    private:
-        ITimer* const m_timer;
     public:
         ZMPT101BTrueRmsReader() = delete;
 
         /// @brief Initializes the reader with _t_timer_. Does not take ownership.
         explicit ZMPT101BTrueRmsReader(ITimer* const t_timer)
-            : m_timer(t_timer) {};
+            : ZMPT101BAcReaderBase(t_timer) {};
 
         virtual ~ZMPT101BTrueRmsReader() = default;
 

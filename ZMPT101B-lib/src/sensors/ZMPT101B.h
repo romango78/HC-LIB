@@ -23,16 +23,26 @@
 /// @brief ZMPT101B analog voltage sensor. _zero_ is the ADC mid-point after calibrate().
 struct ZMPT101BSensor : AnalogSensor
 {
-    float zero;
+    /// @brief The ADC mid-point after calibrate().
+    /// @note Mutable so RMS readers can refine the mid-point during const ISensorReader::read().
+    mutable float zero;
+    /// @brief The calibration factor.
+    float calibration_factor;
 
+    /// @brief Initializes the sensor.
     ZMPT101BSensor() = delete;
 
     /// @brief Initializes the sensor on _t_pin_ with _t_stream_.
     /// @param t_pin Analog pin connected to the module OUT.
     /// @param t_stream Analog stream for that pin. The sensor takes ownership.
-    ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_stream)
-        : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_stream), zero(0) {};
+    /// @param t_calibration_factor Scale applied when converting ADC to volts (default 1.0).
+    ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_stream, const float t_calibration_factor = 1.0f)
+        : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_stream),
+          zero(0.0f), calibration_factor(t_calibration_factor) {};
 
+    /// @brief Checks if the value is close to the mid-point.
+    /// @param t_value The ADC value to check.
+    /// @return True if the value is close to the mid-point, false otherwise.
     bool isCloseToZero(const uint16_t t_value) const
     {
         return t_value > zero*0.90f && t_value < zero*1.10f;

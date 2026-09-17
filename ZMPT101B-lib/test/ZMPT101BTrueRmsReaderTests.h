@@ -42,7 +42,7 @@ void ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized()
 
 void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
 {
-    const float expectedValue = 954.69072732f;
+    const float expectedValue = 1381.75121925f;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -59,7 +59,7 @@ void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
 
 void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
 {
-    const float expectedValue = 954.69072732f;
+    const float expectedValue = 1381.75121925f;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -76,7 +76,7 @@ void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
 
 void ZMPT101BTrueRmsReader_Read_WhenTimerAlreadyStarted()
 {
-    const float expectedValue = 954.69072732f;
+    const float expectedValue = 1381.75121925f;
 
     FakeTimer timer;
     timer.start();
@@ -93,7 +93,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerAlreadyStarted()
 
 void ZMPT101BTrueRmsReader_Read_Twice()
 {
-    const float expectedValue = 954.69072732f;
+    const float expectedValue = 1381.75121925f;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -124,7 +124,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
 
 void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
 {
-    const float expectedValue = 3.198f;
+    const float expectedValue = 0.0f;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeConstantStream(512));
@@ -136,7 +136,7 @@ void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FALSE(sensor.stream->hasError());
     TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data,
-        F("True RMS of PolynomialEquation(0) is |offset|."));
+        F("Constant mid-scale ADC yields 0 V True RMS."));
 }
 
 #endif

@@ -52,9 +52,9 @@ void setup()
 #else
     AnalogStream *stream = new FakeAnalogStream();
 #endif
-    static ZMPT101BSensor zmpt(ZMPT101B_PIN, stream);
+    static ZMPT101BSensor zmpt(ZMPT101B_PIN, stream, 0.27f);
     sensor = &zmpt;
-    ZMPT101B::calibrate(sensor);
+    //ZMPT101B::calibrate(sensor);
 
     static ArduinoTimer timer;
     static ZMPT101BRmsReader rms(&timer);
@@ -62,11 +62,6 @@ void setup()
     rmsReader = &rms;
     trueRmsReader = &trueRms;
 
-#if defined(ARDUINO)
-    Serial.println(F("220V,RMS,TrueRMS"));
-#else
-    std::puts("220V,RMS,TrueRMS");
-#endif
     delay(2000);
 }
 
@@ -76,8 +71,7 @@ void loop()
     Expected<ZMPT101B_ACVoltage, Error> trueRms = trueRmsReader->read(*sensor);
 
 #if defined(ARDUINO)
-    Serial.print(220.00);
-    Serial.write(' ');
+    Serial.print(F("RMS_V:"));
     if(rms.hasValue())
     {
         Serial.print(rms.getValue().data, 2);
@@ -86,7 +80,7 @@ void loop()
     {
         Serial.print(rms.getError().message());
     }
-    Serial.write(' ');
+    Serial.print(F(", TrueRMS_V:"));
     if(trueRms.hasValue())
     {
         Serial.println(trueRms.getValue().data, 2);
@@ -96,7 +90,7 @@ void loop()
         Serial.println(trueRms.getError().message());
     }
 #else
-    std::printf("220.00 %s%f %s%f\n",
+    std::printf("RMS_V:%s%f, TrueRMS_V:%s%f\n",
         rms.hasValue() ? "" : "ERR ",
         rms.hasValue() ? rms.getValue().data : 0.0f,
         trueRms.hasValue() ? "" : "ERR ",
