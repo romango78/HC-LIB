@@ -9,10 +9,33 @@
 #include "ZMPT101BReaders.h"
 #include <math.h>
 
-#define SUPPLY_VOLTAGE 5.0f
+#define SUPPLY_VOLTAGE 5000u
 
+/// @brief Ensures the timer is initialized and the stream is created.
+/// @param t_sensor The sensor to check.
+/// @return True if the timer is initialized and the stream is created, false otherwise.
+Expected<bool, Error> ZMPT101BAcReaderBase::ensureValidInput(const ZMPT101BSensor& t_sensor) const
+{
+    if(!m_timer)
+    {
+        return make_error(DeviceError::TimerIsNotInitialized);
+    }
+    if(!t_sensor.stream)
+    {
+        return make_error(IoError::StreamNotCreated);
+    }
+    return true;
+}
+
+/// @brief Waits until the wave is close to zero.
+/// @param t_sensor The sensor to wait for.
+/// @note The wave is close to zero if the ADC value is close to the mid-point.
 void ZMPT101BAcReaderBase::waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const
-{    
+{   
+    if(t_sensor.zero == 0.0f)
+    {
+        t_sensor.zero = ADC_COUNTS>>1;
+    }
     if(m_timer->isStarted())
     {
         m_timer->stop();
@@ -29,6 +52,9 @@ void ZMPT101BAcReaderBase::waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sens
     m_timer->stop();
 }
 
+/// @brief Reads the ADC raw value.
+/// @param t_sensor The sensor to read the value from.
+/// @return The ADC raw value.
 uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) const
 {
     uint16_t rawValue = static_cast<uint16_t>(t_sensor.stream->read());
@@ -36,9 +62,13 @@ uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) c
     return rawValue;
 }
 
-float ZMPT101BAcReaderBase::toVolts(const float t_adcValue) const
+/// @brief Converts the ADC value to voltage.
+/// @param t_adcValue The ADC value to convert.
+/// @param t_calibration_factor The calibration factor.
+/// @return The voltage.
+float ZMPT101BAcReaderBase::toVoltage(const float t_adcValue, const float t_calibration_factor) const
 {
-    return t_adcValue * SUPPLY_VOLTAGE / ADC_COUNTS;
+    return t_adcValue * t_calibration_factor * SUPPLY_VOLTAGE / ADC_COUNTS;
 }
 
 // The Polynomial Equation 3 (ADC offset from zero -> volts).
@@ -49,14 +79,12 @@ float ZMPT101BAcReaderBase::toVolts(const float t_adcValue) const
 /// @return The RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor) const
 {
-    if(!m_timer)
+    auto validationResult = ensureValidInput(t_sensor);
+    if(!validationResult)
     {
-        return make_error(DeviceError::TimerIsNotInitialized);
+        return make_error(validationResult.getError());
     }
-    if(!t_sensor.stream)
-    {
-        return make_error(IoError::StreamNotCreated);
-    }
+    
     if(!t_sensor.stream->canRead())
     {
         t_sensor.stream->begin(StreamMode::Read);
@@ -67,12 +95,10 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
 
     float maxAdcValue = 0.0f;
     float minAdcValue = 1000.0f;
-    uint8_t halfWaveElapsedCount = 0;
-    float adcOffset = static_cast<float>(t_sensor.zero);
 
     // Start measurement loop to calculate RMS voltage.
     m_timer->start();
-    while(halfWaveElapsedCount <= MESURE_RESOLUTION_IN_WAVE_COUNT*2 && !m_timer->isElapsed())
+    while(!m_timer->isElapsed())
     {
         uint16_t adcRawValue = readAdcRawValue(t_sensor);        
         float adcAdjValue = adcRawValue - t_sensor.zero;
@@ -84,16 +110,11 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
         if(minAdcValue > adcAdjValue)
         {
             minAdcValue = adcAdjValue;
-        }
-
-        if(t_sensor.isCloseToZero(adcRawValue))
-        {
-            halfWaveElapsedCount++;
-        }        
+        }     
     }
     m_timer->stop();
 
-    float result = toVolts((maxAdcValue - minAdcValue) / 2 / sqrt(2));
+    float result = toVoltage((maxAdcValue - minAdcValue) / 2 / sqrt(2), t_sensor.calibration_factor);
     return ZMPT101B_ACVoltage(t_sensor, result);
 }
 
@@ -102,39 +123,38 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
 /// @return The True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor) const
 {
-    if(!m_timer)
+    auto validationResult = ensureValidInput(t_sensor);
+    if(!validationResult)
     {
-        return make_error(DeviceError::TimerIsNotInitialized);
+        return make_error(validationResult.getError());
     }
-    if(!t_sensor.stream)
-    {
-        return make_error(IoError::StreamNotCreated);
-    }
+    
     if(!t_sensor.stream->canRead())
     {
         t_sensor.stream->begin(StreamMode::Read);
     }
 
-    if(m_timer->isStarted())
-    {
-        m_timer->stop();
-    }
+    // Wait until the wave is close to zero (mid-scale adc) part in sin curve.
+    waitUntilWaveCloseToZero(t_sensor);  
 
-    m_timer->setInterval(2 * static_cast<uint32_t>(MILLISECONDS_IN_SECOND / AC_NETWORK_FREQUENCY));
-    m_timer->start();
-
-    double totalVoltage = 0.0;
+    double totalAdcAdjValue = 0.0;
     uint16_t sampleCount = 0;
+
+    // Start measurement loop to calculate True RMS voltage.
+    m_timer->start();
     while(!m_timer->isElapsed())
     {
-        int16_t adjAdcValue = static_cast<int16_t>(t_sensor.stream->read()) - static_cast<int16_t>(t_sensor.zero);
-        float voltage = PolynomialEquation(adjAdcValue);
-        totalVoltage += voltage * voltage;
+        uint16_t adcRawValue = readAdcRawValue(t_sensor);        
+        float adcAdjValue = adcRawValue - t_sensor.zero;
+
+        totalAdcAdjValue += adcAdjValue * adcAdjValue;
         sampleCount++;
     }
     m_timer->stop();
 
-    float result = (sampleCount == 0) ? 0.0f : static_cast<float>(sqrt(totalVoltage / sampleCount));
+    float result = (sampleCount == 0) 
+        ? 0.0f 
+        : toVoltage(static_cast<float>(sqrt(totalAdcAdjValue / sampleCount)), t_sensor.calibration_factor);
     return ZMPT101B_ACVoltage(t_sensor, result);
 }
 
