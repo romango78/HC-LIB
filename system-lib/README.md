@@ -1,6 +1,6 @@
 # HC-LIB
 ## Arduino System Library v1.1.2609
-This __library__ contains fundamental types for Arduino and native builds: __Expected__, __Error__ / __GenericError__, __ITimer__ / __ArduinoTimer__, __ICloneable__, and Arduino std utility traits.
+This __library__ contains fundamental types for Arduino and native builds: __Expected__, __Error__ / __GenericError__, __ITimer__ / __ArduinoTimer__, __ICloneable__, Arduino std utility traits, and __board::getSupplyVoltage()__.
 
 The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 
@@ -14,6 +14,7 @@ No Dependencies
 - Implements __Expected{T, E}__ for returning a value or an error via __Unexpected{E}__ and __make_error()__. Call __hasValue()__ before __getValue()__.
 - Provides __lib-utility.h__: Arduino __std::move__, __std::forward__, __std::remove_reference__, __std::remove_cv__, and __std::decay__. Native builds include `<utility>` and `<type_traits>`.
 - Provides __flash.h__: __flash_c_str__ copies an __F()__ string into a RAM buffer for C APIs. On native builds __F()__ is a pass-through.
+- Provides __board::getSupplyVoltage()__ (AVR): reads the 1.1 V bandgap against AVcc and returns millivolts. Enables the ADC if needed, restores ADMUX, and does not leave the mux on the bandgap. See [docs/README.md](docs/README.md). Non-AVR builds return 3300.
 
 ### Usage
 Return a value or an error with __Expected{T, E}__:
@@ -27,6 +28,11 @@ else if (result.getError() == GenericError::OutOfRange)
 {
     Error error = result.getError();
 }
+```
+
+Read AVcc in millivolts (AVR; requires the ADC already enabled):
+```c++
+uint16_t millivolts = board::getSupplyVoltage();
 ```
 
 Use __ArduinoTimer__ as an interval countdown:

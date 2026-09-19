@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - _flash_c_str_ copies _F()_ / __FlashStringHelper*_ into RAM. Unity *_MESSAGE_ macros accept flash strings.
 - AVR Unity _RUN_TEST_ names stay in PROGMEM (copied into a 96-byte buffer). Nano test builds shrink Serial buffers and drop Unity float/details to stay under 2 KB SRAM.
 - _unity_flash.h_ lives in _src/_ (gated by _UNIT_TEST_) so other HC-LIB packages can include it from HC-LIB.System.
+- AVR ADC register notes in _docs/_ (ADMUX, ADCSRA, ADCSRB, ADCL/ADCH) for _board::getSupplyVoltage()_.
+- _board::getSupplyVoltage()_ enables the ADC, discards the first conversion after the mux change, restores ADMUX / Mega MUX5, and returns millivolts (0 if the ADC reading is 0).
 
 ### Changed
 - Renamed _move.h_ to _lib-utility.h_. Native builds include _\<utility\>_ and _\<type_traits\>_.
