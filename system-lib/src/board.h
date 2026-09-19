@@ -93,7 +93,7 @@ namespace board
         return static_cast<uint16_t>(READ_VCC_CALIBRATION_CONST / adc);
 
 #else
-        return 3300;   // No ADMUX; assume 3.3 V
+        return 5000;   // No ADMUX; assume 5.0 V
 #endif
     }
 }

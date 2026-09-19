@@ -8,32 +8,9 @@
 
 /// @file main.cpp
 /// @brief ZMPT101B calibration helper or RMS / True RMS demo.
-#if defined(ARDUINO)
-    #include <Arduino.h>
-#else
-    #include <cstdio>
-    #include <thread>
-    #include <chrono>
-    inline void delay(unsigned long t_milliseconds)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(t_milliseconds));
-    }
-#ifndef F
-#define F(string_literal) (string_literal)
-#endif
-
-#ifndef A0
-#define A0 14
-#endif
-
-#endif
-
-#if defined(ARDUINO)
-    #include "adapter/AnalogPortAdapter.h"
-    #include "stream/AnalogStream.h"
-#else
-    #include "stream/FakeAnalogStream.h"
-#endif
+#include <Arduino.h>
+#include "adapter/AnalogPortAdapter.h"
+#include "stream/AnalogStream.h"
 #include "sensors/ZMPT101B.h"
 #include "sensors/readers/ZMPT101BReaders.h"
 #include "timers/ArduinoTimer.h"
@@ -46,15 +23,11 @@ ZMPT101BTrueRmsReader *trueRmsReader;
 
 void setup()
 {
-#if defined(ARDUINO)
     Serial.begin(115200);
     AnalogStream *stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
-#else
-    AnalogStream *stream = new FakeAnalogStream();
-#endif
-    static ZMPT101BSensor zmpt(ZMPT101B_PIN, stream, 0.27f);
+
+    static ZMPT101BSensor zmpt(ZMPT101B_PIN, stream, 0.275f);
     sensor = &zmpt;
-    //ZMPT101B::calibrate(sensor);
 
     static ArduinoTimer timer;
     static ZMPT101BRmsReader rms(&timer);
@@ -70,7 +43,6 @@ void loop()
     Expected<ZMPT101B_ACVoltage, Error> rms = rmsReader->read(*sensor);
     Expected<ZMPT101B_ACVoltage, Error> trueRms = trueRmsReader->read(*sensor);
 
-#if defined(ARDUINO)
     Serial.print(F("RMS_V:"));
     if(rms.hasValue())
     {
@@ -89,25 +61,5 @@ void loop()
     {
         Serial.println(trueRms.getError().message());
     }
-#else
-    std::printf("RMS_V:%s%f, TrueRMS_V:%s%f\n",
-        rms.hasValue() ? "" : "ERR ",
-        rms.hasValue() ? rms.getValue().data : 0.0f,
-        trueRms.hasValue() ? "" : "ERR ",
-        trueRms.hasValue() ? trueRms.getValue().data : 0.0f);
-#endif
     delay(500);
 }
-
-#if !defined(ARDUINO)
-int main()
-{
-    setup();
-    for(;;)
-    {
-        loop();
-    }
-    return 0;
-}
-
-#endif

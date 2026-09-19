@@ -8,8 +8,7 @@
 
 #include "ZMPT101BReaders.h"
 #include <math.h>
-
-#define SUPPLY_VOLTAGE 5000u
+#include "board.h"
 
 /// @brief Ensures the timer is initialized and the stream is created.
 /// @param t_sensor The sensor to check.
@@ -32,10 +31,6 @@ Expected<bool, Error> ZMPT101BAcReaderBase::ensureValidInput(const ZMPT101BSenso
 /// @note The wave is close to zero if the ADC value is close to the mid-point.
 void ZMPT101BAcReaderBase::waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const
 {   
-    if(t_sensor.zero == 0.0f)
-    {
-        t_sensor.zero = ADC_COUNTS>>1;
-    }
     if(m_timer->isStarted())
     {
         m_timer->stop();
@@ -68,7 +63,8 @@ uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) c
 /// @return The voltage.
 float ZMPT101BAcReaderBase::toVoltage(const float t_adcValue, const float t_calibration_factor) const
 {
-    return t_adcValue * t_calibration_factor * SUPPLY_VOLTAGE / ADC_COUNTS;
+    auto supply_voltage = board::getSupplyVoltage();
+    return t_adcValue * t_calibration_factor * supply_voltage / ADC_COUNTS;
 }
 
 // The Polynomial Equation 3 (ADC offset from zero -> volts).
@@ -89,7 +85,8 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
     {
         t_sensor.stream->begin(StreamMode::Read);
     }
-
+    // Set initial sensor zero
+    t_sensor.zero = ADC_COUNTS>>1;
     // Wait until the wave is close to zero (mid-scale adc) part in sin curve.
     waitUntilWaveCloseToZero(t_sensor);    
 
@@ -133,7 +130,8 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSe
     {
         t_sensor.stream->begin(StreamMode::Read);
     }
-
+    // Set initial sensor zero
+    t_sensor.zero = ADC_COUNTS>>1;
     // Wait until the wave is close to zero (mid-scale adc) part in sin curve.
     waitUntilWaveCloseToZero(t_sensor);  
 
