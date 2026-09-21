@@ -10,6 +10,11 @@
 #include <math.h>
 #include "board.h"
 
+uint16_t ZMPT101BAcReaderBase::m_supplyVoltageMv = 0;
+
+/// @brief 1/sqrt(2), used to turn a peak amplitude into RMS.
+static const float ONE_OVER_SQRT2 = 0.70710678118f;
+
 /// @brief Ensures the timer is initialized and the stream is created.
 /// @param t_sensor The sensor to check.
 /// @return True if the timer is initialized and the stream is created, false otherwise.
@@ -57,22 +62,27 @@ uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) c
     return rawValue;
 }
 
-/// @brief Converts the ADC value to voltage.
+/// @brief Converts an ADC amplitude to millivolts.
 /// @param t_adcValue The ADC value to convert.
 /// @param t_calibration_factor The calibration factor.
-/// @return The voltage.
-float ZMPT101BAcReaderBase::toVoltage(const float t_adcValue, const float t_calibration_factor) const
+/// @return The voltage in millivolts. Non-positive inputs become 0.
+uint32_t ZMPT101BAcReaderBase::toMillivolts(const float t_adcValue, const float t_calibration_factor) const
 {
-    auto supply_voltage = board::getSupplyVoltage();
-    return t_adcValue * t_calibration_factor * supply_voltage / ADC_COUNTS;
+    if(m_supplyVoltageMv == 0)
+    {
+        m_supplyVoltageMv = board::getSupplyVoltage();
+    }
+    const float millivolts = t_adcValue * t_calibration_factor * static_cast<float>(m_supplyVoltageMv) / ADC_COUNTS;
+    if(millivolts <= 0.0f)
+    {
+        return 0;
+    }
+    return static_cast<uint32_t>(millivolts + 0.5f);
 }
 
-// The Polynomial Equation 3 (ADC offset from zero -> volts).
-#define PolynomialEquation(x) (0.00000412*x*x*x - 0.000857*x*x + 2.675*x - 3.198)
-
-/// @brief Returns RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+/// @brief Returns RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 /// @param t_sensor The sensor to read from.
-/// @return The RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+/// @return The RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor) const
 {
     auto validationResult = ensureValidInput(t_sensor);
@@ -111,13 +121,13 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
     }
     m_timer->stop();
 
-    float result = toVoltage((maxAdcValue - minAdcValue) / 2 / sqrt(2), t_sensor.calibration_factor);
-    return ZMPT101B_ACVoltage(t_sensor, result);
+    const float amplitude = (maxAdcValue - minAdcValue) * 0.5f * ONE_OVER_SQRT2;
+    return ZMPT101B_ACVoltage(t_sensor, toMillivolts(amplitude, t_sensor.calibration_factor));
 }
 
-/// @brief Returns True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+/// @brief Returns True RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 /// @param t_sensor The sensor to read from.
-/// @return The True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+/// @return The True RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
 Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor) const
 {
     auto validationResult = ensureValidInput(t_sensor);
@@ -135,7 +145,7 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSe
     // Wait until the wave is close to zero (mid-scale adc) part in sin curve.
     waitUntilWaveCloseToZero(t_sensor);  
 
-    double totalAdcAdjValue = 0.0;
+    float totalAdcAdjValue = 0.0f;
     uint16_t sampleCount = 0;
 
     // Start measurement loop to calculate True RMS voltage.
@@ -150,9 +160,8 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSe
     }
     m_timer->stop();
 
-    float result = (sampleCount == 0) 
-        ? 0.0f 
-        : toVoltage(static_cast<float>(sqrt(totalAdcAdjValue / sampleCount)), t_sensor.calibration_factor);
-    return ZMPT101B_ACVoltage(t_sensor, result);
+    const uint32_t millivolts = (sampleCount == 0)
+        ? 0u
+        : toMillivolts(sqrtf(totalAdcAdjValue / static_cast<float>(sampleCount)), t_sensor.calibration_factor);
+    return ZMPT101B_ACVoltage(t_sensor, millivolts);
 }
-

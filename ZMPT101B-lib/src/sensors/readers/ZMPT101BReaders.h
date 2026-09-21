@@ -32,6 +32,8 @@ class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSe
 {
     protected:
         ITimer* const m_timer;
+        /// @brief Cached supply voltage in millivolts. 0 means not measured yet.
+        static uint16_t m_supplyVoltageMv;
 
         /// @brief Ensures the timer is initialized and the stream is created.
         /// @param t_sensor The sensor to check.
@@ -45,11 +47,11 @@ class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSe
         /// @param t_sensor The sensor to read the value from.
         /// @return The ADC raw value.
         uint16_t readAdcRawValue(const ZMPT101BSensor& t_sensor) const;
-        /// @brief Converts the ADC value to voltage.
+        /// @brief Converts an ADC amplitude to millivolts.
         /// @param t_adcValue The ADC value to convert.
         /// @param t_calibration_factor The calibration factor.
-        /// @return The voltage.
-        float toVoltage(const float t_adcValue, const float t_calibration_factor) const;
+        /// @return The voltage in millivolts. Non-positive inputs become 0.
+        uint32_t toMillivolts(const float t_adcValue, const float t_calibration_factor) const;
     public:
         ZMPT101BAcReaderBase() = delete;
 
@@ -68,7 +70,7 @@ class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSe
         virtual ~ZMPT101BAcReaderBase() = default;        
 };
 
-/// @brief Peak-to-peak RMS over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 3).
+/// @brief Peak-to-peak RMS over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 4).
 class ZMPT101BRmsReader : public ZMPT101BAcReaderBase
 {
     public:
@@ -80,11 +82,11 @@ class ZMPT101BRmsReader : public ZMPT101BAcReaderBase
 
         virtual ~ZMPT101BRmsReader() = default;
 
-        /// @brief Returns RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+        /// @brief Returns RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
         Expected<ZMPT101B_ACVoltage, Error> read(const ZMPT101BSensor& t_sensor) const override;
 };
 
-/// @brief True RMS (sqrt of mean square) over two AC periods (40 ms at 50 Hz).
+/// @brief True RMS (sqrt of mean square) over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 80 ms at 50 Hz).
 class ZMPT101BTrueRmsReader : public ZMPT101BAcReaderBase
 {
     public:
@@ -96,7 +98,7 @@ class ZMPT101BTrueRmsReader : public ZMPT101BAcReaderBase
 
         virtual ~ZMPT101BTrueRmsReader() = default;
 
-        /// @brief Returns True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+        /// @brief Returns True RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
         Expected<ZMPT101B_ACVoltage, Error> read(const ZMPT101BSensor& t_sensor) const override;
 };
 

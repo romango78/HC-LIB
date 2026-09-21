@@ -43,19 +43,19 @@ void loop()
     Expected<ZMPT101B_ACVoltage, Error> rms = rmsReader->read(*sensor);
     Expected<ZMPT101B_ACVoltage, Error> trueRms = trueRmsReader->read(*sensor);
 
-    Serial.print(F("RMS_V:"));
+    Serial.print(F("RMS_mV:"));
     if(rms.hasValue())
     {
-        Serial.print(rms.getValue().data, 2);
+        Serial.print(rms.getValue().data);
     }
     else
     {
         Serial.print(rms.getError().message());
     }
-    Serial.print(F(", TrueRMS_V:"));
+    Serial.print(F(", TrueRMS_mV:"));
     if(trueRms.hasValue())
     {
-        Serial.println(trueRms.getValue().data, 2);
+        Serial.println(trueRms.getValue().data);
     }
     else
     {

@@ -42,7 +42,7 @@ void ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized()
 
 void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
 {
-    const float expectedValue = 1763.48423188f;
+    const uint32_t expectedValue = 1763u;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -52,14 +52,14 @@ void ZMPT101BRmsReader_Read_Data_And_Calculate_Rms()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_EQUAL(VOLTAGE_SENSOR_TYPE, result.getValue().sensor.type);
     TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), F("No errors expected."));
 }
 
 void ZMPT101BRmsReader_Read_WhenStreamAlreadyReadable()
 {
-    const float expectedValue = 1763.48423188f;
+    const uint32_t expectedValue = 1763u;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -70,13 +70,13 @@ void ZMPT101BRmsReader_Read_WhenStreamAlreadyReadable()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
 void ZMPT101BRmsReader_Read_WhenTimerAlreadyStarted()
 {
-    const float expectedValue = 1763.48423188f;
+    const uint32_t expectedValue = 1763u;
 
     FakeTimer timer;
     timer.start();
@@ -87,13 +87,13 @@ void ZMPT101BRmsReader_Read_WhenTimerAlreadyStarted()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data, F("The RMS calculation is failed."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The RMS calculation is failed."));
     TEST_ASSERT_FALSE(timer.isStarted());
 }
 
 void ZMPT101BRmsReader_Read_Twice()
 {
-    const float expectedValue = 1763.48423188f;
+    const uint32_t expectedValue = 1763u;
 
     FakeTimer timer;
     ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
@@ -105,14 +105,12 @@ void ZMPT101BRmsReader_Read_Twice()
 
     TEST_ASSERT_TRUE(first.hasValue());
     TEST_ASSERT_TRUE(second.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN(0.001f, expectedValue, first.getValue().data);
+    TEST_ASSERT_EQUAL_UINT32(expectedValue, first.getValue().data);
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
 void ZMPT101BRmsReader_Read_WhenTimerElapsedImmediately()
 {
-    const float expectedValue = -1726.33491501f;
-
     FakeTimer timer(0);
     ZMPT101BSensor sensor(0, new FakeConstantStream(512));
     sensor.zero = 512;
@@ -121,8 +119,8 @@ void ZMPT101BRmsReader_Read_WhenTimerElapsedImmediately()
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, expectedValue, result.getValue().data,
-        F("No samples keep max=0 and min=1000."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0u, result.getValue().data,
+        F("No samples keep max=0 and min=1000; negative amplitude clamps to 0 mV."));
 }
 
 void ZMPT101BRmsReader_Read_ConstantMidScale()
@@ -136,8 +134,8 @@ void ZMPT101BRmsReader_Read_ConstantMidScale()
 
     TEST_ASSERT_TRUE(result.hasValue());
     TEST_ASSERT_FALSE(sensor.stream->hasError());
-    TEST_ASSERT_FLOAT_WITHIN_MESSAGE(0.001f, 0.0f, result.getValue().data,
-        F("Constant mid-scale ADC yields 0 V RMS."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(0u, result.getValue().data,
+        F("Constant mid-scale ADC yields 0 mV RMS."));
 }
 
 #endif

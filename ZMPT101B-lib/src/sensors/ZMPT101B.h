@@ -35,7 +35,7 @@ struct ZMPT101BSensor : AnalogSensor
     /// @brief Initializes the sensor on _t_pin_ with _t_stream_.
     /// @param t_pin Analog pin connected to the module OUT.
     /// @param t_stream Analog stream for that pin. The sensor takes ownership.
-    /// @param t_calibration_factor Scale applied when converting ADC to volts (default 1.0).
+    /// @param t_calibration_factor Scale applied when converting ADC to millivolts (default 1.0).
     ZMPT101BSensor(const uint8_t t_pin, IStream<uint16_t>* const t_stream, const float t_calibration_factor = 1.0f)
         : AnalogSensor(VOLTAGE_SENSOR_TYPE, t_pin, t_stream),
           zero(0.0f), calibration_factor(t_calibration_factor) {};
@@ -49,14 +49,14 @@ struct ZMPT101BSensor : AnalogSensor
     }
 };
 
-/// @brief AC RMS voltage reading in volts from a ZMPT101BSensor.
-struct ZMPT101B_ACVoltage : SensorData<float>
+/// @brief AC RMS voltage reading in millivolts from a ZMPT101BSensor.
+struct ZMPT101B_ACVoltage : SensorData<uint32_t>
 {
     ZMPT101B_ACVoltage() = delete;
 
-    /// @brief Initializes a successful reading.
-    ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const float t_data)
-        : SensorData<float>(t_sensor, t_data) {};
+    /// @brief Initializes a successful reading in millivolts.
+    ZMPT101B_ACVoltage(const ZMPT101BSensor& t_sensor, const uint32_t t_data)
+        : SensorData<uint32_t>(t_sensor, t_data) {};
 };
 
 /// @brief Calibration helpers for ZMPT101BSensor.
@@ -83,7 +83,7 @@ class ZMPT101B
             {
                 adcValue += t_sensor->stream->read();
             }
-            t_sensor->zero = static_cast<uint16_t>(adcValue / ZMPT101B_READ_ITERATIONS);
+            t_sensor->zero = static_cast<float>(adcValue / ZMPT101B_READ_ITERATIONS);
             t_sensor->stream->end();
         };
 };
