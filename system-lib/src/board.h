@@ -13,10 +13,11 @@
 
 #include <stdint.h>
 
-#ifndef READ_VCC_CALIBRATION_CONST
 /// @brief 1100 mV × 1024. Result of getSupplyVoltage() is millivolts (e.g. 5000).
 #define READ_VCC_CALIBRATION_CONST 1126400L
-#endif
+
+/// @brief Default supply voltage in millivolts. Used when the supply voltage is not measured.
+#define DEFAULT_SUPPLY_VOLTAGE 5000
 
 #if defined(ARDUINO)
 #include <Arduino.h>
@@ -88,12 +89,12 @@ namespace board
 
         if (adc == 0)
         {
-            return 0;
+            return DEFAULT_SUPPLY_VOLTAGE;
         }
         return static_cast<uint16_t>(READ_VCC_CALIBRATION_CONST / adc);
 
 #else
-        return 5000;   // No ADMUX; assume 5.0 V
+        return DEFAULT_SUPPLY_VOLTAGE;   // No ADMUX; assume 5.0 V
 #endif
     }
 }
