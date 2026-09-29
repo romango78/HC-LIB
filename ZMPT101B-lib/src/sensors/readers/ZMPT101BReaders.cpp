@@ -10,10 +10,13 @@
 #include <math.h>
 #include "board.h"
 
-uint16_t ZMPT101BAcReaderBase::m_supplyVoltageMv = 0;
+/// @brief EMA (Exponential Moving Average) filter allows to correct zero point on fly
+#define EMA_FILTER(y, y0) (0.001*y + 0.999*y0)
 
 /// @brief 1/sqrt(2), used to turn a peak amplitude into RMS.
-static const float ONE_OVER_SQRT2 = 0.70710678118f;
+#define ONE_OVER_SQRT2 0.70710678118f
+
+uint16_t ZMPT101BAcReaderBase::m_supplyVoltageMv = 0;
 
 /// @brief Ensures the timer is initialized and the stream is created.
 /// @param t_sensor The sensor to check.
@@ -58,7 +61,7 @@ void ZMPT101BAcReaderBase::waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sens
 uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) const
 {
     uint16_t rawValue = static_cast<uint16_t>(t_sensor.stream->read());
-    t_sensor.zero += (rawValue - t_sensor.zero) / ADC_COUNTS;
+    t_sensor.zero = EMA_FILTER(rawValue, t_sensor.zero);
     return rawValue;
 }
 
@@ -160,8 +163,9 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSe
     }
     m_timer->stop();
 
-    const uint32_t millivolts = (sampleCount == 0)
-        ? 0u
-        : toMillivolts(sqrtf(totalAdcAdjValue / static_cast<float>(sampleCount)), t_sensor.calibration_factor);
+    const float trueRms = (sampleCount == 0)
+        ? 0.0f
+        : sqrtf(totalAdcAdjValue / static_cast<float>(sampleCount));
+    const uint32_t millivolts = toMillivolts(trueRms, t_sensor.calibration_factor);
     return ZMPT101B_ACVoltage(t_sensor, millivolts);
 }

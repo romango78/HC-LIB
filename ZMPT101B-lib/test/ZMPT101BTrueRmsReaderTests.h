@@ -17,6 +17,8 @@
 #include "FakeTimer.h"
 #include "FakeStream.h"
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the timer is not initialized.
+/// @note The test verifies that the reader raises an error when the timer is not initialized.
 void ZMPT101BTrueRmsReader_Raise_Error_When_TimerIsNotInitialized()
 {
     ZMPT101BSensor sensor(0, nullptr);
@@ -28,6 +30,8 @@ void ZMPT101BTrueRmsReader_Raise_Error_When_TimerIsNotInitialized()
     TEST_ASSERT_TRUE(result.getError() == DeviceError::TimerIsNotInitialized);
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the stream is not initialized.
+/// @note The test verifies that the reader raises an error when the stream is not initialized.
 void ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized()
 {
     FakeTimer timer;
@@ -40,64 +44,68 @@ void ZMPT101BTrueRmsReader_Raise_Error_When_StreamIsNotInitialized()
     TEST_ASSERT_TRUE(result.getError() == IoError::StreamNotCreated);
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the data is read and the True RMS is calculated.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
 {
-    const uint32_t expectedValue = 1382u;
+    const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is failed."));
     TEST_ASSERT_EQUAL(VOLTAGE_SENSOR_TYPE, result.getValue().sensor.type);
     TEST_ASSERT_FALSE_MESSAGE(sensor.stream->hasError(), F("No errors expected."));
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the stream is already readable.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
 {
-    const uint32_t expectedValue = 1382u;
+    const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
     sensor.stream->begin(StreamMode::Read);
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is failed."));
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the timer is already started.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_WhenTimerAlreadyStarted()
 {
-    const uint32_t expectedValue = 1382u;
+    const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
     timer.start();
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
 
     TEST_ASSERT_TRUE(result.hasValue());
-    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is falied."));
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(expectedValue, result.getValue().data, F("The True RMS calculation is failed."));
     TEST_ASSERT_FALSE(timer.isStarted());
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the data is read twice.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_Twice()
 {
-    const uint32_t expectedValue = 1382u;
+    const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> first = sut.read(sensor);
@@ -109,11 +117,12 @@ void ZMPT101BTrueRmsReader_Read_Twice()
     TEST_ASSERT_FALSE(sensor.stream->hasError());
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the timer elapsed immediately.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
 {
     FakeTimer timer(0);
-    ZMPT101BSensor sensor(0, new FakeConstantStream(512));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512), 1.0f); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
@@ -122,11 +131,12 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
     TEST_ASSERT_EQUAL_UINT32_MESSAGE(0u, result.getValue().data, F("No samples must yield 0 mV True RMS."));
 }
 
+/// @brief Tests the ZMPT101BTrueRmsReader class when the data is read and the True RMS is calculated.
+/// @note The test verifies that the reader reads the data and calculates the True RMS.
 void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
 {
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeConstantStream(512));
-    sensor.zero = 512;
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512), 1.0f); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);

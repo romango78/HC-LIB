@@ -17,18 +17,26 @@
 #include "sensors/ZMPT101B.h"
 #include "FakeStream.h"
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is constructed with a pin and a stream.
+/// @note The test verifies that the sensor is constructed with the correct pin and stream.
+/// @return The sensor.
 ZMPT101BSensor createZMPT101BSensor()
 {
-    ZMPT101BSensor result{14, new FakeConstantStream(512)};
+    ZMPT101BSensor result{14, new FakeConstantStream(512), 1.0f};
     return result;
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is constructed with a pin and a stream.
+/// @note The test verifies that the sensor is constructed with the correct pin and stream.
+/// @return The sensor.
 ZMPT101BSensor createZMPT101BSensor2()
 {
-    ZMPT101BSensor result{3, new FakeConstantStream(400)};
+    ZMPT101BSensor result{3, new FakeConstantStream(400), 1.0f};
     return result;
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is constructed with a pin and a stream.
+/// @note The test verifies that the sensor is constructed with the correct pin and stream.
 void ZMPT101BSensor_ShouldConstruct_WithPinAndStream()
 {
     IStream<uint16_t>* stream = new FakeConstantStream(512);
@@ -44,6 +52,8 @@ void ZMPT101BSensor_ShouldConstruct_WithPinAndStream()
     TEST_ASSERT_FALSE(device::is_relay(sut));
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is constructed with a null stream.
+/// @note The test verifies that the sensor is constructed with the correct pin and stream.
 void ZMPT101BSensor_ShouldConstruct_WithNullStream()
 {
     ZMPT101BSensor sut(7, nullptr);
@@ -55,6 +65,8 @@ void ZMPT101BSensor_ShouldConstruct_WithNullStream()
     TEST_ASSERT_EQUAL(0, sut.zero);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is copied.
+/// @note The test verifies that the sensor is copied with the correct pin and stream.
 void ZMPT101BSensor_ShouldCopy_PreservesZeroAndClonesStream()
 {
     ZMPT101BSensor source = createZMPT101BSensor();
@@ -70,6 +82,8 @@ void ZMPT101BSensor_ShouldCopy_PreservesZeroAndClonesStream()
     TEST_ASSERT_TRUE(source.stream != sut.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is copied with a null stream.
+/// @note The test verifies that the sensor is copied with the correct pin and stream.
 void ZMPT101BSensor_ShouldCopy_WithNullStream()
 {
     ZMPT101BSensor source(7, nullptr);
@@ -82,6 +96,8 @@ void ZMPT101BSensor_ShouldCopy_WithNullStream()
     TEST_ASSERT_NULL(sut.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is copied from a moved source.
+/// @note The test verifies that the sensor is copied from a moved source with the correct pin and stream.
 void ZMPT101BSensor_ShouldCopy_FromMovedSource()
 {
     ZMPT101BSensor source = createZMPT101BSensor();
@@ -96,6 +112,8 @@ void ZMPT101BSensor_ShouldCopy_FromMovedSource()
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is moved.
+/// @note The test verifies that the sensor is moved with the correct pin and stream.
 void ZMPT101BSensor_ShouldMove()
 {
     ZMPT101BSensor source = createZMPT101BSensor();
@@ -109,6 +127,8 @@ void ZMPT101BSensor_ShouldMove()
     TEST_ASSERT_EQUAL(stream, sut.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is assigned.
+/// @note The test verifies that the sensor is assigned with the correct pin and stream.
 void ZMPT101BSensor_ShouldAssignCopy()
 {
     ZMPT101BSensor source = createZMPT101BSensor();
@@ -122,6 +142,8 @@ void ZMPT101BSensor_ShouldAssignCopy()
     TEST_ASSERT_TRUE(source.stream != sut.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is assigned from a null stream.
+/// @note The test verifies that the sensor is assigned from a null stream with the correct pin and stream.
 void ZMPT101BSensor_ShouldAssign_FromNullStream()
 {
     ZMPT101BSensor source(7, nullptr);
@@ -133,6 +155,8 @@ void ZMPT101BSensor_ShouldAssign_FromNullStream()
     TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Assignment from a null-stream sensor should clear the stream."));
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is self assigned.
+/// @note The test verifies that the sensor is self assigned with the correct pin and stream.
 void ZMPT101BSensor_ShouldSelfAssign()
 {
     ZMPT101BSensor sut = createZMPT101BSensor();
@@ -145,11 +169,15 @@ void ZMPT101BSensor_ShouldSelfAssign()
     TEST_ASSERT_EQUAL(stream, sut.stream);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated with a null sensor.
+/// @note The test verifies that the sensor is calibrated with a null sensor.
 void ZMPT101B_Calibrate_DoesNothing_WhenSensorIsNull()
 {
     ZMPT101B::calibrate(nullptr);
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated with a null stream.
+/// @note The test verifies that the sensor is calibrated with a null stream.
 void ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull()
 {
     ZMPT101BSensor sensor(3, nullptr);
@@ -160,6 +188,8 @@ void ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull()
     TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero, F("Null stream must leave zero unchanged."));
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated and the ADC is averaged into zero.
+/// @note The test verifies that the sensor is calibrated and the ADC is averaged into zero.
 void ZMPT101B_Calibrate_AveragesAdcIntoZero()
 {
     FakeConstantStream* stream = new FakeConstantStream(512);
@@ -172,6 +202,8 @@ void ZMPT101B_Calibrate_AveragesAdcIntoZero()
     TEST_ASSERT_FALSE(stream->hasError());
 }
 
+/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated and the stream is already readable.
+/// @note The test verifies that the sensor is calibrated and the stream is already readable.
 void ZMPT101B_Calibrate_WhenStreamAlreadyReadable()
 {
     FakeConstantStream* stream = new FakeConstantStream(400);

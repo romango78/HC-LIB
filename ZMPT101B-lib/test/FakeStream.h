@@ -15,6 +15,11 @@
 #include "errors/IoErrors.h"
 #include "FakeTimer.h"
 
+/// @brief Fake stream that returns a value between min and max values.
+/// @param t_minValue The minimum value.
+/// @param t_maxValue The maximum value.
+/// @return The value between min and max values.
+/// @note The stream is initialized with the min value and the step value is calculated based on the min and max values.
 class FakeStream : public AnalogStream
 {
     private:
