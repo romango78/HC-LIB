@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.1.2609]
 ### Added
+- _Q10_ (`src/Q10.h`): signed Q10 fixed point (10 fractional bits). Integer, float, and double constructors; add, subtract, multiply, and divide. _sqrt()_ returns _Expected{Q10, Error}_ — the root for zero and positive values, _GenericError::InvalidOperation_ for a negative value.
+- Unit tests for _Q10_ compare raw steps (`value × 1024`) so they stay valid when Nano builds set _UNITY_EXCLUDE_FLOAT_.
 - _Error_, _ErrorCategory_, and _GenericError_ with category-based messages and _make_error()_.
 - _Unexpected{E}_ and _make_error(E&&)_ so _Expected{T, E}_ can return a typed error.
 - Arduino _std::remove_cv_ and _std::decay_ in _lib-utility.h_ so _make_error_ compiles on AVR.
