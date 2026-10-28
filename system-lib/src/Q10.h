@@ -12,7 +12,6 @@
 #define _HC_LIB_Q10_H_
 
 #include <stdint.h>
-#include <cmath>
 #include "errors/GenericErrors.h"
 
 #define FRACTIONAL_BITS 10
@@ -32,8 +31,13 @@ public:
     /// @brief Constructors.
     constexpr Q10() : m_value(0) {};
     constexpr Q10(int32_t t_value) : m_value(t_value << FRACTIONAL_BITS) {};
-    constexpr Q10(float t_value) : m_value(static_cast<int32_t>(std::round(t_value * SCALE_FACTOR))) {};
-    constexpr Q10(double t_value) : m_value(static_cast<int32_t>(std::round(t_value * SCALE_FACTOR))) {};
+#if defined(__AVR__)
+    /// @brief AVR int is 16-bit, so int and uint16_t would otherwise be ambiguous with float and double.
+    constexpr Q10(int t_value) : m_value(static_cast<int32_t>(t_value) << FRACTIONAL_BITS) {};
+    constexpr Q10(unsigned int t_value) : m_value(static_cast<int32_t>(t_value) << FRACTIONAL_BITS) {};
+#endif
+    constexpr Q10(float t_value) : m_value(static_cast<int32_t>(t_value * SCALE_FACTOR + (t_value >= 0.0f ? 0.5f : -0.5f))) {};
+    constexpr Q10(double t_value) : m_value(static_cast<int32_t>(t_value * SCALE_FACTOR + (t_value >= 0.0 ? 0.5 : -0.5))) {};
 
     /// @brief Convert the Q10 to a float.
     constexpr float toFloat() const { return static_cast<float>(m_value) / SCALE_FACTOR; }
