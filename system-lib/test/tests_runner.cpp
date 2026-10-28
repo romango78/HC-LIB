@@ -103,6 +103,9 @@ void testsProcess()
     RUN_TEST(Q10_Multiply_ShouldScaleBackBy1024);
     RUN_TEST(Q10_Divide_ShouldTruncateTowardZero);
     RUN_TEST(Q10_AssignmentOperators_ShouldUpdateInPlace);
+    RUN_TEST(Q10_Equal_ShouldMatchRawSteps);
+    RUN_TEST(Q10_NotEqual_ShouldDetectDifferentSteps);
+    RUN_TEST(Q10_Ordering_ShouldCompareSignedSteps);
     RUN_TEST(Q10_Sqrt_ShouldReturnZero_WhenValueIsZero);
     RUN_TEST(Q10_Sqrt_ShouldReturnInvalidOperation_WhenValueIsNegative);
     RUN_TEST(Q10_Sqrt_ShouldBeExact_WhenResultIsRepresentable);

@@ -12,7 +12,7 @@ No Dependencies
 - Defines generic __ICloneable{T}__ abstraction.
 - Defines __ITimer__ abstraction and __ArduinoTimer__ (Arduino __millis()__, host __steady_clock__ on native). One-shot: __isElapsed()__ latches; __start()__ restarts; __setInterval()__ is ignored while running.
 - Implements __Expected{T, E}__ for returning a value or an error via __Unexpected{E}__ and __make_error()__. Call __hasValue()__ before __getValue()__.
-- Provides __Q10__ (`src/Q10.h`): a signed fixed-point value with 10 fractional bits (`SCALE_FACTOR` 1024). Construct from `int32_t`, `float`, or `double`. __+__ and __−__ use the raw steps. __*__ is `(A * B) >> 10`. __/__ is `(A << 10) / B` (the shift is parenthesized because `/` binds tighter than `<<`).
+- Provides __Q10__ (`src/Q10.h`): a signed fixed-point value with 10 fractional bits (`SCALE_FACTOR` 1024). Construct from `int32_t`, `float`, or `double`. __+__ and __−__ use the raw steps. __*__ is `(A * B) >> 10`. __/__ is `(A << 10) / B` (the shift is parenthesized because `/` binds tighter than `<<`). __==__, __!=__, __<__, __>__, __<=__, and __>=__ compare the signed raw steps. An integer literal converts to __Q10__, so `value <= 0` is valid.
 - __Q10::sqrt()__ returns __Expected{Q10, Error}__. Zero and positive inputs return the integer square root, rounded to the nearest Q10 step. A negative input returns __GenericError::InvalidOperation__.
 - Provides __lib-utility.h__: Arduino __std::move__, __std::forward__, __std::remove_reference__, __std::remove_cv__, and __std::decay__. Native builds include `<utility>` and `<type_traits>`.
 - Provides __flash.h__: __flash_c_str__ copies an __F()__ string into a RAM buffer for C APIs. On native builds __F()__ is a pass-through.
@@ -36,6 +36,7 @@ Scale a value with __Q10__ and take a square root:
 ```c++
 Q10 gain(0.275);                 // nearest step, 282
 Q10 product = Q10(1.5) * Q10(2); // 3
+bool positive = product > 0;     // compares signed raw steps
 Expected<Q10, Error> root = Q10(4).sqrt();
 if (root.hasValue())
 {

@@ -145,6 +145,40 @@ void Q10_AssignmentOperators_ShouldUpdateInPlace()
     TEST_ASSERT_EQUAL_INT32(q10Raw(Q10(1.25)), q10Raw(sut));
 }
 
+/// @brief Tests equality.
+/// @note Equal raw steps match, including the same value built two ways. Zero compares equal to the integer 0.
+void Q10_Equal_ShouldMatchRawSteps()
+{
+    TEST_ASSERT_TRUE(Q10(1.5) == Q10(1.5));
+    TEST_ASSERT_TRUE(Q10(2) == Q10(2.0));
+    TEST_ASSERT_TRUE(Q10(0) == 0);
+    TEST_ASSERT_FALSE(Q10(1) == Q10(2));
+}
+
+/// @brief Tests inequality.
+/// @note Different steps, including a negative value, are not equal.
+void Q10_NotEqual_ShouldDetectDifferentSteps()
+{
+    TEST_ASSERT_TRUE(Q10(1) != Q10(2));
+    TEST_ASSERT_TRUE(Q10(-1) != 0);
+    TEST_ASSERT_FALSE(Q10(1.5) != Q10(1.5));
+}
+
+/// @brief Tests <, >, <=, and >=.
+/// @note Ordering uses the signed raw steps. A negative value is less than zero.
+void Q10_Ordering_ShouldCompareSignedSteps()
+{
+    TEST_ASSERT_TRUE(Q10(1) < Q10(1.5));
+    TEST_ASSERT_TRUE(Q10(2) > Q10(1.5));
+    TEST_ASSERT_TRUE(Q10(-2) < 0);
+    TEST_ASSERT_TRUE(Q10(0) <= 0);
+    TEST_ASSERT_TRUE(Q10(1) >= 0);
+    TEST_ASSERT_TRUE(Q10(1.5) <= Q10(1.5));
+    TEST_ASSERT_TRUE(Q10(1.5) >= Q10(1.5));
+    TEST_ASSERT_FALSE(Q10(2) < Q10(1));
+    TEST_ASSERT_FALSE(Q10(1) > Q10(2));
+}
+
 /// @brief Tests sqrt() of zero.
 /// @note sqrt(0) is the Q10 value 0.
 void Q10_Sqrt_ShouldReturnZero_WhenValueIsZero()
