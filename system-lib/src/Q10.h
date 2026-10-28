@@ -123,6 +123,19 @@ public:
         *this = *this / other; 
         return *this; 
     }
+
+    /// @brief Equal when both raw steps match.
+    constexpr bool operator==(const Q10& other) const { return m_value == other.m_value; }
+    /// @brief Not equal when the raw steps differ.
+    constexpr bool operator!=(const Q10& other) const { return m_value != other.m_value; }
+    /// @brief Less than, using the signed raw steps.
+    constexpr bool operator<(const Q10& other) const { return m_value < other.m_value; }
+    /// @brief Greater than, using the signed raw steps.
+    constexpr bool operator>(const Q10& other) const { return m_value > other.m_value; }
+    /// @brief Less than or equal, using the signed raw steps.
+    constexpr bool operator<=(const Q10& other) const { return m_value <= other.m_value; }
+    /// @brief Greater than or equal, using the signed raw steps.
+    constexpr bool operator>=(const Q10& other) const { return m_value >= other.m_value; }
 };
 
 #endif
