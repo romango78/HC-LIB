@@ -13,6 +13,7 @@
 #include "ExpectedTests.h"
 #include "MoveTests.h"
 #include "ArduinoTimerTests.h"
+#include "Q10Tests.h"
 
 void dummyTest()
 {
@@ -88,6 +89,27 @@ void testsProcess()
     RUN_TEST(ArduinoTimer_Stop_ShouldClearStartedAndElapsed_WhenStopped);
     RUN_TEST(ArduinoTimer_Start_ShouldRestartCountdown_WhenAlreadyElapsed);
     RUN_TEST(ArduinoTimer_Start_ShouldRunNewInterval_WhenRestartedAfterStop);
+
+    /*****************************************
+     * Q10
+     *****************************************/
+    RUN_TEST(Q10_DefaultCtor_ShouldBeZero);
+    RUN_TEST(Q10_IntCtor_ShouldShiftByFractionalBits);
+    RUN_TEST(Q10_FloatCtor_ShouldRoundToNearestStep);
+    RUN_TEST(Q10_DoubleCtor_ShouldMatchFloatCtor);
+    RUN_TEST(Q10_NegativeInt_ShouldKeepSign);
+    RUN_TEST(Q10_Add_ShouldAddRawValues);
+    RUN_TEST(Q10_Subtract_ShouldKeepFractionalSign);
+    RUN_TEST(Q10_Multiply_ShouldScaleBackBy1024);
+    RUN_TEST(Q10_Divide_ShouldTruncateTowardZero);
+    RUN_TEST(Q10_AssignmentOperators_ShouldUpdateInPlace);
+    RUN_TEST(Q10_Equal_ShouldMatchRawSteps);
+    RUN_TEST(Q10_NotEqual_ShouldDetectDifferentSteps);
+    RUN_TEST(Q10_Ordering_ShouldCompareSignedSteps);
+    RUN_TEST(Q10_Sqrt_ShouldReturnZero_WhenValueIsZero);
+    RUN_TEST(Q10_Sqrt_ShouldReturnInvalidOperation_WhenValueIsNegative);
+    RUN_TEST(Q10_Sqrt_ShouldBeExact_WhenResultIsRepresentable);
+    RUN_TEST(Q10_Sqrt_ShouldRoundToNearestStep_WhenIrrational);
     
     UNITY_END();
 };

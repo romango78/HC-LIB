@@ -47,7 +47,9 @@
           "src/sensors/readers/*",
           "library.json",
           "library.properties",
-          "*.md"
+          "*.md",
+          "docs/ZMPT101B-Arduino.jpg",
+          "docs/ZMPT101B-Pinout.jpg"
       ]
     },
     "license": "MIT",

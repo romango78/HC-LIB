@@ -7,15 +7,14 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 #include "ZMPT101BReaders.h"
-#include <math.h>
+#include "board.h"
 
-// The Polynomial Equation 3 (ADC offset from zero -> volts).
-#define PolynomialEquation(x) (0.00000412*x*x*x - 0.000857*x*x + 2.675*x - 3.198)
+uint16_t ZMPT101BAcReaderBase::m_supplyVoltageMv = 0;
 
-/// @brief Returns RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
-/// @param t_sensor The sensor to read from.
-/// @return The RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
-Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor& t_sensor) const
+/// @brief Ensures the timer is initialized and the stream is created.
+/// @param t_sensor The sensor to check.
+/// @return True if the timer is initialized and the stream is created, false otherwise.
+Expected<bool, Error> ZMPT101BAcReaderBase::ensureValidInput(const ZMPT101BSensor& t_sensor) const
 {
     if(!m_timer)
     {
@@ -25,77 +24,54 @@ Expected<ZMPT101B_ACVoltage, Error> ZMPT101BRmsReader::read(const ZMPT101BSensor
     {
         return make_error(IoError::StreamNotCreated);
     }
-    if(!t_sensor.stream->canRead())
-    {
-        t_sensor.stream->begin(StreamMode::Read);
-    }
-
-    if(m_timer->isStarted())
-    {
-        m_timer->stop();
-    }
-
-    m_timer->setInterval(2 * static_cast<uint32_t>(MILLISECONDS_IN_SECOND / AC_NETWORK_FREQUENCY));
-    m_timer->start();
-
-    float maxVoltage = 0.0f;
-    float minVoltage = 1000.0f;
-    while(!m_timer->isElapsed())
-    {
-        int16_t adjAdcValue = static_cast<int16_t>(t_sensor.stream->read()) - static_cast<int16_t>(t_sensor.zero);
-        float voltage = PolynomialEquation(adjAdcValue);
-        if(maxVoltage < voltage)
-        {
-            maxVoltage = voltage;
-        }
-        if(minVoltage > voltage)
-        {
-            minVoltage = voltage;
-        }
-    }
-    m_timer->stop();
-
-    float result = (maxVoltage - minVoltage) / 2 / sqrt(2);
-    return ZMPT101B_ACVoltage(t_sensor, result);
+    return true;
 }
 
-/// @brief Returns True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
-/// @param t_sensor The sensor to read from.
-/// @return The True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
-Expected<ZMPT101B_ACVoltage, Error> ZMPT101BTrueRmsReader::read(const ZMPT101BSensor& t_sensor) const
-{
-    if(!m_timer)
-    {
-        return make_error(DeviceError::TimerIsNotInitialized);
-    }
-    if(!t_sensor.stream)
-    {
-        return make_error(IoError::StreamNotCreated);
-    }
-    if(!t_sensor.stream->canRead())
-    {
-        t_sensor.stream->begin(StreamMode::Read);
-    }
-
+/// @brief Waits until the wave is close to zero.
+/// @param t_sensor The sensor to wait for.
+/// @note The wave is close to zero if the ADC value is close to the mid-point.
+void ZMPT101BAcReaderBase::waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const
+{   
     if(m_timer->isStarted())
     {
         m_timer->stop();
     }
-
-    m_timer->setInterval(2 * static_cast<uint32_t>(MILLISECONDS_IN_SECOND / AC_NETWORK_FREQUENCY));
     m_timer->start();
-
-    double totalVoltage = 0.0;
-    uint16_t sampleCount = 0;
     while(!m_timer->isElapsed())
     {
-        int16_t adjAdcValue = static_cast<int16_t>(t_sensor.stream->read()) - static_cast<int16_t>(t_sensor.zero);
-        float voltage = PolynomialEquation(adjAdcValue);
-        totalVoltage += voltage * voltage;
-        sampleCount++;
+        uint16_t rawValue = static_cast<uint16_t>(t_sensor.stream->read());
+        if(t_sensor.isCloseToZero(rawValue))
+        {
+            break;
+        }
     }
     m_timer->stop();
+}
 
-    float result = (sampleCount == 0) ? 0.0f : static_cast<float>(sqrt(totalVoltage / sampleCount));
-    return ZMPT101B_ACVoltage(t_sensor, result);
+/// @brief Reads one ADC sample and adjusts the zero point.
+/// @param t_sensor The sensor to read the value from.
+/// @return The ADC raw value.
+uint16_t ZMPT101BAcReaderBase::readAdcRawValue(const ZMPT101BSensor& t_sensor) const
+{
+    uint16_t rawValue = static_cast<uint16_t>(t_sensor.stream->read());
+    t_sensor.adjustZero(rawValue);
+    return rawValue;
+}
+
+/// @brief Converts an ADC amplitude to millivolts.
+/// @param t_adcValue The ADC RMS amplitude in counts.
+/// @param t_calibration_factor Scale applied when converting ADC to millivolts (default 1.0).
+/// @return The voltage in millivolts. Zero inputs become 0.
+uint32_t ZMPT101BAcReaderBase::toMillivolts(const Q10 t_adcValue, const Q10 t_calibration_factor) const
+{
+    if(t_adcValue == 0 || t_calibration_factor == 0)
+    {
+        return 0;
+    }
+    if(m_supplyVoltageMv == 0)
+    {
+        m_supplyVoltageMv = board::getSupplyVoltage();
+    }
+    const Q10 product = t_adcValue * t_calibration_factor * (Q10(m_supplyVoltageMv) / Q10(ADC_COUNTS));
+    return static_cast<uint32_t>(product.toInt32());
 }

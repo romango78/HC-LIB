@@ -16,43 +16,89 @@
 #include "timers/ITimer.h"
 #include "errors/IoErrors.h"
 
-#ifndef AC_NETWORK_FREQUENCY
+/// @brief Analog-to-Digital Converter resolution in bits.
+#define ADC_BITS  10
+/// @brief Analog-to-Digital Converter counts (2^ADC_BITS).
+#define ADC_COUNTS (1<<ADC_BITS)
+/// @brief AC network frequency in Hertz.
 #define AC_NETWORK_FREQUENCY 50
-#endif
+/// @brief Measurement resolution in wave counts.
+#define MESURE_RESOLUTION_IN_WAVE_COUNT 4
+/// @brief Measurement time in milliseconds.
+#define MESURE_TIME_IN_MILLISECONDS (MESURE_RESOLUTION_IN_WAVE_COUNT * static_cast<uint32_t>(MILLISECONDS_IN_SECOND/ AC_NETWORK_FREQUENCY))
 
-/// @brief Peak-to-peak RMS over two AC periods.
-class ZMPT101BRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+
+class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
 {
-    private:
+    protected:
         ITimer* const m_timer;
+        /// @brief Cached supply voltage in millivolts. 0 means not measured yet.
+        static uint16_t m_supplyVoltageMv;
+
+        /// @brief Ensures the timer is initialized and the stream is created.
+        /// @param t_sensor The sensor to check.
+        /// @return True if the timer is initialized and the stream is created, false otherwise.
+        Expected<bool, Error> ensureValidInput(const ZMPT101BSensor& t_sensor) const;
+        /// @brief Waits until the wave is close to zero.
+        /// @param t_sensor The sensor to wait for.
+        /// @note The wave is close to zero if the ADC value is close to the mid-point.
+        void waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const;
+        /// @brief Reads one ADC sample and adjusts the zero point.
+        /// @param t_sensor The sensor to read the value from.
+        /// @return The ADC raw value.
+        uint16_t readAdcRawValue(const ZMPT101BSensor& t_sensor) const;
+        /// @brief Converts an ADC amplitude to millivolts.
+        /// @param t_adcValue The ADC RMS amplitude in counts.
+        /// @param t_calibration_factor Scale applied when converting ADC to millivolts (default 1.0).
+        /// @return The voltage in millivolts. Zero inputs become 0.
+        uint32_t toMillivolts(const Q10 t_adcValue, const Q10 t_calibration_factor) const;
+    public:
+        ZMPT101BAcReaderBase() = delete;
+
+        explicit ZMPT101BAcReaderBase(ITimer* const t_timer)
+            : m_timer(t_timer) {
+                if(m_timer)
+                {
+                    if(m_timer->isStarted())
+                    {
+                        m_timer->stop();
+                    }
+                    m_timer->setInterval(MESURE_TIME_IN_MILLISECONDS);
+                }
+            };
+
+        virtual ~ZMPT101BAcReaderBase() = default;        
+};
+
+/// @brief Peak-to-peak RMS over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 4).
+class ZMPT101BRmsReader : public ZMPT101BAcReaderBase
+{
     public:
         ZMPT101BRmsReader() = delete;
 
         /// @brief Initializes the reader with _t_timer_. Does not take ownership.
         explicit ZMPT101BRmsReader(ITimer* const t_timer)
-            : m_timer(t_timer) {};
+            : ZMPT101BAcReaderBase(t_timer) {};         
 
         virtual ~ZMPT101BRmsReader() = default;
 
-        /// @brief Returns RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+        /// @brief Returns RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
         Expected<ZMPT101B_ACVoltage, Error> read(const ZMPT101BSensor& t_sensor) const override;
 };
 
-/// @brief True RMS (sqrt of mean square) over two AC periods.
-class ZMPT101BTrueRmsReader : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSensor>
+/// @brief True RMS (sqrt of mean square) over MESURE_RESOLUTION_IN_WAVE_COUNT AC periods (default 80 ms at 50 Hz).
+class ZMPT101BTrueRmsReader : public ZMPT101BAcReaderBase
 {
-    private:
-        ITimer* const m_timer;
     public:
         ZMPT101BTrueRmsReader() = delete;
 
         /// @brief Initializes the reader with _t_timer_. Does not take ownership.
         explicit ZMPT101BTrueRmsReader(ITimer* const t_timer)
-            : m_timer(t_timer) {};
+            : ZMPT101BAcReaderBase(t_timer) {};
 
         virtual ~ZMPT101BTrueRmsReader() = default;
 
-        /// @brief Returns True RMS volts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
+        /// @brief Returns True RMS millivolts, or DeviceError::TimerIsNotInitialized / IoError::StreamNotCreated.
         Expected<ZMPT101B_ACVoltage, Error> read(const ZMPT101BSensor& t_sensor) const override;
 };
 

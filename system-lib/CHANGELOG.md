@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.1.2609]
 ### Added
+- _Q10_ (`src/Q10.h`): signed Q10 fixed point (10 fractional bits). Integer, float, and double constructors; add, subtract, multiply, and divide. _==_, _!=_, _<_, _>_, _<=_, and _>=_ compare the signed raw steps. _sqrt()_ returns _Expected{Q10, Error}_ — the root for zero and positive values, _GenericError::InvalidOperation_ for a negative value.
+- Unit tests for _Q10_ cover arithmetic, comparison, and _sqrt()_. Numeric checks use raw steps (`value × 1024`) so they stay valid when Nano builds set _UNITY_EXCLUDE_FLOAT_.
 - _Error_, _ErrorCategory_, and _GenericError_ with category-based messages and _make_error()_.
 - _Unexpected{E}_ and _make_error(E&&)_ so _Expected{T, E}_ can return a typed error.
 - Arduino _std::remove_cv_ and _std::decay_ in _lib-utility.h_ so _make_error_ compiles on AVR.
@@ -13,6 +15,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - _flash_c_str_ copies _F()_ / __FlashStringHelper*_ into RAM. Unity *_MESSAGE_ macros accept flash strings.
 - AVR Unity _RUN_TEST_ names stay in PROGMEM (copied into a 96-byte buffer). Nano test builds shrink Serial buffers and drop Unity float/details to stay under 2 KB SRAM.
 - _unity_flash.h_ lives in _src/_ (gated by _UNIT_TEST_) so other HC-LIB packages can include it from HC-LIB.System.
+- AVR ADC register notes in _docs/_ (ADMUX, ADCSRA, ADCSRB, ADCL/ADCH) for _board::getSupplyVoltage()_.
+- _board::getSupplyVoltage()_ enables the ADC, discards the first conversion after the mux change, restores ADMUX / Mega MUX5, and returns millivolts (0 if the ADC reading is 0).
 
 ### Changed
 - Renamed _move.h_ to _lib-utility.h_. Native builds include _\<utility\>_ and _\<type_traits\>_.

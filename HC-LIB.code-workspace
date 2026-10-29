@@ -1,7 +1,7 @@
 {
 	"folders": [
 		{
-			"name": "root",
+			"name": "main",
 			"path": "."
 		},
 		{
@@ -41,14 +41,55 @@
 			"path": "ZMPT101B-lib"
 		}
 	],
-	"settings": {},
+	"settings": {
+		"platformio-ide.toolbar": [			
+			{
+				"text": "$(home)",
+				"tooltip": "PlatformIO: Home",
+				"commands": "platformio-ide.showHome"
+			},
+			{
+				"text": "$(check)",
+				"tooltip": "PlatformIO: Build",
+				"commands": "platformio-ide.build"
+			},
+			{
+				"text": "$(arrow-right)",
+				"tooltip": "PlatformIO: Upload",
+				"commands": "platformio-ide.upload"
+			},
+			{
+				"text": "$(trashcan)",
+				"tooltip": "PlatformIO: Clean",
+				"commands": "platformio-ide.clean"
+			},
+			{
+				"text": "$(beaker)",
+				"tooltip": "PlatformIO: Test",
+				"commands": "platformio-ide.test"
+			},
+			{
+				"text": "$(plug)",
+				"tooltip": "PlatformIO: Serial Monitor",
+				"commands": "platformio-ide.serialMonitor"
+			},
+			{
+				"text": "$(terminal)",
+				"tooltip": "PlatformIO: New Terminal",
+				"commands": "platformio-ide.newTerminal"
+			}
+		],
+		"airun.settings": {
+			"workspaceId": "2150c182-d83e-4b15-ae3f-fe5b9955f085"
+		}
+	},
 	"launch": {
 		"version": "0.2.0",
 		"configurations": [
 			{
 				"type": "cppdbg",
 				"request": "launch",
-				"name": "native-debug",
+				"name": "native-debug-windows",
 				"program": "${fileWorkspaceFolder}/.pio/build/desktop-debug/program.exe",
 				"args": [],
 				"stopAtEntry": false,
@@ -56,6 +97,26 @@
 				"environment": [],
 				"externalConsole": false,
 				"MIMode": "gdb",
+				"setupCommands": [
+					{
+						"description": "Enable pretty-printing for gdb",
+						"text": "-enable-pretty-printing",
+						"ignoreFailures": true
+					}
+				]
+			},
+			{
+				"type": "cppdbg",
+				"request": "launch",
+				"name": "native-debug-linux",
+				"program": "${fileWorkspaceFolder}/.pio/build/desktop-debug/program",
+				"args": [],
+				"stopAtEntry": false,
+				"cwd": "${fileWorkspaceFolder}",
+				"environment": [],
+				"externalConsole": false,
+				"MIMode": "gdb",
+				"miDebuggerPath": "/usr/bin/gdb",
 				"setupCommands": [
 					{
 						"description": "Enable pretty-printing for gdb",

@@ -14,6 +14,11 @@
 
 #define TIMER_TACTS 1000
 
+/// @brief Fake timer that returns a value between min and max values.
+/// @param t_minValue The minimum value.
+/// @param t_maxValue The maximum value.
+/// @return The value between min and max values.
+/// @note The timer is initialized with the min value and the step value is calculated based on the min and max values.
 class FakeTimer : public ITimer
 {
     private:
