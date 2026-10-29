@@ -13,37 +13,36 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
 
 ---
 ### Features
-- Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin, with a calibrated ADC __zero__. The sensor owns the analog stream.
-- __ZMPT101B::calibrate__ averages __ZMPT101B_READ_ITERATIONS__ (default 1000) samples into that zero.
-- __ZMPT101BRmsReader__ (via __ZMPT101BAcReaderBase__) waits until the waveform is close to __zero__ (±10%, __isCloseToZero__), then measures peak-to-peak over __MESURE_RESOLUTION_IN_WAVE_COUNT__ periods (default 3 → 60 ms at 50 Hz).
-- __ZMPT101BTrueRmsReader__ computes True RMS over two AC periods (40 ms at 50 Hz). It does not use the zero-cross wait.
-- Both readers return __Expected{ZMPT101B_ACVoltage, Error}__. They do not own the __ITimer__.
-- Errors are __DeviceError::TimerIsNotInitialized__ and __IoError::StreamNotCreated__.
-- ADC offset from __zero__ is mapped to volts with the cubic polynomial in __ZMPT101BReaders.cpp__ (not a single linear \(K_{calib}\)).
+- Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin. __zero__ and __calibration_factor__ are __Q10__ values from HC-LIB.System. The sensor owns the analog stream.
+- The constructor takes a float scale (default 1.0). __ZMPT101B::calibrate__ averages __ZMPT101B_READ_ITERATIONS__ (default 1000) samples into __zero__.
+- Both readers (via __ZMPT101BAcReaderBase__) wait until the waveform is within ±10% of __zero__, then sample over __MESURE_RESOLUTION_IN_WAVE_COUNT__ periods (default 4 → 80 ms at 50 Hz). Each sample runs a Q10 EMA (`adjustZero`, weight 0.001).
+- __ZMPT101BRmsReader__ is peak-to-peak × `1/(2√2)`. __ZMPT101BTrueRmsReader__ sums squares in `int64_t` (a Q10 running sum overflows) and takes __Q10::sqrt()__.
+- Millivolts are `amplitude × calibration_factor × Vcc / 1024`, using the cached supply from __board::getSupplyVoltage()__.
+- Both readers return __Expected{ZMPT101B_ACVoltage, Error}__ (`uint32_t` millivolts). They do not own the __ITimer__. Both set the same interval, so sequential reads can share one timer.
+- Errors are __DeviceError::TimerIsNotInitialized__, __IoError::StreamNotCreated__, and __GenericError::InvalidOperation__ if True RMS square root is given a negative value.
+- Reader implementations live in separate `.cpp` files so an RMS-only sketch can drop True RMS under `--gc-sections`.
 
 ---
 ### Usage
 1. Connect __ZMPT101B__ to an analog pin (see __How to connect device to Arduino board__).
-2. In `setup()`, create a stream and sensor. The sensor takes ownership of the stream:
+2. Create a heap stream (the sensor deletes it) and a static sensor. The third argument is the float calibration scale:
     ```c++
-    AnalogStream *stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
-    static ZMPT101BSensor sensor(ZMPT101B_PIN, stream);
+    static AnalogStream *const stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
+    static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, 0.275f);
     ZMPT101B::calibrate(&sensor);
     ```
-3. Give each reader its own timer. Do not share one __ArduinoTimer__ between RMS and True RMS (they set different intervals):
+3. Both readers use the same window, so one timer is enough when `read()` calls do not overlap:
     ```c++
-    static ArduinoTimer rmsTimer;
-    static ZMPT101BRmsReader rmsReader(&rmsTimer);
-
-    static ArduinoTimer trueRmsTimer;
-    static ZMPT101BTrueRmsReader trueRmsReader(&trueRmsTimer);
+    static ArduinoTimer timer;
+    static ZMPT101BRmsReader rmsReader(&timer);
+    static ZMPT101BTrueRmsReader trueRmsReader(&timer);
     ```
 4. Read:
     ```c++
     Expected<ZMPT101B_ACVoltage, Error> reading = rmsReader.read(sensor);
     if (reading.hasValue())
     {
-        float volts = reading.getValue().data;
+        uint32_t millivolts = reading.getValue().data;
     }
     else
     {
@@ -51,7 +50,7 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
     }
     ```
 
-See __examples/ZMPT101B-ReadExampleApp__ for a full sketch (that sample currently shares one timer; prefer one timer per reader as above).
+See __examples/ZMPT101B-ReadExampleApp__ for a full sketch.
 
 ---
 ### Device purpose
@@ -71,9 +70,9 @@ Values below are typical for the common ZMPT101B breakout (confirm the marking o
 | AC input | screw terminals L / N (mains, isolated from the MCU) |
 | Gain | onboard multi-turn potentiometer |
 | Network frequency | 50 Hz (`AC_NETWORK_FREQUENCY`) |
-| Sample window | two AC periods (40 ms at 50 Hz) |
+| Sample window | four AC periods (80 ms at 50 Hz) |
 
-Calibrate with no AC (or a known idle waveform) so __zero__ tracks the module mid-point. The onboard trimmer sets gain; the example's polynomial maps ADC offset from zero to volts.
+Calibrate with no AC (or a known idle waveform) so __zero__ tracks the module mid-point. The onboard trimmer sets gain; the float __calibration_factor__ (stored as __Q10__) maps ADC amplitude to millivolts using the measured Vcc.
 
 ### Voltage transformation
 The **ZMPT101B** active voltage sensor module works in three main physical stages: **Current Limiting**, **Current Transformation**, and **Operational Amplification (I-V Conversion & Level Shifting)**.
@@ -150,7 +149,7 @@ Mains on L/N is hazardous. Keep that wiring away from the Nano. Fuse the measure
 1. Wire 5V, GND, and OUT as in the table. Leave L/N disconnected until the analog output looks mid-scale on A0.
 2. Adjust the trimmer with __examples/ZMPT101B-PotentiometerCalibrationApp__ (optional).
 3. Upload __examples/ZMPT101B-ReadExampleApp__ (`pio run -e nano-board -t upload`). Serial is `115200`. `platformio.ini` defaults to `/dev/ttyUSB0`; on Windows use `COM3` (or the port Device Manager shows).
-4. The sketch calibrates, then prints `220V`, RMS, and True RMS every 500 ms.
+4. The sketch prints RMS and True RMS millivolts every 500 ms.
 
 To use another analog pin, change `ZMPT101B_PIN` and move the OUT wire to that pin.
 
@@ -263,7 +262,7 @@ Do not combine `test_build_src = yes` with `build_src_filter = +<*> +<../test/te
 
 Assertion messages may use __F()__ so the text stays in flash on AVR. Include __unity_extensions.h__ after __unity.h__ (from HC-LIB.System, empty unless `UNIT_TEST` is set). On AVR it also copies each __RUN_TEST__ name from flash into a 96-byte RAM buffer.
 
-Nano test SRAM must stay under 2 KB. `[env:nano-board]` shrinks Serial buffers (`16` / `32`) and sets `UNITY_EXCLUDE_DETAILS`. Float asserts stay enabled for RMS / True RMS tests. After packing a new System tarball, delete `.pio/libdeps` so PlatformIO unpacks `unity_extensions.h`.
+Nano test SRAM must stay under 2 KB. `[env:nano-board]` shrinks Serial buffers (`16` / `32`) and sets `UNITY_EXCLUDE_DETAILS`. After packing a new System tarball, delete `.pio/libdeps` so PlatformIO unpacks `unity_extensions.h`.
 
 ---
 ### Inspect memory usage

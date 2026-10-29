@@ -51,7 +51,7 @@ void ZMPT101BTrueRmsReader_Read_Data_And_Calculate_TrueRms()
     const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023)); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
@@ -69,7 +69,7 @@ void ZMPT101BTrueRmsReader_Read_WhenStreamAlreadyReadable()
     const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023)); 
     sensor.stream->begin(StreamMode::Read);
     ZMPT101BTrueRmsReader sut(&timer);
 
@@ -88,7 +88,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerAlreadyStarted()
 
     FakeTimer timer;
     timer.start();
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023)); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
@@ -105,7 +105,7 @@ void ZMPT101BTrueRmsReader_Read_Twice()
     const uint32_t expectedValue = 1381u;
 
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023)); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> first = sut.read(sensor);
@@ -122,7 +122,7 @@ void ZMPT101BTrueRmsReader_Read_Twice()
 void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
 {
     FakeTimer timer(0);
-    ZMPT101BSensor sensor(0, new FakeConstantStream(512), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512)); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);
@@ -136,7 +136,7 @@ void ZMPT101BTrueRmsReader_Read_WhenTimerElapsedImmediately()
 void ZMPT101BTrueRmsReader_Read_ConstantMidScale()
 {
     FakeTimer timer;
-    ZMPT101BSensor sensor(0, new FakeConstantStream(512), 1.0f); 
+    ZMPT101BSensor sensor(0, new FakeConstantStream(512)); 
     ZMPT101BTrueRmsReader sut(&timer);
 
     Expected<ZMPT101B_ACVoltage, Error> result = sut.read(sensor);

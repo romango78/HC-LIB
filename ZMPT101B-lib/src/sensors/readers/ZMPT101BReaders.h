@@ -43,15 +43,15 @@ class ZMPT101BAcReaderBase : public ISensorReader<ZMPT101B_ACVoltage, ZMPT101BSe
         /// @param t_sensor The sensor to wait for.
         /// @note The wave is close to zero if the ADC value is close to the mid-point.
         void waitUntilWaveCloseToZero(const ZMPT101BSensor& t_sensor) const;
-        /// @brief Reads the ADC raw value.
+        /// @brief Reads one ADC sample and adjusts the zero point.
         /// @param t_sensor The sensor to read the value from.
         /// @return The ADC raw value.
         uint16_t readAdcRawValue(const ZMPT101BSensor& t_sensor) const;
         /// @brief Converts an ADC amplitude to millivolts.
-        /// @param t_adcValue The ADC value to convert.
-        /// @param t_calibration_factor The calibration factor.
-        /// @return The voltage in millivolts. Non-positive inputs become 0.
-        uint32_t toMillivolts(const float t_adcValue, const float t_calibration_factor) const;
+        /// @param t_adcValue The ADC RMS amplitude in counts.
+        /// @param t_calibration_factor Scale applied when converting ADC to millivolts (default 1.0).
+        /// @return The voltage in millivolts. Zero inputs become 0.
+        uint32_t toMillivolts(const Q10 t_adcValue, const Q10 t_calibration_factor) const;
     public:
         ZMPT101BAcReaderBase() = delete;
 

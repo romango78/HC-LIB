@@ -7,7 +7,7 @@
 // contained in it should be construed as commitment by Roman Gorielov.
 
 /// @file main.cpp
-/// @brief ZMPT101B calibration helper or RMS / True RMS demo.
+/// @brief ZMPT101B RMS / True RMS demo.
 #include <Arduino.h>
 #include "adapter/AnalogPortAdapter.h"
 #include "stream/AnalogStream.h"
@@ -17,31 +17,22 @@
 
 #define ZMPT101B_PIN A0
 
-ZMPT101BSensor *sensor;
-ZMPT101BRmsReader *rmsReader;
-ZMPT101BTrueRmsReader *trueRmsReader;
+static AnalogStream *const stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
+static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, 0.275f);
+static ArduinoTimer timer;
+static ZMPT101BRmsReader rmsReader(&timer);
+static ZMPT101BTrueRmsReader trueRmsReader(&timer);
 
 void setup()
 {
     Serial.begin(115200);
-    AnalogStream *stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
-
-    static ZMPT101BSensor zmpt(ZMPT101B_PIN, stream, 0.275f);
-    sensor = &zmpt;
-
-    static ArduinoTimer timer;
-    static ZMPT101BRmsReader rms(&timer);
-    static ZMPT101BTrueRmsReader trueRms(&timer);
-    rmsReader = &rms;
-    trueRmsReader = &trueRms;
-
     delay(2000);
 }
 
 void loop()
 {
-    Expected<ZMPT101B_ACVoltage, Error> rms = rmsReader->read(*sensor);
-    Expected<ZMPT101B_ACVoltage, Error> trueRms = trueRmsReader->read(*sensor);
+    Expected<ZMPT101B_ACVoltage, Error> rms = rmsReader.read(sensor);
+    Expected<ZMPT101B_ACVoltage, Error> trueRms = trueRmsReader.read(sensor);
 
     Serial.print(F("RMS_mV:"));
     if(rms.hasValue())

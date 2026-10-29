@@ -78,7 +78,10 @@
 				"tooltip": "PlatformIO: New Terminal",
 				"commands": "platformio-ide.newTerminal"
 			}
-		]
+		],
+		"airun.settings": {
+			"workspaceId": "2150c182-d83e-4b15-ae3f-fe5b9955f085"
+		}
 	},
 	"launch": {
 		"version": "0.2.0",

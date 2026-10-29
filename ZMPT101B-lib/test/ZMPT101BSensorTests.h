@@ -22,7 +22,7 @@
 /// @return The sensor.
 ZMPT101BSensor createZMPT101BSensor()
 {
-    ZMPT101BSensor result{14, new FakeConstantStream(512), 1.0f};
+    ZMPT101BSensor result{14, new FakeConstantStream(512)};
     return result;
 }
 
@@ -31,7 +31,7 @@ ZMPT101BSensor createZMPT101BSensor()
 /// @return The sensor.
 ZMPT101BSensor createZMPT101BSensor2()
 {
-    ZMPT101BSensor result{3, new FakeConstantStream(400), 1.0f};
+    ZMPT101BSensor result{3, new FakeConstantStream(400)};
     return result;
 }
 
@@ -46,7 +46,7 @@ void ZMPT101BSensor_ShouldConstruct_WithPinAndStream()
     TEST_ASSERT_EQUAL(DeviceCategory::Analog, sut.category);
     TEST_ASSERT_EQUAL(14, sut.pin);
     TEST_ASSERT_EQUAL(stream, sut.stream);
-    TEST_ASSERT_EQUAL(0, sut.zero);
+    TEST_ASSERT_EQUAL(0, sut.zero.toInt32());
     TEST_ASSERT_TRUE(device::is_analog(sut));
     TEST_ASSERT_FALSE(device::is_digital(sut));
     TEST_ASSERT_FALSE(device::is_relay(sut));
@@ -62,7 +62,7 @@ void ZMPT101BSensor_ShouldConstruct_WithNullStream()
     TEST_ASSERT_EQUAL(DeviceCategory::Analog, sut.category);
     TEST_ASSERT_EQUAL(7, sut.pin);
     TEST_ASSERT_NULL(sut.stream);
-    TEST_ASSERT_EQUAL(0, sut.zero);
+    TEST_ASSERT_EQUAL(0, sut.zero.toInt32());
 }
 
 /// @brief Tests the ZMPT101BSensor class when the sensor is copied.
@@ -77,7 +77,7 @@ void ZMPT101BSensor_ShouldCopy_PreservesZeroAndClonesStream()
     TEST_ASSERT_EQUAL(source.type, sut.type);
     TEST_ASSERT_EQUAL(source.category, sut.category);
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_EQUAL(512, sut.zero);
+    TEST_ASSERT_EQUAL(512, sut.zero.toInt32());
     TEST_ASSERT_NOT_NULL(sut.stream);
     TEST_ASSERT_TRUE(source.stream != sut.stream);
 }
@@ -92,7 +92,7 @@ void ZMPT101BSensor_ShouldCopy_WithNullStream()
     ZMPT101BSensor sut = source;
 
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_EQUAL(99, sut.zero);
+    TEST_ASSERT_EQUAL(99, sut.zero.toInt32());
     TEST_ASSERT_NULL(sut.stream);
 }
 
@@ -107,7 +107,7 @@ void ZMPT101BSensor_ShouldCopy_FromMovedSource()
     ZMPT101BSensor sut(source);
 
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_EQUAL(400, sut.zero);
+    TEST_ASSERT_EQUAL(400, sut.zero.toInt32());
     TEST_ASSERT_NULL_MESSAGE(sut.stream, F("Copy of a moved-from sensor should not clone the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
 }
@@ -123,7 +123,7 @@ void ZMPT101BSensor_ShouldMove()
     ZMPT101BSensor sut(std::move(source));
 
     TEST_ASSERT_EQUAL(14, sut.pin);
-    TEST_ASSERT_EQUAL(480, sut.zero);
+    TEST_ASSERT_EQUAL(480, sut.zero.toInt32());
     TEST_ASSERT_EQUAL(stream, sut.stream);
 }
 
@@ -138,7 +138,7 @@ void ZMPT101BSensor_ShouldAssignCopy()
     sut = source;
 
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
-    TEST_ASSERT_EQUAL(512, sut.zero);
+    TEST_ASSERT_EQUAL(512, sut.zero.toInt32());
     TEST_ASSERT_TRUE(source.stream != sut.stream);
 }
 
@@ -165,7 +165,7 @@ void ZMPT101BSensor_ShouldSelfAssign()
 
     sut = sut;
 
-    TEST_ASSERT_EQUAL(333, sut.zero);
+    TEST_ASSERT_EQUAL(333, sut.zero.toInt32());
     TEST_ASSERT_EQUAL(stream, sut.stream);
 }
 
@@ -185,7 +185,7 @@ void ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull()
 
     ZMPT101B::calibrate(&sensor);
 
-    TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero, F("Null stream must leave zero unchanged."));
+    TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero.toInt32(), F("Null stream must leave zero unchanged."));
 }
 
 /// @brief Tests the ZMPT101BSensor class when the sensor is calibrated and the ADC is averaged into zero.
@@ -197,7 +197,7 @@ void ZMPT101B_Calibrate_AveragesAdcIntoZero()
 
     ZMPT101B::calibrate(&sensor);
 
-    TEST_ASSERT_EQUAL(512, sensor.zero);
+    TEST_ASSERT_EQUAL(512, sensor.zero.toInt32());
     TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end()."));
     TEST_ASSERT_FALSE(stream->hasError());
 }
@@ -212,7 +212,7 @@ void ZMPT101B_Calibrate_WhenStreamAlreadyReadable()
 
     ZMPT101B::calibrate(&sensor);
 
-    TEST_ASSERT_EQUAL(400, sensor.zero);
+    TEST_ASSERT_EQUAL(400, sensor.zero.toInt32());
     TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end() even if the stream was already readable."));
     TEST_ASSERT_FALSE(stream->hasError());
 }
