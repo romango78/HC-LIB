@@ -17,7 +17,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Millivolts are `amplitude × calibration_factor × Vcc / 1024`, with Vcc cached from _board::getSupplyVoltage()_.
 - _ZMPT101BRmsReader_ and _ZMPT101BTrueRmsReader_ return _Expected{ZMPT101B_ACVoltage, Error}_ (`uint32_t` millivolts). Both use the same sample window.
 - RMS and True RMS live in separate `.cpp` files so unused True RMS can be dropped from flash.
-- Samples live in __examples/ZMPT101B-ReadExampleApp__ and __examples/ZMPT101B-PotentiometerCalibrationApp__. The read example uses static objects, one heap stream the sensor owns, and one shared timer. The calibration sketch prints integers only.
+- Samples live in __examples/ZMPT101B-ReadExampleApp__, __examples/ZMPT101B-PotentiometerCalibrationApp__, and __examples/ZMPT101B-SensorCalibrationApp__. The read example uses static objects, one heap stream the sensor owns, and one shared timer. The trimmer sketch prints integers only. The sensor calibration sketch prints the factor found from a meter etalon.
+- _ZMPT101B::calibrate(sensor, etalonMillivolts)_ reads one RMS window with _calibration_factor_ forced to 1, then stores `etalon / measured`. It returns nothing. The previous factor is restored when the stream is missing, the etalon is 0, or the measured RMS is 0.
 
 ## [1.0.2203]
 ### Changed

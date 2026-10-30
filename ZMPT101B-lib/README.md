@@ -14,7 +14,7 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
 ---
 ### Features
 - Defines __ZMPT101BSensor__ as an __AnalogSensor__ on an analog pin. __zero__ and __calibration_factor__ are __Q10__ values from HC-LIB.System. The sensor owns the analog stream.
-- The constructor takes a float scale (default 1.0). __ZMPT101B::calibrate__ averages __ZMPT101B_READ_ITERATIONS__ (default 1000) samples into __zero__.
+- The constructor takes a float scale (default 1.0). __ZMPT101B::calibrate(sensor, etalonMillivolts)__ reads one RMS window with __calibration_factor__ forced to 1, then stores `etalon / measured`. It returns nothing and leaves the factor unchanged when the stream is missing, the etalon is 0, or the measured RMS is 0.
 - Both readers (via __ZMPT101BAcReaderBase__) wait until the waveform is within ±10% of __zero__, then sample over __MESURE_RESOLUTION_IN_WAVE_COUNT__ periods (default 4 → 80 ms at 50 Hz). Each sample runs a Q10 EMA (`adjustZero`, weight 0.001).
 - __ZMPT101BRmsReader__ is peak-to-peak × `1/(2√2)`. __ZMPT101BTrueRmsReader__ sums squares in `int64_t` (a Q10 running sum overflows) and takes __Q10::sqrt()__.
 - Millivolts are `amplitude × calibration_factor × Vcc / 1024`, using the cached supply from __board::getSupplyVoltage()__.
@@ -27,9 +27,10 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
 1. Connect __ZMPT101B__ to an analog pin (see __How to connect device to Arduino board__).
 2. Create a heap stream (the sensor deletes it) and a static sensor. The third argument is the float calibration scale:
     ```c++
+    #define ZMPT101B_CALIBRATION_FACTOR 0.275f
     static AnalogStream *const stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
-    static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, 0.275f);
-    ZMPT101B::calibrate(&sensor);
+    static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, ZMPT101B_CALIBRATION_FACTOR);
+    ZMPT101B::calibrate(sensor, 230000);
     ```
 3. Both readers use the same window, so one timer is enough when `read()` calls do not overlap:
     ```c++
@@ -50,7 +51,7 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
     }
     ```
 
-See __examples/ZMPT101B-ReadExampleApp__ for a full sketch.
+See __examples/ZMPT101B-ReadExampleApp__ for a full sketch. __examples/ZMPT101B-SensorCalibrationApp__ prints the factor for a meter reading in millivolts.
 
 ---
 ### Device purpose
@@ -72,7 +73,7 @@ Values below are typical for the common ZMPT101B breakout (confirm the marking o
 | Network frequency | 50 Hz (`AC_NETWORK_FREQUENCY`) |
 | Sample window | four AC periods (80 ms at 50 Hz) |
 
-Calibrate with no AC (or a known idle waveform) so __zero__ tracks the module mid-point. The onboard trimmer sets gain; the float __calibration_factor__ (stored as __Q10__) maps ADC amplitude to millivolts using the measured Vcc.
+The onboard trimmer sets gain. __ZMPT101B::calibrate__ sets __calibration_factor__ from a meter reading in millivolts so later RMS values match that etalon. Readers keep __zero__ at mid-scale and refine it with the EMA.
 
 ### Voltage transformation
 The **ZMPT101B** active voltage sensor module works in three main physical stages: **Current Limiting**, **Current Transformation**, and **Operational Amplification (I-V Conversion & Level Shifting)**.
@@ -292,7 +293,7 @@ Per-section breakdown:
 
 ---
 ### Sample
-The voltage demo is __examples/ZMPT101B-ReadExampleApp__. The trimmer helper is __examples/ZMPT101B-PotentiometerCalibrationApp__. From either folder:
+The voltage demo is __examples/ZMPT101B-ReadExampleApp__. The trimmer helper is __examples/ZMPT101B-PotentiometerCalibrationApp__. The meter-based factor sketch is __examples/ZMPT101B-SensorCalibrationApp__. From any of those folders:
 ```powershell
 pio run -e nano-board -t upload
 ```

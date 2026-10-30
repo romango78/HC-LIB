@@ -16,9 +16,10 @@
 #include "timers/ArduinoTimer.h"
 
 #define ZMPT101B_PIN A0
+#define ZMPT101B_CALIBRATION_FACTOR 0.275f
 
 static AnalogStream *const stream = new AnalogStream(new AnalogPortAdapter(ZMPT101B_PIN));
-static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, 0.275f);
+static ZMPT101BSensor sensor(ZMPT101B_PIN, stream, ZMPT101B_CALIBRATION_FACTOR);
 static ArduinoTimer timer;
 static ZMPT101BRmsReader rmsReader(&timer);
 static ZMPT101BTrueRmsReader trueRmsReader(&timer);

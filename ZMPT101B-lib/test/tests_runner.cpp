@@ -27,10 +27,10 @@ void testsProcess()
     RUN_TEST(ZMPT101BSensor_ShouldAssignCopy);
     RUN_TEST(ZMPT101BSensor_ShouldAssign_FromNullStream);
     RUN_TEST(ZMPT101BSensor_ShouldSelfAssign);
-    RUN_TEST(ZMPT101B_Calibrate_DoesNothing_WhenSensorIsNull);
     RUN_TEST(ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull);
-    RUN_TEST(ZMPT101B_Calibrate_AveragesAdcIntoZero);
-    RUN_TEST(ZMPT101B_Calibrate_WhenStreamAlreadyReadable);
+    RUN_TEST(ZMPT101B_Calibrate_DoesNothing_WhenEtalonIsZero);
+    RUN_TEST(ZMPT101B_Calibrate_DoesNothing_WhenMeasuredIsZero);
+    RUN_TEST(ZMPT101B_Calibrate_SetsFactorFromEtalon);
 
     RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_TimerIsNotInitialized);
     RUN_TEST(ZMPT101BRmsReader_Raise_Error_When_StreamIsNotInitialized);

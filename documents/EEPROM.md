@@ -265,7 +265,7 @@ void setup()
 
 These libraries target the Nano and **do not** read or write EEPROM.
 
-1. **Calibration in RAM.** `ZMPT101BSensor::zero` is an in-memory field from `ZMPT101B::calibrate`. Persist it in a **sketch** with `EEPROM.put` if you need it across power cycles — not inside the library.
+1. **Calibration in RAM.** `ZMPT101BSensor::calibration_factor` is an in-memory field from `ZMPT101B::calibrate`. Persist it in a **sketch** with `EEPROM.put` if you need it across power cycles — not inside the library.
 2. **Relay state.** `RelayDeviceController` does not remember `On`/`Off` after reset. Persist in the sketch if required.
 3. **Do not add EEPROM to a library `src/`** unless the device truly owns a settings block and the wear policy is documented.
 4. **Native tests** stay EEPROM-free. Desktop has no 1 KB array and no 3.3 ms write.

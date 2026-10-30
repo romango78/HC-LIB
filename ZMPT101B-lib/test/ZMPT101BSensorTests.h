@@ -15,7 +15,10 @@
 #include "unity_extensions.h"
 #include "lib-utility.h"
 #include "sensors/ZMPT101B.h"
+#include "sensors/readers/ZMPT101BReaders.h"
 #include "FakeStream.h"
+#include "FakeTimer.h"
+#include "timers/ArduinoTimer.h"
 
 /// @brief Tests the ZMPT101BSensor class when the sensor is constructed with a pin and a stream.
 /// @note The test verifies that the sensor is constructed with the correct pin and stream.
@@ -169,52 +172,58 @@ void ZMPT101BSensor_ShouldSelfAssign()
     TEST_ASSERT_EQUAL(stream, sut.stream);
 }
 
-/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated with a null sensor.
-/// @note The test verifies that the sensor is calibrated with a null sensor.
-void ZMPT101B_Calibrate_DoesNothing_WhenSensorIsNull()
-{
-    ZMPT101B::calibrate(nullptr);
-}
-
-/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated with a null stream.
-/// @note The test verifies that the sensor is calibrated with a null stream.
+/// @brief Tests that calibrate() leaves the factor unchanged when the stream is null.
 void ZMPT101B_Calibrate_DoesNothing_WhenStreamIsNull()
 {
-    ZMPT101BSensor sensor(3, nullptr);
-    sensor.zero = 99;
+    ZMPT101BSensor sensor(3, nullptr, 0.5f);
+    const Q10 previous = sensor.calibration_factor;
 
-    ZMPT101B::calibrate(&sensor);
+    ZMPT101B::calibrate(sensor, 230000);
 
-    TEST_ASSERT_EQUAL_MESSAGE(99, sensor.zero.toInt32(), F("Null stream must leave zero unchanged."));
+    TEST_ASSERT_TRUE(sensor.calibration_factor == previous);
 }
 
-/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated and the ADC is averaged into zero.
-/// @note The test verifies that the sensor is calibrated and the ADC is averaged into zero.
-void ZMPT101B_Calibrate_AveragesAdcIntoZero()
+/// @brief Tests that calibrate() rejects a zero etalon without changing the factor.
+void ZMPT101B_Calibrate_DoesNothing_WhenEtalonIsZero()
 {
-    FakeConstantStream* stream = new FakeConstantStream(512);
-    ZMPT101BSensor sensor(14, stream);
+    ZMPT101BSensor sensor(14, new FakeConstantStream(512), 0.5f);
+    const Q10 previous = sensor.calibration_factor;
 
-    ZMPT101B::calibrate(&sensor);
+    ZMPT101B::calibrate(sensor, 0);
 
-    TEST_ASSERT_EQUAL(512, sensor.zero.toInt32());
-    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end()."));
-    TEST_ASSERT_FALSE(stream->hasError());
+    TEST_ASSERT_TRUE(sensor.calibration_factor == previous);
 }
 
-/// @brief Tests the ZMPT101BSensor class when the sensor is calibrated and the stream is already readable.
-/// @note The test verifies that the sensor is calibrated and the stream is already readable.
-void ZMPT101B_Calibrate_WhenStreamAlreadyReadable()
+/// @brief Tests that calibrate() leaves the factor unchanged when the measured RMS is zero.
+void ZMPT101B_Calibrate_DoesNothing_WhenMeasuredIsZero()
 {
-    FakeConstantStream* stream = new FakeConstantStream(400);
-    ZMPT101BSensor sensor(14, stream);
-    stream->begin(StreamMode::Read);
+    ZMPT101BSensor sensor(14, new FakeConstantStream(512), 0.5f);
+    const Q10 previous = sensor.calibration_factor;
 
-    ZMPT101B::calibrate(&sensor);
+    ZMPT101B::calibrate(sensor, 230000);
 
-    TEST_ASSERT_EQUAL(400, sensor.zero.toInt32());
-    TEST_ASSERT_FALSE_MESSAGE(stream->canRead(), F("calibrate() must call end() even if the stream was already readable."));
-    TEST_ASSERT_FALSE(stream->hasError());
+    TEST_ASSERT_TRUE(sensor.calibration_factor == previous);
+    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->canRead(), F("calibrate() must call end()."));
+}
+
+/// @brief Tests that calibrate() sets the factor so a later read matches the etalon.
+void ZMPT101B_Calibrate_SetsFactorFromEtalon()
+{
+    const uint32_t etalon = 5000;
+    ZMPT101BSensor sensor(0, new FakeStream(0, 1023), 2.0f);
+    const Q10 previous = sensor.calibration_factor;
+
+    ZMPT101B::calibrate(sensor, etalon);
+
+    TEST_ASSERT_TRUE(sensor.calibration_factor != previous);
+    TEST_ASSERT_FALSE_MESSAGE(sensor.stream->canRead(), F("calibrate() must call end()."));
+
+    ArduinoTimer timer;
+    ZMPT101BRmsReader reader(&timer);
+    Expected<ZMPT101B_ACVoltage, Error> scaled = reader.read(sensor);
+    TEST_ASSERT_TRUE(scaled.hasValue());
+    TEST_ASSERT_UINT32_WITHIN_MESSAGE(etalon / 20, etalon, scaled.getValue().data,
+        F("A later RMS read should match the etalon voltage."));
 }
 
 #endif

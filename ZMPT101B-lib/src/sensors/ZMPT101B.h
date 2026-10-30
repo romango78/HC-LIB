@@ -17,14 +17,10 @@
 #include "stream/IStream.h"
 #include "Q10.h"
 
-#ifndef ZMPT101B_READ_ITERATIONS
-#define ZMPT101B_READ_ITERATIONS 1000
-#endif
-
 /// @brief ZMPT101B analog voltage sensor.
 struct ZMPT101BSensor : AnalogSensor
 {
-    /// @brief The ADC mid-point after calibrate(), in ADC counts.
+    /// @brief ADC mid-point, in counts. Readers start at mid-scale and refine it.
     /// @note Mutable so a const reader can refine the mid-point.
     mutable Q10 zero;
     
@@ -83,29 +79,11 @@ struct ZMPT101B_ACVoltage : SensorData<uint32_t>
 class ZMPT101B
 {
     public:
-        /// @brief Averages ADC samples into _t_sensor_->zero. No-ops if the sensor or stream is null.
-        static void calibrate(ZMPT101BSensor* const t_sensor)
-        {
-            if(!t_sensor)
-            {
-                return;
-            }
-            if(!t_sensor->stream)
-            {
-                return;
-            }
-            if(!t_sensor->stream->canRead())
-            {
-                t_sensor->stream->begin(StreamMode::Read);
-            }
-            uint32_t adcValue = 0;
-            for(int index = 0; index < ZMPT101B_READ_ITERATIONS; index++)
-            {
-                adcValue += t_sensor->stream->read();
-            }
-            t_sensor->zero = Q10(static_cast<float>(adcValue / ZMPT101B_READ_ITERATIONS));
-            t_sensor->stream->end();
-        };
+        /// @brief Sets _t_sensor.calibration_factor_ so a later read matches the etalon.
+        /// @param t_sensor Sensor to scale. The existing factor is left unchanged on failure.
+        /// @param t_etalonVoltageInMillivolts Reference RMS from a meter, in millivolts. Must be greater than 0.
+        /// @note Reads one RMS window with the factor forced to 1, then stores etalon / measured. Closes the stream.
+        static void calibrate(ZMPT101BSensor& t_sensor, uint32_t t_etalonVoltageInMillivolts);
 };
 
 #endif
