@@ -1,6 +1,6 @@
 {
     "name": "HC-LIB.Collections",
-    "version": "1.0.2609",
+    "version": "1.1.2611",
     "description": "Generic collections for Arduino and native builds: Queue<T, CAPACITY>, IEnumerable/IEnumerator, and KeyValuePair. Queue is a fixed FIFO ring using Expected and GenericError from HC-LIB.System.",
     "keywords": "collections, queue, enumerable, enumerator, arduino, atmelavr, native",
     "repository":

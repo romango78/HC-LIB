@@ -2,14 +2,14 @@
 <package>
   <metadata>
     <id>HC-LIB.Collections</id>
-    <version>1.0.2609</version>
+    <version>1.1.2611</version>
     <title>HC-LIB Collections Arduino Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/collections-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Generic collections for Arduino and native builds: Queue, IEnumerable/IEnumerator, and KeyValuePair. Queue uses Expected and GenericError from HC-LIB.System.</description>
-    <releaseNotes>1.0.2609: Queue uses Expected/GenericError; fixed EnumeratorBase destructor and Queue memmove size; copy/move disabled. PlatformIO project is the library root. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
+    <releaseNotes>1.1.2611: Added IFixedCollection and fixed-length Array. IEnumerable::getEnumerator returns unique_ptr only. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
     <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr collections queue enumerable enumerator</tags>
     <dependencies>
