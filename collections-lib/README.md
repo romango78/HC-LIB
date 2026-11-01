@@ -1,6 +1,6 @@
 # HC-LIB
-## Collections Arduino Library v1.0.2609
-This __library__ defines generic collections for Arduino and native builds: __Queue{T}__, __IEnumerable{T}__ / __IEnumerator{T}__, and __KeyValuePair{TKey, TValue}__.
+## Collections Arduino Library v1.1.2611
+This __library__ defines generic collections for Arduino and native builds: __Array{T}__, __Queue{T}__, __IFixedCollection{T}__, __IEnumerable{T}__ / __IEnumerator{T}__, and __KeyValuePair{TKey, TValue}__.
 
 The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 
@@ -8,6 +8,8 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`).
 - HC-LIB.System v1.1.2609
 
 ### Features
+- Defines __Array{T, LENGTH}__, a fixed-length collection of trivially copyable elements. It implements __IFixedCollection{T}__. Copy and move are disabled. Element storage is a compile-time array. __getValue__ returns __Expected{T, Error}__. __setValue__ returns __Expected{bool, Error}__ (__GenericError::OutOfRange__ past the end). __clear__ writes __T()__ into every slot. __getEnumerator__ returns __std::unique_ptr{IEnumerator{T}}__.
+- Defines __IFixedCollection{T}__ with __getCount__, __operator[]__ returning __T&__, and __clear__. Enumeration comes from __IEnumerable{T}__.
 - Defines __Queue{T, CAPACITY}__, a fixed-size FIFO ring of trivially copyable elements (default __CAPACITY__ 16). Copy and move are disabled. Storage is a compile-time array (no malloc). __dequeue__ / __peek__ return __Expected{T, Error}__; __enqueue__ returns __bool__.
 - Defines __IEnumerator{T}__. __getCurrent()__ is const and returns __Expected{T, Error}__ (__GenericError::InvalidOperation__ before the first item or after the last).
 - Defines __EnumeratorBase{T, TKey}__, a key-based walker. The collection keeps storage; the derived type implements __getHead()__, __getNext()__, and __getByKey()__. Copy and move are disabled. After create or __reset()__, the first __moveNext()__ advances to the first element. After __moveNext()__ returns false, later calls stay false until __reset()__.

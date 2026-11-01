@@ -29,6 +29,7 @@ void loop()
 #include "collections/generic/KeyValuePairTests.h"
 #include "collections/generic/EnumeratorBaseTests.h"
 #include "collections/generic/QueueTests.h"
+#include "collections/generic/ArrayTests.h"
 
 void dummyTest()
 {
@@ -76,6 +77,18 @@ void testsProcess()
     RUN_TEST(Queue_ShouldReturnError_WhenPeekFromEmptyQueue);
     RUN_TEST(Queue_ShouldPreserveOrder_WhenElementSizeIsLargerThanByte);
     RUN_TEST(Queue_ShouldPreserveOrder_WhenIndicesWrap);
+
+    /*****************************************
+     * Collections\Generic\Array<T, LENGTH>
+     *****************************************/
+    RUN_TEST(Array_ShouldReportLength_AndDefaultElements);
+    RUN_TEST(Array_ShouldSetAndReadElement);
+    RUN_TEST(Array_ShouldAssignElement_ThroughOperator);
+    RUN_TEST(Array_ShouldNotStoreElement_WhenOperatorIndexPastEnd);
+    RUN_TEST(Array_ShouldReturnOutOfRange_WhenIndexPastEnd);
+    RUN_TEST(Array_ShouldReturnOutOfRange_WhenSetPastEnd);
+    RUN_TEST(Array_ShouldClearElements);
+    RUN_TEST(Array_ShouldEnumerateInIndexOrder);
 
     UNITY_END();
 };

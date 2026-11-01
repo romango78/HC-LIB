@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.2611]
+### Added
+- __IFixedCollection{T}__ (__getCount__, __operator[]__ returning __T&__, __clear__).
+- __Array{T, LENGTH}__, a fixed-length __IFixedCollection{T}__. Element storage is a compile-time array. __getValue__ returns __Expected{T, Error}__. __setValue__ returns __Expected{bool, Error}__.
+
+### Changed
+- __IEnumerable{T}::getEnumerator__ returns __std::unique_ptr{IEnumerator{T}}__ only. The by-value overload was removed because __IEnumerator{T}__ is abstract.
+
 ## [1.0.2609]
 ### Added
 - Unit tests for multi-byte __Queue{T}__ FIFO order and ring wrap-around.

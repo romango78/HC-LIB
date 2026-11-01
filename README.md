@@ -7,7 +7,7 @@ The following Arduino libraries are available in this repository:
 | Library | Folder | Version | Dependencies |
 |---|---|---|---|
 | [HC-LIB.System](system-lib/README.md) | `system-lib` | 1.1.2609 | none |
-| [HC-LIB.Collections](collections-lib/README.md) | `collections-lib` | 1.0.2609 | HC-LIB.System ≥1.1.2609 |
+| [HC-LIB.Collections](collections-lib/README.md) | `collections-lib` | 1.1.2611 | HC-LIB.System ≥1.1.2609 |
 | [HC-LIB.Logger](logger-lib/README.md) | `logger-lib` | 1.0.2609 | none |
 | [HC-LIB.IO-Abstraction](io-abstraction-lib/README.md) | `io-abstraction-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609 |
 | [HC-LIB.IO-Port](io-port-lib/README.md) | `io-port-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609<br>HC-LIB.IO-Abstraction ≥1.1.2609 |
