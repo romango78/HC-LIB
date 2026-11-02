@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.2.2611]
+### Changed
+- __ISensorReader__ reads one sensor into a caller-owned __SensorData*__, or a fixed collection of sensors into __SensorData*__ slots. __TSensor__ must inherit __ISensor__.
+- __IDevice__ and __ISensor__ are trivially copyable. __SensorData{T}__ is trivially copyable when __T__ is.
+- Requires __HC-LIB.Collections__ 1.1.2611.
+
 ## [1.1.2609]
 ### Added
 - _DeviceError_ / _DeviceErrors.h_ (_TimerIsNotInitialized_, _SensorIsNotInitialized_).

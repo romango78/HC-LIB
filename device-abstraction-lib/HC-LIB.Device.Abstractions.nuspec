@@ -2,18 +2,19 @@
 <package>
   <metadata>
     <id>HC-LIB.Device.Abstractions</id>
-    <version>1.1.2609</version>
+    <version>1.2.2611</version>
     <title>Arduino Device Abstractions Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/device-abstraction-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Device and sensor abstractions: IDevice, IDeviceController, ISensor, ISensorReader, DeviceError. Uses Expected and Error from HC-LIB.System.</description>
-    <releaseNotes>1.1.2609: DeviceError; IDeviceController and ISensorReader use Error/Expected; DeviceCategory is enum class. Requires HC-LIB.SYSTEM 1.1.2609.</releaseNotes>
+    <releaseNotes>1.2.2611: ISensorReader reads one sensor or a fixed collection. IDevice and ISensor are trivially copyable. Requires HC-LIB.SYSTEM 1.1.2609 and HC-LIB.Collections 1.1.2611.</releaseNotes>
     <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr device abstractions</tags>
     <dependencies>
       <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
+      <dependency id="HC-LIB.Collections" version="1.1.2611" />
     </dependencies>
     <summary>For Arduino projects</summary>
     <packageTypes>

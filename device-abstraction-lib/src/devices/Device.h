@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2026 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -22,7 +22,7 @@ enum class DeviceCategory : uint8_t
 };
 
 /// @brief Type and category of a device.
-/// @note Copying IDevice slices derived types (pin, stream, and other fields are dropped).
+/// @note Trivially copyable. It has no virtual functions. Copying IDevice slices derived types (pin, stream, and other fields are dropped).
 ///       Pass concrete devices by const reference when those fields are needed.
 struct IDevice
 {
@@ -34,8 +34,6 @@ struct IDevice
     /// @param t_category Analog or digital.
     IDevice(const uint8_t t_type, const DeviceCategory t_category)
         : type(t_type), category(t_category) {};
-
-    virtual ~IDevice() = default;
 };
 
 namespace device

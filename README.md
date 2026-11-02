@@ -11,7 +11,7 @@ The following Arduino libraries are available in this repository:
 | [HC-LIB.Logger](logger-lib/README.md) | `logger-lib` | 1.0.2609 | none |
 | [HC-LIB.IO-Abstraction](io-abstraction-lib/README.md) | `io-abstraction-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609 |
 | [HC-LIB.IO-Port](io-port-lib/README.md) | `io-port-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609<br>HC-LIB.IO-Abstraction ≥1.1.2609 |
-| [HC-LIB.Device.Abstractions](device-abstraction-lib/README.md) | `device-abstraction-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609 |
+| [HC-LIB.Device.Abstractions](device-abstraction-lib/README.md) | `device-abstraction-lib` | 1.2.2611 | HC-LIB.System ≥1.1.2609<br>HC-LIB.Collections ≥1.1.2611 |
 | [HC-LIB.Devices](devices-lib/README.md) | `devices-lib` | 1.1.2609 | HC-LIB.System ≥1.1.2609<br>HC-LIB.Device.Abstractions ≥1.1.2609<br>HC-LIB.IO-Port ≥1.1.2609 |
 | [HC-LIB.ZMPT101B](ZMPT101B-lib/README.md) | `ZMPT101B-lib` | 1.0.2609 | HC-LIB.System ≥1.1.2609<br>HC-LIB.IO-Abstraction ≥1.1.2609<br>HC-LIB.IO-Port ≥1.1.2609<br>HC-LIB.Device.Abstractions ≥1.1.2609<br>HC-LIB.Devices ≥1.1.2609 |
 | [HC-LIB.SRD05VDCSL](SRD05VDCSL-lib/README.md) | `SRD05VDCSL-lib` | 1.0.2609 | HC-LIB.System ≥1.1.2609<br>HC-LIB.IO-Abstraction ≥1.1.2609<br>HC-LIB.IO-Port ≥1.1.2609<br>HC-LIB.Device.Abstractions ≥1.1.2609<br>HC-LIB.Devices ≥1.1.2609 |

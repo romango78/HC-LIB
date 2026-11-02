@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2026 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -14,11 +14,15 @@
 #include "Sensor.h"
 
 /// @brief A measurement _T_ taken from an _ISensor_.
-/// @tparam T The measurement type.
-/// @note Failures belong on _Expected{SensorData, Error}_, not on this type.
+/// @tparam T The measurement type. Must be trivially copyable.
+/// @note Trivially copyable when _T_ is trivially copyable. The copy copies the _ISensor_ slice and _data_.
+/// Failures belong on _Expected{SensorData, Error}_, not on this type.
+/// const members delete assignment, so a _SensorData_ cannot be stored in an _Array_.
 template<typename T>
 struct SensorData
 {
+    static_assert(__is_trivially_copyable(T), "SensorData measurement type must be trivially copyable.");
+
     const ISensor sensor;
     const T data;
 
@@ -30,5 +34,7 @@ struct SensorData
     SensorData(const ISensor& t_sensor, const T& t_data)
         : sensor(t_sensor), data(t_data) {};
 };
+
+static_assert(__is_trivially_copyable(SensorData<uint8_t>), "SensorData must be trivially copyable.");
 
 #endif

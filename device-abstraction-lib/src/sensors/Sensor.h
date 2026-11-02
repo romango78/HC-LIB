@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Roman Gorielov. All Rights Reserved.
+// Copyright (c) 2026 Roman Gorielov. All Rights Reserved.
 // 
 // This software is the confidential and proprietary information of Roman Gorielov.
 // It is furnished under license and may only be used or copied in accordance
@@ -14,7 +14,7 @@
 #include "devices/Device.h"
 
 /// @brief A device that produces measurements.
-/// @note Copying ISensor slices derived types the same way as IDevice.
+/// @note Trivially copyable. It has no virtual functions. Copying ISensor slices derived types the same way as IDevice.
 struct ISensor : IDevice
 {
     /// @brief Initializes the sensor type and category.
@@ -22,8 +22,6 @@ struct ISensor : IDevice
     /// @param t_category Analog or digital.
     ISensor(const uint8_t t_type, const DeviceCategory t_category)
         : IDevice(t_type, t_category) {};
-
-    virtual ~ISensor() = default;
 };
 
 #endif
