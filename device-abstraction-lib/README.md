@@ -9,9 +9,9 @@ The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `
 - HC-LIB.Collections v1.1.2611
 
 ### Features
-- Defines __IDevice__ (type + __DeviceCategory__) and helpers __is_digital__, __is_analog__, __is_relay__.
+- Defines __IDevice__ (type + __DeviceCategory__) and helpers __is_digital__, __is_analog__, __is_relay__. Type and category are read through __getType__ and __getCategory__. Copy and assignment replace the whole value.
 - Defines __IDeviceController{State, Device}__: __setState__ returns __Error__; __getState__ returns __Expected{State, Error}__.
-- Defines __ISensor__, __SensorData{T}__, and __ISensorReader__. A single __read__ returns __Expected{SensorData{T}, Error}__. The group __read__ takes __IFixedCollection{const TSensor*}__ and writes __SensorData{T}*__ into __IFixedCollection{SensorData{T}*}__. The caller deletes each reading. On failure the readings collection is unchanged. __Array__ satisfies both group arguments.
+- Defines __ISensor__, __EmptySensor__, __SensorData{T}__, and __ISensorReader__. __SensorData__ exposes __getSensor__ and __getData__. Its default value is an __EmptySensor__ slice so an __Array__ slot can be default-constructed, then replaced by assignment. A single __read__ returns __Expected{SensorData{T}, Error}__. The group __read__ takes __IFixedCollection{const TSensor*}__ and writes __SensorData{T}*__ into __IFixedCollection{SensorData{T}*}__. The caller deletes each reading. On failure the readings collection is unchanged. __Array__ satisfies both group arguments.
 - Defines __DeviceError__ (__TimerIsNotInitialized__, __SensorIsNotInitialized__).
 
 ### Environments

@@ -5,10 +5,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [1.2.2611]
+### Added
+- __EmptySensor__ (__EMPTY_SENSOR_TYPE__, __DeviceCategory::None__). __SensorData{T}__'s default constructor stores that slice so an __Array__ slot can exist before a reading is assigned.
+
 ### Changed
 - __ISensorReader__ reads one sensor into a caller-owned __SensorData*__, or a fixed collection of sensors into __SensorData*__ slots. __TSensor__ must inherit __ISensor__.
 - __IDevice__ and __ISensor__ are trivially copyable. __SensorData{T}__ is trivially copyable when __T__ is.
+- __IDevice__ type and category are private. Read them with __getType__ and __getCategory__. Assignment still replaces the whole value, so __Array__ can store devices.
+- __SensorData{T}__ sensor and measurement are private. Read them with __getSensor__ and __getData__. Assignment still replaces the whole reading.
 - Requires __HC-LIB.Collections__ 1.1.2611.
+
+### Removed
+- Public __IDevice__ fields __type__ and __category__.
+- Public __SensorData__ fields __sensor__ and __data__.
 
 ## [1.1.2609]
 ### Added
