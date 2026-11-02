@@ -1,12 +1,12 @@
 # HC-LIB
-## Arduino Devices Library v1.1.2609
+## Arduino Devices Library v1.1.2611
 This __library__ defines concrete devices, sensors, and controllers for Arduino Boards.
 
 The PlatformIO project is the library root (`platformio.ini`, `src/`, `test/`, `firmware/`).
 
 ### Dependencies
 - HC-LIB.System v1.1.2609
-- HC-LIB.Device.Abstractions v1.1.2609
+- HC-LIB.Device.Abstractions v1.2.2611
 - HC-LIB.IO-Port v1.1.2609
 
 ### Features

@@ -2,19 +2,19 @@
 <package>
   <metadata>
     <id>HC-LIB.Devices</id>
-    <version>1.1.2609</version>
+    <version>1.1.2611</version>
     <title>Arduino Devices Library</title>
     <authors>Roman Gorielov</authors>
     <owners>Roman Gorielov</owners>
     <projectUrl>https://github.com/romango78/HC-LIB/tree/master/devices-lib</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Arduino device types: AnalogDevice, DigitalDevice, RelayDevice, AnalogSensor, and controllers using Error/Expected.</description>
-    <releaseNotes>1.1.2609: PlatformIO at library root; controllers use Error/Expected. Requires System, Device.Abstractions, and IO-Port 1.1.2609.</releaseNotes>
+    <releaseNotes>1.1.2611: Requires HC-LIB.Device.Abstractions 1.2.2611. Requires System and IO-Port 1.1.2609.</releaseNotes>
     <copyright>Copyright 2026 Roman Gorielov</copyright>
     <tags>native arduino atmelavr device relay sensor</tags>
     <dependencies>
       <dependency id="HC-LIB.SYSTEM" version="1.1.2609" />
-      <dependency id="HC-LIB.Device.Abstractions" version="1.1.2609" />
+      <dependency id="HC-LIB.Device.Abstractions" version="1.2.2611" />
       <dependency id="HC-LIB.IO-Port" version="1.1.2609" />
     </dependencies>
     <summary>For Arduino projects</summary>
