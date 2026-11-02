@@ -38,8 +38,8 @@ void ShouldConvert_AnalogSensorToAnalogSensor()
     AnalogSensor sut = source;
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getType(), sut.getType(),  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getCategory(), sut.getCategory(),  F("The 'category' should be same as in origin object."));
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
     TEST_ASSERT_NOT_NULL_MESSAGE(sut.stream,  F("The 'stream' should be cloned."));
 }
@@ -53,8 +53,8 @@ void ShouldConvert_AnalogSensorToISensor()
     ISensor sut = (ISensor)source;
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getType(), sut.getType(),  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getCategory(), sut.getCategory(),  F("The 'category' should be same as in origin object."));
 }
 
 void ShouldMove_AnalogSensorToAnalogSensor()
@@ -67,8 +67,8 @@ void ShouldMove_AnalogSensorToAnalogSensor()
     AnalogSensor sut(std::move(source));
 
     // Asserts
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getType(), sut.getType(),  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getCategory(), sut.getCategory(),  F("The 'category' should be same as in origin object."));
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
     TEST_ASSERT_EQUAL_MESSAGE(sourceStreamAddr, sut.stream,  F("The 'stream' should be same as in origin object."));
 }
@@ -82,8 +82,8 @@ void ShouldAssignCopy_AnalogSensor()
     // Act
     sut = source;
 
-    TEST_ASSERT_EQUAL_MESSAGE(source.type, sut.type,  F("The 'type' should be same as in origin object."));
-    TEST_ASSERT_EQUAL_MESSAGE(source.category, sut.category,  F("The 'category' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getType(), sut.getType(),  F("The 'type' should be same as in origin object."));
+    TEST_ASSERT_EQUAL_MESSAGE(source.getCategory(), sut.getCategory(),  F("The 'category' should be same as in origin object."));
     TEST_ASSERT_EQUAL_MESSAGE(source.pin, sut.pin,  F("The 'pin' should be same as in origin object."));
     TEST_ASSERT_TRUE_MESSAGE(source.stream != sut.stream,  F("The 'stream' should be cloned."));
 }
@@ -101,8 +101,8 @@ void ShouldConstruct_AnalogSensor_WithNullStream()
 {
     AnalogSensor sut{10, 5, nullptr};
 
-    TEST_ASSERT_EQUAL(10, sut.type);
-    TEST_ASSERT_TRUE(sut.category == DeviceCategory::Analog);
+    TEST_ASSERT_EQUAL(10, sut.getType());
+    TEST_ASSERT_TRUE(sut.getCategory() == DeviceCategory::Analog);
     TEST_ASSERT_EQUAL(5, sut.pin);
     TEST_ASSERT_NULL(sut.stream);
 }
@@ -113,7 +113,7 @@ void ShouldCopy_AnalogSensor_WithNullStream()
 
     AnalogSensor sut = source;
 
-    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.getType(), sut.getType());
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
     TEST_ASSERT_NULL(sut.stream);
 }
@@ -125,7 +125,7 @@ void ShouldCopy_AnalogSensor_FromMovedSource()
 
     AnalogSensor sut(source);
 
-    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.getType(), sut.getType());
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
     TEST_ASSERT_NULL_MESSAGE(sut.stream,  F("Copy of a moved-from sensor should not clone the stream."));
     TEST_ASSERT_NOT_NULL(owner.stream);
@@ -138,7 +138,7 @@ void ShouldAssign_AnalogSensor_FromNullStream()
 
     sut = source;
 
-    TEST_ASSERT_EQUAL(source.type, sut.type);
+    TEST_ASSERT_EQUAL(source.getType(), sut.getType());
     TEST_ASSERT_EQUAL(source.pin, sut.pin);
     TEST_ASSERT_NULL_MESSAGE(sut.stream,  F("Assignment from a null-stream sensor should clear the stream."));
 }

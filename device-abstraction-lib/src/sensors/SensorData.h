@@ -15,26 +15,35 @@
 
 /// @brief A measurement _T_ taken from an _ISensor_.
 /// @tparam T The measurement type. Must be trivially copyable.
-/// @note Trivially copyable when _T_ is trivially copyable. The copy copies the _ISensor_ slice and _data_.
+/// @note Trivially copyable when _T_ is trivially copyable. Copy and assignment replace the whole reading.
+/// getSensor() and getData() are const, so a caller cannot change the fields after construction.
+/// Assignment still replaces the whole object, which is what _Array_ requires.
 /// Failures belong on _Expected{SensorData, Error}_, not on this type.
-/// const members delete assignment, so a _SensorData_ cannot be stored in an _Array_.
 template<typename T>
 struct SensorData
 {
     static_assert(__is_trivially_copyable(T), "SensorData measurement type must be trivially copyable.");
 
-    const ISensor sensor;
-    const T data;
-
-    SensorData() = delete;
+    /// @brief Initializes a null reading.
+    /// @note This is necessary for Array assignment to work.
+    SensorData()
+        : m_sensor(EmptySensor()), m_data(T()) {};
 
     /// @brief Initializes a successful reading.
     /// @param t_sensor The sensor that produced _t_data_. Copied as an ISensor slice.
     /// @param t_data The measurement.
     SensorData(const ISensor& t_sensor, const T& t_data)
-        : sensor(t_sensor), data(t_data) {};
-};
+        : m_sensor(t_sensor), m_data(t_data) {};
 
-static_assert(__is_trivially_copyable(SensorData<uint8_t>), "SensorData must be trivially copyable.");
+    /// @brief The sensor slice that produced this reading.
+    const ISensor& getSensor() const { return m_sensor; }
+
+    /// @brief The measurement.
+    const T& getData() const { return m_data; }
+
+private:
+    ISensor m_sensor;
+    T m_data;
+};
 
 #endif

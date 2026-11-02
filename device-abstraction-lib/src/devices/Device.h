@@ -17,23 +17,33 @@
 /// @brief Broad class of a device (analog vs digital).
 enum class DeviceCategory : uint8_t
 {
+    None = DEVICE_CATEGORY_NONE,
     Analog = DEVICE_CATEGORY_ANALOG,
     Digital = DEVICE_CATEGORY_DIGITAL
 };
 
 /// @brief Type and category of a device.
-/// @note Trivially copyable. It has no virtual functions. Copying IDevice slices derived types (pin, stream, and other fields are dropped).
-///       Pass concrete devices by const reference when those fields are needed.
+/// @note Trivially copyable. It has no virtual functions. Copy and assignment replace the whole value.
+/// getType() and getCategory() are const, so a caller cannot change the fields after construction.
+/// Copying IDevice slices derived types (pin, stream, and other fields are dropped).
+/// Pass concrete devices by const reference when those fields are needed.
 struct IDevice
 {
-    const uint8_t type;
-    const DeviceCategory category;
-
     /// @brief Initializes the type and category.
     /// @param t_type Device type code (see _devicedef.h_).
-    /// @param t_category Analog or digital.
+    /// @param t_category Analog, digital, or none.
     IDevice(const uint8_t t_type, const DeviceCategory t_category)
-        : type(t_type), category(t_category) {};
+        : m_type(t_type), m_category(t_category) {};
+
+    /// @brief Device type code.
+    uint8_t getType() const { return m_type; }
+
+    /// @brief Analog, digital, or none.
+    DeviceCategory getCategory() const { return m_category; }
+
+private:
+    uint8_t m_type;
+    DeviceCategory m_category;
 };
 
 namespace device
@@ -41,19 +51,19 @@ namespace device
     /// @brief True when _t_device_ is digital.
     inline bool is_digital(const IDevice& t_device) noexcept
     {
-        return t_device.category == DeviceCategory::Digital;
+        return t_device.getCategory() == DeviceCategory::Digital;
     }
 
     /// @brief True when _t_device_ is analog.
     inline bool is_analog(const IDevice& t_device) noexcept
     {
-        return t_device.category == DeviceCategory::Analog;
+        return t_device.getCategory() == DeviceCategory::Analog;
     }
 
     /// @brief True when _t_device_ is a digital relay.
     inline bool is_relay(const IDevice& t_device) noexcept
     {
-        return is_digital(t_device) && t_device.type == RELAY_DEVICE_TYPE;
+        return is_digital(t_device) && t_device.getType() == RELAY_DEVICE_TYPE;
     }
 }
 

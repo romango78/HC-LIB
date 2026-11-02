@@ -12,6 +12,7 @@
 #define _HC_LIB_SENSOR_H_
 
 #include "devices/Device.h"
+#include "sensordef.h"
 
 /// @brief A device that produces measurements.
 /// @note Trivially copyable. It has no virtual functions. Copying ISensor slices derived types the same way as IDevice.
@@ -22,6 +23,17 @@ struct ISensor : IDevice
     /// @param t_category Analog or digital.
     ISensor(const uint8_t t_type, const DeviceCategory t_category)
         : IDevice(t_type, t_category) {};
+};
+
+/// @brief An ISensor value that names no physical sensor.
+/// @note Type is EMPTY_SENSOR_TYPE (0x00) and category is DeviceCategory::None.
+/// SensorData's default constructor stores this slice so an Array slot can exist before a real reading is assigned.
+/// The struct adds no fields. Copying it into an ISensor drops nothing beyond the usual slice.
+struct EmptySensor : public ISensor
+{
+    /// @brief Initializes the empty sensor type and DeviceCategory::None.
+    EmptySensor()
+        : ISensor(EMPTY_SENSOR_TYPE, DeviceCategory::None) {};
 };
 
 #endif

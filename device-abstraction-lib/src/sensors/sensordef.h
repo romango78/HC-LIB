@@ -10,6 +10,7 @@
 #define _HC_LIB_SENSOR_DEF_H_
 
 // Sensor Types
+#define EMPTY_SENSOR_TYPE 0x00
 #define VOLTAGE_SENSOR_TYPE 0xff
 
 #endif

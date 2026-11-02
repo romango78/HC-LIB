@@ -12,6 +12,7 @@
 #include "unity_extensions.h"
 #include "DeviceTests.h"
 #include "DeviceErrorTests.h"
+#include "SensorDataTests.h"
 
 void testsProcess()
 {
@@ -25,6 +26,12 @@ void testsProcess()
     RUN_TEST(DeviceError_ToError_ShouldMatchTimerCode);
     RUN_TEST(DeviceError_ToError_ShouldMatchSensorCode);
     RUN_TEST(DeviceError_MakeError_ShouldWrapDeviceError);
+
+    RUN_TEST(SensorData_Ctor_ShouldStoreSensorSliceAndData);
+    RUN_TEST(SensorData_Ctor_ShouldAcceptDigitalSensor);
+    RUN_TEST(SensorData_CopyCtor_ShouldCopySensorAndData);
+    RUN_TEST(SensorData_Ctor_ShouldStoreStructMeasurement);
+    RUN_TEST(SensorData_Array_ShouldBeUsedForStoring);
 
     UNITY_END();
 };
